@@ -144,7 +144,6 @@
     @endif
 
     <script>
-        alert("cdd");
         $(document).ready(function() {
             $('.auto_click').click();
         })
