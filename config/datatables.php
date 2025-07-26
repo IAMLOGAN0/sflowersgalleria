@@ -35,6 +35,17 @@ return [
         'starts_with'      => false,
     ],
 
+    'parameters' => [
+        'scrollX' => true,
+        'scrollY' => '400px',
+        'scrollCollapse' => true,
+        'processing' => true,
+        'serverSide' => true,
+        'paging' => true,
+        'ordering' => true,
+        'info' => true,
+    ],
+
     /*
      * DataTables internal index id response column name.
      */

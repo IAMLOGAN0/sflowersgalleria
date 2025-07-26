@@ -75,8 +75,7 @@ class UserOrderDataTable extends DataTable
 
             })
             ->rawColumns(['order_status', 'action', 'payment_status'])
-            ->setRowId('id')
-            ->setTableAttributes(['style' => 'overflow-x: auto;']);
+            ->setRowId('id');
     }
 
     /**

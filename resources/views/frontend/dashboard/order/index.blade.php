@@ -18,7 +18,9 @@
             <h3><i class="far fa-user"></i> Orders</h3>
             <div class="wsus__dashboard_profile">
               <div class="wsus__dash_pro_area">
-                {{ $dataTable->table() }}
+                <div class="table-responsive">
+                  {{ $dataTable->table() }}
+                </div>
               </div>
             </div>
           </div>
