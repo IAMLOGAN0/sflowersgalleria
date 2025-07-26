@@ -9,8 +9,7 @@
             <div class="col-xl-2 col-7 col-md-8 col-lg-2">
                 <div class="wsus_logo_area">
                     <a class="wsus__header_logo" href="{{ url('/') }}">
-                        <img src="{{ asset($logoSetting->logo) }}" alt="logo" class="img-fluid"
-                            style="width: 60% !important;">
+                        <img src="{{ asset($logoSetting->logo) }}" alt="logo" class="img-fluid w-50">
                     </a>
                 </div>
             </div>
