@@ -44,7 +44,7 @@
     <!--============================
         SINGLE BANNER START
     ==============================-->
-    @include('frontend.home.sections.single-banner')
+    {{-- @include('frontend.home.sections.single-banner') --}}
     <!--============================
         SINGLE BANNER END
     ==============================-->
@@ -53,7 +53,7 @@
     <!--============================
         HOT DEALS START
     ==============================-->
-    @include('frontend.home.sections.hot-deals')
+    {{-- @include('frontend.home.sections.hot-deals') --}}
     <!--============================
         HOT DEALS END
     ==============================-->
@@ -91,7 +91,7 @@
     <!--============================
         WEEKLY BEST ITEM START
     ==============================-->
-    @include('frontend.home.sections.weekly-best-item')
+    {{-- @include('frontend.home.sections.weekly-best-item') --}}
     <!--============================
         WEEKLY BEST ITEM END
     ==============================-->
