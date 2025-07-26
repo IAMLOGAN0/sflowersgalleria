@@ -22,6 +22,7 @@ use App\Http\Controllers\Frontend\UserVendorReqeustController;
 use App\Http\Controllers\Frontend\WishlistController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\AuthOtpController;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,7 +98,10 @@ Route::get('show-product-modal/{id}', [HomeController::class, 'ShowProductModal'
 /** add product in wishlist */
 Route::get('wishlist/add-product', [WishlistController::class, 'addToWishlist'])->name('wishlist.store');
 
-
+Route::get('otp/login', [AuthOtpController::class, 'login'])->name('otp.login');
+Route::post('otp/generate', [AuthOtpController::class, 'generate'])->name('otp.generate');
+Route::get('otp/verification/{user_id}', [AuthOtpController::class, 'verification'])->name('otp.verification');
+Route::post('otp/login', [AuthOtpController::class, 'loginWithOtp'])->name('otp.getlogin');
 
 
 

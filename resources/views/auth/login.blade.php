@@ -77,6 +77,11 @@
                                         </div>
 
                                         <button class="common_btn" type="submit">login</button>
+                                        OR
+
+                                        <a class="btn btn-success" href="{{ route('otp.login') }}">
+                                            Login with OTP
+                                        </a>
                                         {{-- <p class="social_text">Sign in with social account</p>
                                         <ul class="wsus__login_link">
                                             <li><a href="#"><i class="fab fa-google"></i></a></li>
@@ -103,6 +108,10 @@
                                             <input id="email" type="email" name="email" value="{{old('email')}}" type="text" placeholder="Email">
                                         </div>
 
+                                        <div class="wsus__login_input">
+                                            <i class="fas fa-mobile-alt"></i>
+                                            <input id="mobile_no" type="text" name="mobile_no" value="{{old('mobile_no')}}" placeholder="Mobile No">
+                                        </div>
 
                                         <div class="wsus__login_input">
                                             <i class="fas fa-key"></i>
