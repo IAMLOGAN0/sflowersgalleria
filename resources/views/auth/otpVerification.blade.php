@@ -56,7 +56,7 @@
                                                 @enderror
                                             </div>
                                         </div>
-                                        <button type="submit" class="btn btn-primary w-100 mt-3">Login with OTP</button>
+                                        <button type="submit" class="btn btn-primary w-100 mt-3">Validate OTP</button>
                                     </form>
                                 </div>
 
