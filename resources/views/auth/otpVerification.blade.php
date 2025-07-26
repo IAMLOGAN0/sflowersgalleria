@@ -41,7 +41,7 @@
                             <div class="tab-content" id="authTabsContent">
                                 <!-- Login -->
                                 <div class="tab-pane fade show active" id="login" role="tabpanel">
-                                    <form method="POST" action="{{ route('otp.generate') }}">
+                                    <form method="POST" action="{{ route('otp.getlogin') }}">
                                         @csrf
                                         <input type="hidden" name="user_id" value="{{$user_id}}" />
                                         <div class="mb-3">
