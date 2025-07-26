@@ -56,7 +56,7 @@
                                             <label class="form-label">Mobile Number</label>
                                             <div class="input-group">
                                                 <span class="input-group-text bg-light"><i class="fas fa-mobile-alt"></i></span>
-                                                <input type="text" name="mobile_no" class="form-control" placeholder="Enter mobile number" required>
+                                                <input type="text" name="mobile_no" class="form-control @error('mobile_no') is-invalid @enderror" placeholder="Enter mobile number" required>
                                                 @error('mobile_no')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
