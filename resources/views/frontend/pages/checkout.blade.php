@@ -47,7 +47,7 @@
                                 <div class="col-xl-6">
                                     <div class="wsus__checkout_single_address">
                                         <div class="form-check">
-                                            <input class="form-check-input shipping_address" data-id="{{$address->id}}" type="radio" name="flexRadioDefault"
+                                            <input class="form-check-input shipping_address" data-zip="{{$address->zip}}" data-id="{{$address->id}}" type="radio" name="flexRadioDefault"
                                                 id="flexRadioDefault1">
                                             <label class="form-check-label" for="flexRadioDefault1">
                                                 Select Address
@@ -70,7 +70,10 @@
                     </div>
                     <div class="col-xl-4 col-lg-5">
                         <div class="wsus__order_details" id="sticky_sidebar">
-                            <p class="wsus__product">shipping Methods</p>
+                            <p class="wsus__product delivery_time_label" style="display: none">Delivery Time</p>
+                            <span id="delivery_time" style="color: green">Standard delivery: 2-5 business days</span>
+
+                            <p class="wsus__product mt-4">Shipping Methods</p>
                             @foreach ($shippingMethods as $method)
                                 @if ($method->type === 'min_cost' && getCartTotal() >= $method->min_cost)
                                     <div class="form-check">
@@ -173,7 +176,7 @@
 
                                     <div class="col-md-6">
                                         <div class="wsus__check_single_form">
-                                            <input type="text" placeholder="Zip *" name="zip" value="{{old('zip')}}">
+                                            <input id="zipInput" type="text" placeholder="Zip *" name="zip" value="{{old('zip')}}">
                                         </div>
                                     </div>
 
@@ -228,7 +231,29 @@
 
         $('.shipping_address').on('click', function(){
             $('#shipping_address_id').val($(this).data('id'));
-        })
+            let zip = $(this).data('zip');
+
+            // check if shipping method is available for this address
+            $.ajax({
+                url: "{{route('user.check.pincode')}}",
+                method: 'POST',
+                data: {zip: zip},
+                success: function(data){
+                    if(data.status === 'success'){
+                        $('.delivery_time_label').show();
+                        $('#delivery_time').text('Express delivery: '+data.data.b_time);
+                        toastr.success('Delivery is available in your area');
+                    }else{
+                        $('.delivery_time_label').show();
+                        $('#delivery_time').text('Standard delivery: 2-5 business days');
+                        toastr.error('Delivery is not available in your area');
+                    }
+                },
+                error: function(data){
+                    console.log(data);
+                }
+            });
+        });
 
         // submit checkout form
         $('#submitCheckoutForm').on('click', function(e){
@@ -262,7 +287,28 @@
 
 
 
-        })
+        });
+
+        $('#zipInput').on('blur', function(){
+            let zip = $(this).val();
+            $.ajax({
+                url: "{{route('user.check.pincode')}}",
+                method: 'POST',
+                data: {zip: zip},
+                success: function(data){
+                    if(data.status === 'success'){
+                        console.log(data);
+                        toastr.success('Delivery is available in your area');
+                    }else{
+                        toastr.error('Delivery is not available in your area');
+                    }
+                },
+                error: function(data){
+                    console.log(data);
+                }
+            })
+        });
+
     })
 </script>
 @endpush
