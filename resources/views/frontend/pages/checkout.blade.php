@@ -70,7 +70,7 @@
                     </div>
                     <div class="col-xl-4 col-lg-5">
                         <div class="wsus__order_details" id="sticky_sidebar">
-                            <p class="wsus__product delivery_time_label" style="display: none">Delivery Time</p>
+                            <p class="wsus__product delivery_time_label">Delivery Time</p>
                             <span id="delivery_time" style="color: green">Standard delivery: 2-5 business days</span>
 
                             <p class="wsus__product mt-4">Shipping Methods</p>
@@ -240,11 +240,9 @@
                 data: {zip: zip},
                 success: function(data){
                     if(data.status === 'success'){
-                        $('.delivery_time_label').show();
                         $('#delivery_time').text('Express delivery: '+data.data.b_time);
                         toastr.success('Delivery is available in your area');
                     }else{
-                        $('.delivery_time_label').show();
                         $('#delivery_time').text('Standard delivery: 2-5 business days');
                         toastr.error('Delivery is not available in your area');
                     }
