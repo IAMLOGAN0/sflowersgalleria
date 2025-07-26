@@ -57,6 +57,11 @@
                                             <div class="input-group">
                                                 <span class="input-group-text bg-light"><i class="fas fa-mobile-alt"></i></span>
                                                 <input type="text" name="mobile_no" class="form-control" placeholder="Enter mobile number" required>
+                                                @error('mobile_no')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
                                             </div>
                                         </div>
                                         <button type="submit" class="btn btn-primary w-100 mt-3">Login with OTP</button>
