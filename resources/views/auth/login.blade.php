@@ -10,7 +10,7 @@
          BREADCRUMB START
     ==============================-->
     <section id="wsus__breadcrumb">
-        {{-- <div class="wsus_breadcrumb_overlay">
+        <div class="wsus_breadcrumb_overlay">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
@@ -22,7 +22,7 @@
                     </div>
                 </div>
             </div>
-        </div> --}}
+        </div>
     </section>
     <!--============================
         BREADCRUMB END
@@ -32,7 +32,7 @@
     <!--============================
        LOGIN/REGISTER PAGE START
     ==============================-->
-    <section class="py-5 mt-6" style="background: #f5f7fa;">
+    <section class="py-5" style="background: #f5f7fa;">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-6 col-lg-5">
