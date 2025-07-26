@@ -32,102 +32,77 @@
     <!--============================
        LOGIN/REGISTER PAGE START
     ==============================-->
-    <section id="wsus__login_register">
+    <section class="py-5" style="background: #f5f7fa;">
         <div class="container">
-            <div class="row">
-                <div class="col-xl-5 m-auto">
-                    <div class="wsus__login_reg_area">
-                        <ul class="nav nav-pills mb-3" id="pills-tab2" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="pills-home-tab2" data-bs-toggle="pill"
-                                    data-bs-target="#pills-homes" type="button" role="tab" aria-controls="pills-homes"
-                                    aria-selected="true">login</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="pills-profile-tab2" data-bs-toggle="pill"
-                                    data-bs-target="#pills-profiles" type="button" role="tab"
-                                    aria-controls="pills-profiles" aria-selected="true">signup</button>
-                            </li>
-                        </ul>
-                        <div class="tab-content" id="pills-tabContent2">
-                            <div class="tab-pane fade show active" id="pills-homes" role="tabpanel"
-                                aria-labelledby="pills-home-tab2">
-                                <div class="wsus__login">
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-5">
+                    <div class="card shadow-sm border-0 rounded-4">
+                        <div class="card-body p-4">
+                            <ul class="nav nav-tabs mb-4 justify-content-center" id="authTabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active fw-semibold" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab">Login</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link fw-semibold" id="signup-tab" data-bs-toggle="tab" data-bs-target="#signup" type="button" role="tab">Sign Up</button>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content" id="authTabsContent">
+                                <!-- Login -->
+                                <div class="tab-pane fade show active" id="login" role="tabpanel">
                                     <form method="POST" action="{{ route('otp.generate') }}">
                                         @csrf
-                                        <div class="wsus__login_input">
-                                            <i class="fas fa-mobile-alt"></i>
-                                            {{-- <input id="email" type="email" value="{{old('email')}}" name="email" placeholder="Email"> --}}
-                                            <input id="mobile_no" type="text" class="@error('mobile_no') is-invalid @enderror" name="mobile_no" value="{{ old('mobile_no') }}" required autocomplete="mobile_no" autofocus placeholder="Enter Your Registered Mobile Number">
-
-                                            @error('mobile_no')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-
-                                        {{-- <div class="wsus__login_input">
-                                            <i class="fas fa-key"></i>
-                                            <input id="password" type="password" name="password" placeholder="Password">
-                                        </div>
-
-
-                                        <div class="wsus__login_save">
-                                            <div class="form-check form-switch">
-                                                <input id="remember_me" name="remember" class="form-check-input" type="checkbox"
-                                                    id="flexSwitchCheckDefault">
-                                                <label class="form-check-label" for="flexSwitchCheckDefault">Remember
-                                                    me</label>
+                                        <div class="mb-3">
+                                            <label class="form-label">Mobile Number</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-light"><i class="fas fa-mobile-alt"></i></span>
+                                                <input type="text" name="mobile_no" class="form-control" placeholder="Enter mobile number" required>
                                             </div>
-                                            <a class="forget_p" href="{{ route('password.request') }}">forget password ?</a>
-                                        </div> --}}
-
-                                        <button class="common_btn mt-4" type="submit">login</button>
-
-                                        {{-- <p class="social_text">Sign in with social account</p>
-                                        <ul class="wsus__login_link">
-                                            <li><a href="#"><i class="fab fa-google"></i></a></li>
-                                            <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                                            <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                                            <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
-                                        </ul> --}}
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100 mt-3">Login with OTP</button>
                                     </form>
                                 </div>
-                            </div>
-                            <div class="tab-pane fade" id="pills-profiles" role="tabpanel"
-                                aria-labelledby="pills-profile-tab2">
-                                <div class="wsus__login">
+
+                                <!-- Sign Up -->
+                                <div class="tab-pane fade" id="signup" role="tabpanel">
                                     <form method="POST" action="{{ route('register') }}">
                                         @csrf
-                                        <div class="wsus__login_input">
-                                            <i class="fas fa-user-tie"></i>
-                                            <input id="name" name="name" value="{{old('name')}}" type="text" placeholder="Name">
+                                        <div class="mb-3">
+                                            <label class="form-label">Name</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-light"><i class="fas fa-user"></i></span>
+                                                <input type="text" name="name" class="form-control" placeholder="Full Name" required>
+                                            </div>
                                         </div>
-
-
-                                        <div class="wsus__login_input">
-                                            <i class="far fa-envelope"></i>
-                                            <input id="email" type="email" name="email" value="{{old('email')}}" type="text" placeholder="Email">
+                                        <div class="mb-3">
+                                            <label class="form-label">Email</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-light"><i class="fas fa-envelope"></i></span>
+                                                <input type="email" name="email" class="form-control" placeholder="Email Address" required>
+                                            </div>
                                         </div>
-
-                                        <div class="wsus__login_input">
-                                            <i class="fas fa-mobile-alt"></i>
-                                            <input id="mobile_no" type="text" name="mobile_no" value="{{old('mobile_no')}}" placeholder="Mobile No">
+                                        <div class="mb-3">
+                                            <label class="form-label">Mobile No</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-light"><i class="fas fa-mobile-alt"></i></span>
+                                                <input type="text" name="mobile_no" class="form-control" placeholder="Mobile Number" required>
+                                            </div>
                                         </div>
-
-                                        <div class="wsus__login_input">
-                                            <i class="fas fa-key"></i>
-                                            <input id="password" name="password" type="password" placeholder="Password">
+                                        <div class="mb-3">
+                                            <label class="form-label">Password</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-light"><i class="fas fa-lock"></i></span>
+                                                <input type="password" name="password" class="form-control" placeholder="Password" required>
+                                            </div>
                                         </div>
-
-
-                                        <div class="wsus__login_input">
-                                            <i class="fas fa-key"></i>
-                                            <input id="password_confirmation" type="password" name="password_confirmation" placeholder="Confirm Password">
+                                        <div class="mb-3">
+                                            <label class="form-label">Confirm Password</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-light"><i class="fas fa-lock"></i></span>
+                                                <input type="password" name="password_confirmation" class="form-control" placeholder="Confirm Password" required>
+                                            </div>
                                         </div>
-
-                                        <button class="common_btn mt-4" type="submit">signup</button>
+                                        <button type="submit" class="btn btn-success w-100 mt-3">Sign Up</button>
                                     </form>
                                 </div>
                             </div>
@@ -137,6 +112,7 @@
             </div>
         </div>
     </section>
+
     <!--============================
        LOGIN/REGISTER PAGE END
     ==============================-->
