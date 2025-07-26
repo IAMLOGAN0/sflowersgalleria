@@ -266,6 +266,9 @@
                 $.ajax({
                     url: "{{route('user.checkout.form-submit')}}",
                     method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
                     data: $('#checkOutForm').serialize(),
                     beforeSend: function(){
                         $('#submitCheckoutForm').html('<i class="fas fa-spinner fa-spin fa-1x"></i>')
