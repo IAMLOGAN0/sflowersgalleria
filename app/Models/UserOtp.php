@@ -23,11 +23,13 @@ class UserOtp extends Model
      *
      * @return response()
      */
-    public function sendSMS($receiverNumber,Fast2SMSService $smsService)
+
+    public function sendSMS($receiverNumber)
     {
         $message = "Your OTP is $this->otp. Do not share it with anyone.";
 
         try {
+            (new Fast2SMSService())->sendSMS($receiverNumber, $message);
             $smsService->sendSMS($receiverNumber, $message);
             info('SMS Sent Successfully.');
         } catch (Exception $e) {

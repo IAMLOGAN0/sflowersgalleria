@@ -10,7 +10,6 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
-use App\Services\Fast2SMSService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,7 +18,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(Fast2SMSService::class);
+        //
     }
 
     /**

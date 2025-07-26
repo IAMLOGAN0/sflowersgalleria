@@ -17,7 +17,7 @@ class AuthOtpController extends Controller
      */
     public function login()
     {
-        return view('auth.otpLogin');
+        return view('auth.login');
     }
 
     /**

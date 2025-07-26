@@ -53,14 +53,21 @@
                             <div class="tab-pane fade show active" id="pills-homes" role="tabpanel"
                                 aria-labelledby="pills-home-tab2">
                                 <div class="wsus__login">
-                                    <form method="POST" action="{{ route('login') }}">
+                                    <form method="POST" action="{{ route('otp.generate') }}">
                                         @csrf
                                         <div class="wsus__login_input">
-                                            <i class="fas fa-user-tie"></i>
-                                            <input id="email" type="email" value="{{old('email')}}" name="email" placeholder="Email">
+                                            <i class="fas fa-mobile-alt"></i>
+                                            {{-- <input id="email" type="email" value="{{old('email')}}" name="email" placeholder="Email"> --}}
+                                            <input id="mobile_no" type="text" class="@error('mobile_no') is-invalid @enderror" name="mobile_no" value="{{ old('mobile_no') }}" required autocomplete="mobile_no" autofocus placeholder="Enter Your Registered Mobile Number">
+
+                                            @error('mobile_no')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
                                         </div>
 
-                                        <div class="wsus__login_input">
+                                        {{-- <div class="wsus__login_input">
                                             <i class="fas fa-key"></i>
                                             <input id="password" type="password" name="password" placeholder="Password">
                                         </div>
@@ -74,14 +81,10 @@
                                                     me</label>
                                             </div>
                                             <a class="forget_p" href="{{ route('password.request') }}">forget password ?</a>
-                                        </div>
+                                        </div> --}}
 
-                                        <button class="common_btn" type="submit">login</button>
-                                        OR
+                                        <button class="common_btn mt-4" type="submit">login</button>
 
-                                        <a class="btn btn-success" href="{{ route('otp.login') }}">
-                                            Login with OTP
-                                        </a>
                                         {{-- <p class="social_text">Sign in with social account</p>
                                         <ul class="wsus__login_link">
                                             <li><a href="#"><i class="fab fa-google"></i></a></li>
