@@ -24,36 +24,15 @@ class HomepageController extends Controller
     public function getHomepageData(Request $request)
     {
         $sliders = Slider::where('status', 1)->orderBy('serial', 'asc')->get();
-        $flashSaleDate = FlashSale::first();
-
-        $flashSaleItems = FlashSaleItem::where('show_at_home', 1)
-            ->where('status', 1)
-            ->pluck('product_id')
-            ->toArray();
-
-        $flashSaleProducts = Product::whereIn('id', $flashSaleItems)
-            ->withAvg('reviews', 'rating')
-            ->withCount('reviews')
-            ->with(['variants', 'category', 'productImageGalleries'])
-            ->get();
-
-        $brands = Brand::where('status', 1)->where('is_featured', 1)->get();
-        $typeBaseProducts = $this->getTypeBaseProduct(); // make sure this method is public if reused
-        $homepage_secion_banner_one = json_decode(optional(Adverisement::where('key', 'homepage_secion_banner_one')->first())->value);
-        $homepage_secion_banner_two = json_decode(optional(Adverisement::where('key', 'homepage_secion_banner_two')->first())->value);
-        $homepage_secion_banner_three = json_decode(optional(Adverisement::where('key', 'homepage_secion_banner_three')->first())->value);
-        $homepage_secion_banner_four = json_decode(optional(Adverisement::where('key', 'homepage_secion_banner_four')->first())->value);
+        $categories = Category::where('status', 1)->get();
+        $typeBaseProducts = $this->getTypeBaseProduct();
+        $events = Blog::with('category')->where('status', 1)->get()->groupBy('category.name');
 
         return response()->json([
             'sliders' => $sliders,
-            'flashSaleDate' => $flashSaleDate,
-            'flashSaleProducts' => $flashSaleProducts,
-            'brands' => $brands,
+            'categories' => $categories,
             'typeBaseProducts' => $typeBaseProducts,
-            'homepage_secion_banner_one' => $homepage_secion_banner_one,
-            'homepage_secion_banner_two' => $homepage_secion_banner_two,
-            'homepage_secion_banner_three' => $homepage_secion_banner_three,
-            'homepage_secion_banner_four' => $homepage_secion_banner_four,
+            'events' => $events
         ]);
     }
 
