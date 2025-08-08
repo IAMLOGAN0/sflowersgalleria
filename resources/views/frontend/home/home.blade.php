@@ -17,7 +17,7 @@
     <!--============================
         FLASH SELL START
     ==============================-->
-    @include('frontend.home.sections.flash-sale')
+    {{-- @include('frontend.home.sections.flash-sale') --}}
     <!--============================
         FLASH SELL END
     ==============================-->
