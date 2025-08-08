@@ -58,4 +58,27 @@ class HomepageController extends Controller
 
         return $typeBaseProducts;
     }
+
+    public function getAllCategoriesWithSubcategories()
+    {
+        $categories = Category::where('status', 1)->get();
+
+        $data = [];
+        foreach ($categories as $category) {
+            $subCategories = SubCategory::where('category_id', $category->id)->where('status', 1)->get();
+            $data[] = [
+                'category' => $category,
+                'subCategories' => $subCategories
+            ];
+        }
+
+        return response()->json($data);
+    }
+
+    public function getSubcategoriesByCategoryId($id)
+    {
+        $subCategories = SubCategory::where('category_id', $id)->where('status', 1)->get();
+
+        return response()->json($subCategories);
+    }
 }

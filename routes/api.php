@@ -27,3 +27,8 @@ Route::prefix('v1/products')->group(function () {
     Route::get('/search', [ProductController::class, 'searchProducts']);
     Route::get('/{slug}', [ProductController::class, 'getProductDetails']);
 });
+
+Route::prefix('v1/categories')->group(function () {
+    Route::get('/', [HomepageController::class, 'getAllCategoriesWithSubcategories']);
+    Route::get('/{id}/subcategories', [HomepageController::class, 'getSubcategoriesByCategoryId']);
+});
