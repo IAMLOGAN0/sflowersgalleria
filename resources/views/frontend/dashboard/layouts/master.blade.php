@@ -47,6 +47,7 @@
     }
   </script>
     @vite(['resources/js/app.js', 'resources/js/frontend.js'])
+    @stack('styles')
 </head>
 
 <body>

@@ -10,6 +10,33 @@
     {{ $settings->site_name }} || Product
 @endsection
 
+@push('styles')
+<style>
+    /* Mobile Adjustments */
+    @media (max-width: 767px) {
+        .invoice-print {
+            padding: 15px;
+        }
+        .invoice-header {
+            flex-direction: column;
+            align-items: flex-start !important;
+        }
+        .invoice-header .text-end {
+            text-align: left !important;
+            margin-top: 10px;
+        }
+        .invoice-info h6 {
+            margin-top: 15px;
+        }
+        .table-responsive {
+            border: none;
+        }
+        .print_invoice {
+            width: 100%;
+        }
+    }
+</style>
+@endpush
 @section('content')
     <!--=============================
         DASHBOARD START
@@ -24,7 +51,8 @@
                         <h3><i class="far fa-file-invoice"></i> Order Invoice</h3>
 
                         <section class="invoice-print p-4 bg-white shadow rounded">
-                            <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+                            <!-- HEADER -->
+                            <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4 invoice-header">
                                 <div>
                                     <h4 class="mb-0">{{ $settings->site_name }}</h4>
                                     <small class="text-muted">Thank you for your purchase!</small>
@@ -38,8 +66,9 @@
                                 </div>
                             </div>
 
-                            <div class="row mb-4">
-                                <div class="col-md-6">
+                            <!-- BILLING / SHIPPING -->
+                            <div class="row mb-4 invoice-info">
+                                <div class="col-md-6 col-12">
                                     <h6 class="fw-bold mb-2">Billing Information</h6>
                                     <p class="mb-1">{{ $address->name }}</p>
                                     <p class="mb-1">{{ $address->email }}</p>
@@ -47,7 +76,7 @@
                                     <p class="mb-1">{{ $address->address }}, {{ $address->city }}, {{ $address->state }} - {{ $address->zip }}</p>
                                     <p class="mb-0">{{ $address->country }}</p>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 col-12">
                                     <h6 class="fw-bold mb-2">Shipping Information</h6>
                                     <p class="mb-1">{{ $address->name }}</p>
                                     <p class="mb-1">{{ $address->email }}</p>
@@ -57,6 +86,7 @@
                                 </div>
                             </div>
 
+                            <!-- PRODUCT TABLE -->
                             <div class="table-responsive">
                                 <table class="table table-bordered align-middle">
                                     <thead class="table-light">
@@ -88,6 +118,7 @@
                                 </table>
                             </div>
 
+                            <!-- TOTALS -->
                             <div class="d-flex justify-content-end mt-4">
                                 <div style="max-width: 300px;" class="w-100">
                                     <div class="d-flex justify-content-between">
@@ -111,13 +142,14 @@
                             </div>
                         </section>
 
+                        <!-- PRINT BUTTON -->
                         <div class="mt-3 text-end">
                             <button class="btn btn-warning print_invoice"><i class="fas fa-print me-2"></i> Print Invoice</button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </div>  
     </section>
     <!--=============================
         DASHBOARD START
