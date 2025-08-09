@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\EventsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\HomepageController;
@@ -31,4 +32,12 @@ Route::prefix('v1/products')->group(function () {
 Route::prefix('v1/categories')->group(function () {
     Route::get('/', [HomepageController::class, 'getAllCategoriesWithSubcategories']);
     Route::get('/{id}/subcategories', [HomepageController::class, 'getSubcategoriesByCategoryId']);
+});
+
+
+Route::prefix('v1/events')->group(function () {
+    Route::get('/', [EventsController::class, 'getAllEvents']);
+    Route::get('/{categorySlug}', [EventsController::class, 'getEventsByCategorySlug']);
+    Route::get('/{categorySlug}/{eventSlug}', [EventsController::class, 'getEventDetails']);
+    Route::get('/{categorySlug}/{eventSlug}/comments', [EventsController::class, 'getCommentsByEventSlug']);
 });

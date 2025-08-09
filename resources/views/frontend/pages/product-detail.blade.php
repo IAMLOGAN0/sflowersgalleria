@@ -137,11 +137,11 @@
                                     <li><button type="submit" class="add_cart" href="#">add to cart</button></li>
 
 
-                                    <li><a style="border: 1px solid gray;
+                                    {{-- <li><a style="border: 1px solid gray;
                                         padding: 7px 11px;
                                         border-radius: 100%;"
                                             href="javascript:;" class="add_to_wishlist" data-id="{{ $product->id }}"><i
-                                                class="fal fa-heart"></i></a></li>
+                                                class="fal fa-heart"></i></a></li> --}}
 
                                     <li>
                                         <button type="button"
@@ -178,11 +178,11 @@
                                         aria-controls="pills-home" aria-selected="true">Description</button>
                                 </li>
 
-                                <li class="nav-item" role="presentation">
+                                {{-- <li class="nav-item" role="presentation">
                                     <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill"
                                         data-bs-target="#pills-contact" type="button" role="tab"
                                         aria-controls="pills-contact" aria-selected="false">Vendor Info</button>
-                                </li>
+                                </li> --}}
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link" id="pills-contact-tab2" data-bs-toggle="pill"
                                         data-bs-target="#pills-contact2" type="button" role="tab"
@@ -203,7 +203,7 @@
                                     </div>
                                 </div>
 
-                                <div class="tab-pane fade" id="pills-contact" role="tabpanel"
+                                {{-- <div class="tab-pane fade" id="pills-contact" role="tabpanel"
                                     aria-labelledby="pills-contact-tab">
                                     <div class="wsus__pro_det_vendor">
                                         <div class="row">
@@ -246,7 +246,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <div class="tab-pane fade" id="pills-contact2" role="tabpanel"
                                     aria-labelledby="pills-contact-tab2">
                                     <div class="wsus__pro_det_review">

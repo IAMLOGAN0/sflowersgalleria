@@ -4,7 +4,7 @@
       <!-- Main Content -->
         <section class="section">
           <div class="section-header">
-            <h1>Blogs Comments</h1>
+            <h1>Events Comments</h1>
           </div>
 
           <div class="section-body">
@@ -13,7 +13,7 @@
               <div class="col-12">
                 <div class="card">
                   <div class="card-header">
-                    <h4>All Blogs Comments</h4>
+                    <h4>All Events Comments</h4>
 
                   </div>
                   <div class="card-body">

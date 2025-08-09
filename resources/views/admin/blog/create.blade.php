@@ -4,7 +4,7 @@
       <!-- Main Content -->
         <section class="section">
           <div class="section-header">
-            <h1>Blog</h1>
+            <h1>Event</h1>
 
           </div>
 
@@ -14,7 +14,7 @@
               <div class="col-12">
                 <div class="card">
                   <div class="card-header">
-                    <h4>Create Blog</h4>
+                    <h4>Create Event</h4>
                   </div>
                   <div class="card-body">
                     <form action="{{route('admin.blog.store')}}" method="POST" enctype="multipart/form-data">

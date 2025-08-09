@@ -14,10 +14,10 @@
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                        <h4>our latest blogs</h4>
+                        <h4>our latest events</h4>
                         <ul>
                             <li><a href="#">home</a></li>
-                            <li><a href="#">blogs</a></li>
+                            <li><a href="#">events</a></li>
                         </ul>
                     </div>
                 </div>

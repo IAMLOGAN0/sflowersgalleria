@@ -90,8 +90,8 @@ Route::post('contact', [PageController::class, 'handleContactForm'])->name('hand
 Route::get('product-traking', [ProductTrackController::class, 'index'])->name('product-traking.index');
 
 /** blog routes */
-Route::get('blog-details/{slug}', [BlogController::class, 'blogDetails'])->name('blog-details');
-Route::get('blog', [BlogController::class, 'blog'])->name('blog');
+Route::get('event-details/{slug}', [BlogController::class, 'blogDetails'])->name('blog-details');
+Route::get('event', [BlogController::class, 'blog'])->name('blog');
 
 /** Product routes */
 Route::get('show-product-modal/{id}', [HomeController::class, 'ShowProductModal'])->name('show-product-modal');
