@@ -9,7 +9,7 @@
 <!--============================
     PAYMENT SUCCESS START
 ==============================-->
-<section id="wsus__payment_success" class="py-5">
+<section id="wsus__payment_success" class="py-5 mt-2">
     <div class="container">
         <div class="wsus__payment_success_area text-center shadow-sm p-5 rounded" style="background: #fff;">
             <div class="success_icon mb-4">
@@ -33,9 +33,9 @@
                     <li><strong>Status:</strong> <span class="badge bg-success">Paid</span></li>
                 </ul>
             </div>
-            <div class="mt-4">
-                <a href="{{route('home')}}" class="btn btn-success me-2">Continue Shopping</a>
-                <a href="{{route('user.orders.index')}}" class="btn btn-outline-primary">View My Orders</a>
+            <div class="mt-4 d-flex flex-column flex-sm-row justify-content-center gap-2 gap-sm-3">
+                <a href="{{route('home')}}" class="btn btn-success w-100">Continue Shopping</a>
+                <a href="{{route('user.orders.index')}}" class="btn btn-outline-primary w-100">View My Orders</a>
             </div>
         </div>
     </div>
