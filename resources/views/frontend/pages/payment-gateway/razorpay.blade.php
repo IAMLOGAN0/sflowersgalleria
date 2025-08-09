@@ -1,4 +1,4 @@
-<div class="tab-pane fade" id="v-pills-razorpay" role="tabpanel"
+<div class="tab-pane fade show active" id="v-pills-razorpay" role="tabpanel"
 aria-labelledby="v-pills-home-tab">
     <div class="row">
         <div class="col-xl-12 m-auto">
@@ -6,7 +6,7 @@ aria-labelledby="v-pills-home-tab">
                 @php
                     $razorpaySetting = \App\Models\RazorpaySetting::first();
                     $total = getFinalPayableAmount();
-                    $payableAmount = round($total * $razorpaySetting->currency_rate, 2);
+                    $payableAmount = $total;
 
                 @endphp
                 <form action="{{route('user.razorpay.payment')}}" method="POST">
