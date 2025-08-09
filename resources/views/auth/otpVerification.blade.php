@@ -105,7 +105,7 @@
 
                                  <p class="text-center mt-3">
                                     @if (null !== session('otp'))
-                                        <span class="badge bg-primary rounded-pill">{{ session('otp') }}</span>
+                                        Your OTP is <span class="badge bg-primary rounded-pill">{{ session('otp') }}</span>
                                     @endif
                                 </p>
 
