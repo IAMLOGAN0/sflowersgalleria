@@ -36,9 +36,10 @@ class AuthOtpController extends Controller
         $mobile_no = $request->mobile_no;
 
         /* Generate An OTP */
-        $userOtp = new UserOtp();
-        $userOtp = $this->generateOtp($request->mobile_no);
+        $userOtp = $this->generateOtp($mobile_no);
         $userOtp->sendSMS($mobile_no);
+
+        session(['otp' => $userOtp->otp]); // Store OTP in session for testing
 
         return redirect()->route('otp.verification', ['user_id' => $userOtp->user_id])
                          ->with('success', "OTP has been sent on Your Mobile Number.");

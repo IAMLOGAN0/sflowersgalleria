@@ -102,6 +102,13 @@
                                         <button type="submit" class="btn btn-success w-100 mt-3">Sign Up</button>
                                     </form>
                                 </div>
+
+                                 <p class="text-center mt-3">
+                                    @if (null !== session('otp'))
+                                        <span class="badge bg-primary rounded-pill">{{ session('otp') }}</span>
+                                    @endif
+                                </p>
+
                             </div>
                         </div>
                     </div>
