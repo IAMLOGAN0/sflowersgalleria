@@ -30,9 +30,37 @@ class PaymentController extends Controller
         return view('frontend.pages.payment');
     }
 
-    public function paymentSuccess()
+    public function paymentSuccess(Request $request)
     {
-        return view('frontend.pages.payment-success');
+        $orderNumber = session('order_number') ?? $request->query('order') ?? $request->input('order_number');
+
+        $order = null;
+
+        if ($orderNumber) {
+            $order = Order::where('invocie_id', $orderNumber)
+                ->when(Auth::check(), function ($q) {
+                    return $q->where('user_id', Auth::id());
+                })
+                ->first();
+        }
+
+        if (! $order && Auth::check()) {
+            $order = Order::where('user_id', Auth::id())
+                          ->where('payment_status', 1)
+                          ->latest()
+                          ->first();
+        }
+
+        if (! $order) {
+
+            return redirect()->route('home')->with('info', 'Payment completed. Order details not found.');
+        }
+
+
+        // Optionally remove session variable now (so refresh doesn't re-show)
+        session()->forget('order_number');
+
+        return view('frontend.pages.payment-success', compact('order'));
     }
 
     public function storeOrder($paymentMethod, $paymentStatus, $transactionId, $paidAmount, $paidCurrencyName)
@@ -85,6 +113,7 @@ class PaymentController extends Controller
         $transaction->amount_real_currency_name = $paidCurrencyName;
         $transaction->save();
 
+        return $order;
     }
 
     public function clearSession()
@@ -236,7 +265,7 @@ class PaymentController extends Controller
 
        // amount calculation
        $total = getFinalPayableAmount();
-       $payableAmount = round($total * $razorPaySetting->currency_rate, 2);
+       $payableAmount = $total;
        $payableAmountInPaisa = $payableAmount * 100;
 
        if($request->has('razorpay_payment_id') && $request->filled('razorpay_payment_id')){
@@ -250,10 +279,11 @@ class PaymentController extends Controller
 
 
             if($response['status'] == 'captured'){
-                $this->storeOrder('razorpay', 1, $response['id'], $payableAmount, $razorPaySetting->currency_name);
+                $order = $this->storeOrder('razorpay', 1, $response['id'], $payableAmount, $razorPaySetting->currency_name);
                 // clear session
                 $this->clearSession();
 
+                session(['order_number' => $order->invocie_id]);
                 return redirect()->route('user.payment.success');
             }
 
@@ -279,7 +309,7 @@ class PaymentController extends Controller
         $this->clearSession();
 
         return redirect()->route('user.payment.success');
-            
+
 
     }
 
