@@ -20,12 +20,14 @@
                     <form action="{{route('admin.category.store')}}" method="POST">
                         @csrf
                         <div class="form-group">
-                            <label>Icon</label>
-                             <div>
-                                <button class="btn btn-primary" data-icon="" data-selected-class="btn-danger"
-                                data-unselected-class="btn-info" role="iconpicker" name="icon"></button>
-                             </div>
-
+                            <label for="icon-picker">Icon</label>
+                            <div>
+                                <button type="button" class="btn btn-primary icon-picker-btn" id="icon-picker">
+                                    <i class="fas fa-plus me-2"></i>
+                                    <span class="selected-icon-text">Select Icon</span>
+                                </button>
+                                <input type="hidden" name="icon" id="selected-icon" value="">
+                            </div>
                         </div>
                         <div class="form-group">
                             <label>Name</label>
@@ -48,5 +50,4 @@
 
           </div>
         </section>
-
 @endsection
