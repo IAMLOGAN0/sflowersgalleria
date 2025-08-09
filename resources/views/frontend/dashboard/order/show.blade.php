@@ -149,7 +149,7 @@
                     </div>
                 </div>
             </div>
-        </div>  
+        </div>
     </section>
     <!--=============================
         DASHBOARD START
@@ -162,12 +162,33 @@
             let printBody = $('.invoice-print');
             let originalContents = $('body').html();
 
-            $('body').html(printBody.html());
+            $('body').html(printBody.clone());
 
             window.print();
 
             $('body').html(originalContents);
 
+            // Adjust the print settings for mobile
+            if (window.matchMedia("(max-width: 767px)").matches) {
+                let style = document.createElement('style');
+                style.innerHTML = `
+                    @media print {
+                        body * {
+                            visibility: hidden;
+                        }
+                        .invoice-print, .invoice-print * {
+                            visibility: visible;
+                        }
+                        .invoice-print {
+                            width: 100%;
+                            position: absolute;
+                            left: 0;
+                            top: 0;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
         })
     </script>
 @endpush
