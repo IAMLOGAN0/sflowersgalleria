@@ -26,6 +26,7 @@ return new class extends Migration
             $table->text('shpping_method');
             $table->text('coupon');
             $table->string('order_status');
+            $table->integer('delivery_boy_id')->nullable();
             $table->timestamps();
         });
     }

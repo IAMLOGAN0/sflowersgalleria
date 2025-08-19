@@ -106,6 +106,21 @@
                 </ul>
             </li>
 
+            <li
+                class="dropdown {{ setActive([
+                    'admin.locations',
+                    'admin.assign-orders-to-delivery-boy'
+                ]) }}">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-cart-plus"></i>
+                    <span>Manage Delivery</span></a>
+                <ul class="dropdown-menu">
+                    <li class="{{ setActive(['admin.locations']) }}"><a class="nav-link"
+                            href="{{ route('admin.locations') }}">All location</a></li>
+                    <li class="{{ setActive(['admin.assign-orders-to-delivery-boy']) }}"><a class="nav-link"
+                            href="{{ route('admin.assign-orders-to-delivery-boy') }}">Assign Orders</a></li>
+                </ul>
+            </li>
+
             <li class="{{ setActive(['admin.transaction']) }}"><a class="nav-link"
                     href="{{ route('admin.transaction') }}"><i class="fas fa-money-bill-alt"></i>
                     <span>Transactions</span></a>
@@ -240,6 +255,8 @@
                 <ul class="dropdown-menu">
                     <li class="{{ setActive(['admin.customer.index']) }}"><a class="nav-link"
                             href="{{ route('admin.customer.index') }}">Customer list</a></li>
+                    <li class="{{ setActive(['admin.delivery-boy.index']) }}"><a class="nav-link"
+                            href="{{ route('admin.delivery-boy.index') }}">Delivery Boy list</a></li>
                     {{-- <li class="{{ setActive(['admin.vendor-list.index']) }}"><a class="nav-link"
                             href="{{ route('admin.vendor-list.index') }}">Vendor list</a></li> --}}
 

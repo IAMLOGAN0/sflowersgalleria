@@ -39,6 +39,18 @@ class ManageUserController extends Controller
 
             toastr('Created Successfully!', 'success', 'success');
             return redirect()->back();
+        }if($request->role === 'delivery-boy'){
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = bcrypt($request->password);
+            $user->role = 'delivery-boy';
+            $user->status = 'active';
+            $user->save();
+
+            Mail::to($request->email)->send(new AccountCreatedMail($request->name, $request->email, $request->password));
+
+            toastr('Created Successfully!', 'success', 'success');
+            return redirect()->back();
         }elseif ($request->role === 'vendor'){
             $user->name = $request->name;
             $user->email = $request->email;

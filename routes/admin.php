@@ -17,6 +17,8 @@ use App\Http\Controllers\Backend\ChildCategoryController;
 use App\Http\Controllers\Backend\CodSettingController;
 use App\Http\Controllers\Backend\CouponController;
 use App\Http\Controllers\Backend\CustomerListController;
+use App\Http\Controllers\Backend\DeliveryBoyListController;
+use App\Http\Controllers\Backend\DeliveryController;
 use App\Http\Controllers\Backend\FlashSaleController;
 use App\Http\Controllers\Backend\FooterGridThreeController;
 use App\Http\Controllers\Backend\FooterGridTwoController;
@@ -149,6 +151,21 @@ Route::get('delivered-orders', [OrderController::class, 'deliveredOrders'])->nam
 Route::get('canceled-orders', [OrderController::class, 'canceledOrders'])->name('canceled-orders');
 Route::resource('order', OrderController::class);
 
+
+//** Delivery route */
+Route::get('all-delivery-location', [DeliveryController::class, 'allDeliveryLocation'])->name('locations');
+Route::get('edit-delivery-location/{id}', [DeliveryController::class, 'editDeliveryLocation'])->name('locations.edit');
+Route::delete('delete-delivery-location/{id}', [DeliveryController::class, 'deleteDeliveryLocation'])->name('locations.destroy');
+Route::get('create-delivery-location', [DeliveryController::class, 'createDeliveryLocation'])->name('locations.create');
+Route::post('store-delivery-location', [DeliveryController::class, 'storeDeliveryLocation'])->name('locations.store');
+Route::post('update-delivery-location/{id}', [DeliveryController::class, 'updateDeliveryLocation'])->name('locations.update');
+
+Route::get('assign-orders-to-delivery-boy', [DeliveryController::class, 'assignOrdersToDeliveryBoy'])->name('assign-orders-to-delivery-boy');
+Route::post('assign-orders-to-delivery-boy/store', [DeliveryController::class, 'storeAssignedOrders'])->name('assign-orders.store');
+
+
+
+
 /** Order Transaction route */
 Route::get('transaction', [TransactionController::class, 'index'])->name('transaction');
 
@@ -225,6 +242,9 @@ Route::delete('admin-list/{id}', [AdminListController::class, 'destory'])->name(
 /** manage user routes */
 Route::get('manage-user', [ManageUserController::class, 'index'])->name('manage-user.index');
 Route::post('manage-user', [ManageUserController::class, 'create'])->name('manage-user.create');
+
+Route::get('delivery-boy-list', [DeliveryBoyListController::class, 'index'])->name('delivery-boy.index');
+Route::put('delivery-boy-list/status-change', [VendorListController::class, 'changeStatus'])->name('delivery-boy-list.status-change');
 
 Route::get('vendor-list', [VendorListController::class, 'index'])->name('vendor-list.index');
 Route::put('vendor-list/status-change', [VendorListController::class, 'changeStatus'])->name('vendor-list.status-change');

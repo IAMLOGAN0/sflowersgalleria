@@ -12,6 +12,7 @@ use App\Models\ChildCategory;
 use App\Models\FlashSale;
 use App\Models\FlashSaleItem;
 use App\Models\HomePageSetting;
+use App\Models\Location;
 use App\Models\Product;
 use App\Models\Slider;
 use App\Models\SubCategory;
@@ -80,5 +81,11 @@ class HomepageController extends Controller
         $subCategories = SubCategory::where('category_id', $id)->where('status', 1)->get();
 
         return response()->json($subCategories);
+    }
+
+    public function getDeliveryLocations()
+    {
+        $deliveryLocations = Location::all();
+        return response()->json($deliveryLocations);
     }
 }

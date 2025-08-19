@@ -1,10 +1,13 @@
 <?php
 
+use App\Http\Controllers\Api\V1\DeliveryBoyController;
 use App\Http\Controllers\Api\V1\EventsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\HomepageController;
 use App\Http\Controllers\Api\V1\ProductController;
+use App\Http\Controllers\Backend\DeliveryController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -40,4 +43,14 @@ Route::prefix('v1/events')->group(function () {
     Route::get('/{categorySlug}', [EventsController::class, 'getEventsByCategorySlug']);
     Route::get('/{categorySlug}/{eventSlug}', [EventsController::class, 'getEventDetails']);
     Route::get('/{categorySlug}/{eventSlug}/comments', [EventsController::class, 'getCommentsByEventSlug']);
+});
+
+
+Route::prefix('v1/delivery-boy')->group(function () {
+    Route::post('order-status', [DeliveryBoyController::class, 'changeOrderStatus']);
+    Route::post('orders', [DeliveryBoyController::class, 'getOrders']);
+});
+
+Route::prefix('v1/delivery')->group(function () {
+    Route::get('locations', [HomepageController::class, 'getDeliveryLocations']);
 });

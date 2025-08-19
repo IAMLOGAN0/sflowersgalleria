@@ -49,7 +49,7 @@
                             <select id="inputState" class="form-control" name="role">
                                 <option value="">Select</option>
                               <option value="user">User</option>
-                              <option value="vendor">Vendor</option>
+                              <option value="delivery-boy">Delivery Boy</option>
                               <option value="admin">Admin</option>
 
                             </select>
