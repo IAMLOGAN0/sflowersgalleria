@@ -40,6 +40,7 @@ Route::prefix('v1/categories')->group(function () {
 
 Route::prefix('v1/events')->group(function () {
     Route::get('/', [EventsController::class, 'getAllEvents']);
+    Route::get('/categories', [EventsController::class, 'getAllCategories']);
     Route::get('/{categorySlug}', [EventsController::class, 'getEventsByCategorySlug']);
     Route::get('/{categorySlug}/{eventSlug}', [EventsController::class, 'getEventDetails']);
     Route::get('/{categorySlug}/{eventSlug}/comments', [EventsController::class, 'getCommentsByEventSlug']);

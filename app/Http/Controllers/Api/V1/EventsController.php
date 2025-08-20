@@ -26,6 +26,20 @@ class EventsController extends Controller
     }
 
     /**
+     * GET /v1/events/categories
+     * Fetch all categories
+     */
+    public function getAllCategories()
+    {
+        $categories = BlogCategory::all();
+
+        return response()->json([
+            'status' => true,
+            'data' => $categories
+        ]);
+    }
+
+    /**
      * GET /v1/events/{categorySlug}
      * Fetch events by category slug
      */
