@@ -201,6 +201,11 @@
 <script>
 $(document).ready(function () {
     const icons = [
+    'fas fa-birthday-cake',
+    'fas fa-seedling',
+    'fas fa-gift',
+    'fas fa-spa',
+    'fas fa-pagelines',
 	'fas fa-ad',
 	'fas fa-address-book',
 	'fas fa-address-card',
