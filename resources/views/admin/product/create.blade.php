@@ -30,7 +30,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="inputState">Category</label>
                                     <select id="inputState" class="form-control main-category" name="category">
@@ -41,7 +41,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="inputState">Sub Category</label>
                                     <select id="inputState" class="form-control sub-category" name="sub_category">
@@ -50,7 +50,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4" style="display: none">
                                 <div class="form-group">
                                     <label for="inputState">Child Category</label>
                                     <select id="inputState" class="form-control child-category" name="child_category">
@@ -189,6 +189,7 @@
 
 
             /** get child categories **/
+            /**
             $('body').on('change', '.sub-category', function(e){
                 let id = $(this).val();
                 $.ajax({
@@ -209,6 +210,7 @@
                     }
                 })
             })
+            **/
         })
     </script>
 @endpush

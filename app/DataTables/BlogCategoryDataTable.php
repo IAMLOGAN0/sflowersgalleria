@@ -28,6 +28,9 @@ class BlogCategoryDataTable extends DataTable
 
                 return $editBtn.$deleteBtn;
             })
+            ->addColumn('image', function($query){
+                return "<img width='40px' src='".asset($query->image)."' ></img>";
+            })
             ->addColumn('status', function($query){
                 if($query->status == 1){
                     $button = '<label class="custom-switch mt-2">
@@ -42,7 +45,7 @@ class BlogCategoryDataTable extends DataTable
                 }
                 return $button;
             })
-            ->rawColumns(['action', 'status'])
+            ->rawColumns(['action', 'image', 'status'])
             ->setRowId('id');
     }
 
@@ -84,6 +87,11 @@ class BlogCategoryDataTable extends DataTable
         return [
 
             Column::make('id'),
+            Column::make('image')
+            ->exportable(false)
+            ->printable(false)
+            ->width(120)
+            ->addClass('text-center'),
             Column::make('name'),
             Column::make('slug'),
             Column::make('status'),

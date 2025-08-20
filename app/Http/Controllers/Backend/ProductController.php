@@ -68,7 +68,7 @@ class ProductController extends Controller
         $product->vendor_id = Auth::user()->vendor->id;
         $product->category_id = $request->category;
         $product->sub_category_id = $request->sub_category;
-        $product->child_category_id = $request->child_category;
+        // $product->child_category_id = $request->child_category;
         $product->brand_id = $request->brand;
         $product->qty = $request->qty;
         $product->short_description = $request->short_description;
@@ -142,7 +142,7 @@ class ProductController extends Controller
         $product->slug = Str::slug($request->name);
         $product->category_id = $request->category;
         $product->sub_category_id = $request->sub_category;
-        $product->child_category_id = $request->child_category;
+        // $product->child_category_id = $request->child_category;
         $product->brand_id = $request->brand;
         $product->qty = $request->qty;
         $product->short_description = $request->short_description;

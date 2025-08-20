@@ -6,10 +6,12 @@ use App\DataTables\BlogCategoryDataTable;
 use App\Http\Controllers\Controller;
 use App\Models\BlogCategory;
 use Illuminate\Http\Request;
+use App\Traits\ImageUploadTrait;
 use Str;
 
 class BlogCategoryController extends Controller
 {
+    use ImageUploadTrait;
     /**
      * Display a listing of the resource.
      */
@@ -37,8 +39,11 @@ class BlogCategoryController extends Controller
             'name.unique' => 'Category already exist!'
         ]);
 
+        $imagePath = $this->uploadImage($request, 'image', 'uploads/subcategory');
+
         $category = new BlogCategory();
         $category->name = $request->name;
+        $category->image = $imagePath;
         $category->slug = Str::slug($request->name);
         $category->status = $request->status;
         $category->save();
@@ -73,6 +78,10 @@ class BlogCategoryController extends Controller
         $category->name = $request->name;
         $category->slug = Str::slug($request->name);
         $category->status = $request->status;
+        if ($request->hasFile('image')) {
+            $imagePath = $this->updateImage($request, 'image', 'uploads/subcategory', $category->image);
+            $category->image = $imagePath;
+        }
         $category->save();
 
         toastr('Updated Successfully!', 'success', 'success');
@@ -86,6 +95,7 @@ class BlogCategoryController extends Controller
     public function destroy(string $id)
     {
         $category = BlogCategory::findOrFail($id);
+        $this->deleteImage($category->image);
         $category->delete();
 
         return response(['status' => 'success', 'message' => 'Deleted successfully!']);
