@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Adverisement;
 use App\Models\Blog;
+use App\Models\BlogCategory;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\ChildCategory;
@@ -28,12 +29,13 @@ class HomepageController extends Controller
         $categories = Category::where('status', 1)->get();
         $typeBaseProducts = $this->getTypeBaseProduct();
         $events = Blog::with('category')->where('status', 1)->get()->groupBy('category.name');
-
+        $event_category = BlogCategory::where('status', 1)->get();
         return response()->json([
             'sliders' => $sliders,
             'categories' => $categories,
             'typeBaseProducts' => $typeBaseProducts,
-            'events' => $events
+            'events' => $events,
+            'event_categories' => $event_category
         ]);
     }
 
