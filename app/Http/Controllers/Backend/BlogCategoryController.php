@@ -39,7 +39,7 @@ class BlogCategoryController extends Controller
             'name.unique' => 'Category already exist!'
         ]);
 
-        $imagePath = $this->uploadImage($request, 'image', 'uploads/subcategory');
+        $imagePath = $this->uploadImage($request, 'image', 'uploads/blog-category');
 
         $category = new BlogCategory();
         $category->name = $request->name;
@@ -79,7 +79,7 @@ class BlogCategoryController extends Controller
         $category->slug = Str::slug($request->name);
         $category->status = $request->status;
         if ($request->hasFile('image')) {
-            $imagePath = $this->updateImage($request, 'image', 'uploads/subcategory', $category->image);
+            $imagePath = $this->updateImage($request, 'image', 'uploads/blog-category', $category->image);
             $category->image = $imagePath;
         }
         $category->save();

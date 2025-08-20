@@ -17,12 +17,16 @@
 
                   </div>
                   <div class="card-body">
-                    <form action="{{route('admin.blog-category.update', $category->id)}}" method="POST">
+                    <form action="{{route('admin.blog-category.update', $category->id)}}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div class="form-group">
                             <label>Name</label>
                             <input type="text" class="form-control" name="name" value="{{$category->name}}">
+                        </div>
+                        <div class="form-group">
+                            <label>Category Image</label>
+                            <input type="file" class="form-control" name="image" value="">
                         </div>
                         <div class="form-group">
                             <label for="inputState">Status</label>
