@@ -50,6 +50,36 @@
                         </div>
 
                         <div class="form-group">
+                            <label>Featured Images</label>
+                            <input type="file" class="form-control" name="featured_images[]" multiple>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Existing Featured Images</label>
+                            <br>
+                            @if (!empty(json_decode($blog->featured_images)))
+                                @foreach (json_decode($blog->featured_images) as $image)
+                                    <a href="{{asset($image)}}" target="_blank"><img src="{{asset($image)}}" width="50px" alt=""></a>
+                                    @endforeach
+                            @endif
+                        </div>
+
+                        <div class="form-group">
+                            <label>Event Images</label>
+                            <input type="file" class="form-control" name="event_images[]" multiple>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Existing Event Images</label>
+                            <br>
+                            @if (!empty(json_decode($blog->event_images)))
+                                @foreach (json_decode($blog->event_images) as $image)
+                                    <a href="{{asset($image)}}" target="_blank"><img src="{{asset($image)}}" width="50px" alt=""></a>
+                                    @endforeach
+                            @endif
+                        </div>
+
+                        <div class="form-group">
                             <label>Seo Title</label>
                             <input type="text" class="form-control" name="seo_title" value="{{$blog->seo_title}}">
                         </div>

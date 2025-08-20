@@ -46,6 +46,9 @@ class BlogController extends Controller
         ]);
 
         $imagePath = $this->uploadImage($request, 'image', 'uploads');
+        $featuredImagesPath = $this->uploadMultiImage($request, 'featured_images', 'uploads/blog/featured_images');
+        $eventImagesPath = $this->uploadMultiImage($request, 'event_images', 'uploads/blog/event_images');
+
 
         $blog = new Blog();
         $blog->image = $imagePath;
@@ -58,6 +61,9 @@ class BlogController extends Controller
         $blog->seo_title = $request->seo_title;
         $blog->seo_description = $request->seo_description;
         $blog->status = $request->status;
+
+        $blog->featured_images = json_encode($featuredImagesPath);
+        $blog->event_images = json_encode($eventImagesPath);
 
         $blog->save();
 
@@ -96,10 +102,15 @@ class BlogController extends Controller
         $blog = Blog::findOrFail($id);
 
         $imagePath = $this->updateImage($request, 'image', 'uploads', $blog->image);
+        $featuredImagesPath = $this->uploadMultiImage($request, 'featured_images', 'uploads/blog/featured_images');
+        $eventImagesPath = $this->uploadMultiImage($request, 'event_images', 'uploads/blog/event_images');
 
         $blog->image = !empty($imagePath) ? $imagePath : $blog->image;
         $blog->title = $request->title;
         $blog->slug = Str::slug($request->title);
+
+        $blog->featured_images = !empty($featuredImagesPath) ? json_encode($featuredImagesPath) : $blog->featured_images;
+        $blog->event_images = !empty($eventImagesPath) ? json_encode($eventImagesPath) : $blog->event_images;
 
         $blog->category_id = $request->category;
         $blog->user_id = Auth::user()->id;

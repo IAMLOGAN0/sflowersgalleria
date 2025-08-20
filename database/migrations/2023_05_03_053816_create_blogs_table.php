@@ -16,6 +16,8 @@ return new class extends Migration
             $table->integer('user_id');
             $table->integer('category_id');
             $table->text('image');
+            $table->text('featured_images')->nullable();
+            $table->text('event_images')->nullable();
             $table->string('title');
             $table->string('slug');
             $table->text('description');

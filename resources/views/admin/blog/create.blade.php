@@ -46,6 +46,15 @@
                             <textarea name="description" class="form-control summernote"></textarea>
                         </div>
 
+                        <div class="form-group">
+                            <label>Featured Images</label>
+                            <input type="file" class="form-control" name="featured_images[]" multiple>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Event Images</label>
+                            <input type="file" class="form-control" name="event_images[]" multiple>
+                        </div>
 
 
                         <div class="form-group">
