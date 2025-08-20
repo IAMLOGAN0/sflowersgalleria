@@ -40,7 +40,6 @@ class BlogCategoryController extends Controller
         ]);
 
         $imagePath = $this->uploadImage($request, 'image', 'uploads/blog-category');
-
         $category = new BlogCategory();
         $category->name = $request->name;
         $category->image = $imagePath;
