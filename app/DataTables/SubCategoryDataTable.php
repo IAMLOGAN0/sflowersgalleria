@@ -31,6 +31,9 @@ class SubCategoryDataTable extends DataTable
             ->addColumn('category', function($query){
                 return $query->category->name;
             })
+             ->addColumn('image', function($query){
+                return "<img width='40px' src='$query->image' ></img>";
+            })
             ->addColumn('status', function($query){
                 if($query->status == 1){
                     $button = '<label class="custom-switch mt-2">
@@ -45,7 +48,7 @@ class SubCategoryDataTable extends DataTable
                 }
                 return $button;
             })
-            ->rawColumns(['status', 'action'])
+            ->rawColumns(['status','image','action'])
             ->setRowId('id');
     }
 
@@ -87,6 +90,7 @@ class SubCategoryDataTable extends DataTable
         return [
             Column::make('id'),
             Column::make('name'),
+            Column::make('image')->width(300),
             Column::make('slug'),
             Column::make('category'),
             Column::make('status'),

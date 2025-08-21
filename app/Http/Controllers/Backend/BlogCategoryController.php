@@ -94,7 +94,9 @@ class BlogCategoryController extends Controller
     public function destroy(string $id)
     {
         $category = BlogCategory::findOrFail($id);
-        $this->deleteImage($category->image);
+        if(!empty($category->image)){
+            $this->deleteImage($category->image);
+        }
         $category->delete();
 
         return response(['status' => 'success', 'message' => 'Deleted successfully!']);

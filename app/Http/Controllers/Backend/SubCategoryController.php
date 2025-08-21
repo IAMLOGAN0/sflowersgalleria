@@ -8,10 +8,12 @@ use App\Models\Category;
 use App\Models\ChildCategory;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
+use App\Traits\ImageUploadTrait;
 use Str;
 
 class SubCategoryController extends Controller
 {
+    use ImageUploadTrait;
     /**
      * Display a listing of the resource.
      */
@@ -40,10 +42,12 @@ class SubCategoryController extends Controller
             'status' => ['required']
         ]);
 
+        $imagePath = $this->uploadImage($request, 'image', 'uploads/sub-category');
         $subCategory = new SubCategory();
 
         $subCategory->category_id = $request->category;
         $subCategory->name = $request->name;
+        $subCategory->image = $imagePath;
         $subCategory->slug = Str::slug($request->name);
         $subCategory->status = $request->status;
         $subCategory->save();
@@ -87,6 +91,10 @@ class SubCategoryController extends Controller
 
         $subCategory->category_id = $request->category;
         $subCategory->name = $request->name;
+        if ($request->hasFile('image')) {
+            $imagePath = $this->updateImage($request, 'image', 'uploads/sub-category', $subCategory->image);
+            $subCategory->image = $imagePath;
+        }
         $subCategory->slug = Str::slug($request->name);
         $subCategory->status = $request->status;
         $subCategory->save();
@@ -108,6 +116,10 @@ class SubCategoryController extends Controller
             return response(['status' => 'error', 'message' => 'This items contain, sub items for delete this you have to delete the sub items first!']);
         }
         $subCategory->delete();
+
+        if(!empty($subCategory->image)){
+            $this->deleteImage($subCategory->image);
+        }
 
         return response(['status' => 'success', 'message' => 'Deleted Successfully!']);
     }

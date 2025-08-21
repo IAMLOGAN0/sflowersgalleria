@@ -17,7 +17,7 @@
 
                   </div>
                   <div class="card-body">
-                    <form action="{{route('admin.category.update', $category->id)}}" method="POST">
+                    <form action="{{route('admin.category.update', $category->id)}}" method="POST" enctype="multipart/form-data"    >
                         @csrf
                         @method('PUT')
                         <div class="form-group">
@@ -29,6 +29,10 @@
                                 </button>
                                 <input type="hidden" name="icon" id="selected-icon" value="">
                             </div>
+                        </div>  
+                        <div class="form-group">
+                            <label>Image</label>
+                            <input type="file" class="form-control" name="image" value="">
                         </div>
                         <div class="form-group">
                             <label>Name</label>

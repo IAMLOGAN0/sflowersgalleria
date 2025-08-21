@@ -7,10 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
+use App\Traits\ImageUploadTrait;
 use Str;
 
 class CategoryController extends Controller
 {
+    use ImageUploadTrait;
     /**
      * Display a listing of the resource.
      */
@@ -38,10 +40,11 @@ class CategoryController extends Controller
             'status' => ['required']
         ]);
 
+        $imagePath = $this->uploadImage($request, 'image', 'uploads/category');
         $category = new Category();
-
         $category->icon = $request->icon;
         $category->name = $request->name;
+        $category->image = $imagePath;
         $category->slug = Str::slug($request->name);
         $category->status = $request->status;
         $category->save();
@@ -80,9 +83,12 @@ class CategoryController extends Controller
         ]);
 
         $category = Category::findOrFail($id);
-
         $category->icon = $request->icon;
         $category->name = $request->name;
+        if ($request->hasFile('image')) {
+            $imagePath = $this->updateImage($request, 'image', 'uploads/category', $category->image);
+            $category->image = $imagePath;
+        }
         $category->slug = Str::slug($request->name);
         $category->status = $request->status;
         $category->save();
@@ -99,6 +105,15 @@ class CategoryController extends Controller
     {
         $category = Category::findOrFail($id);
         $subCategory = SubCategory::where('category_id', $category->id)->count();
+
+        if(!empty($category->image)){
+            $this->deleteImage($category->image);
+        }
+
+        if(!empty($subCategory->image)){
+            $this->deleteImage($subCategory->image);
+        }
+
         if($subCategory > 0){
             return response(['status' => 'error', 'message' => 'This items contain, sub items for delete this you have to delete the sub items first!']);
         }
