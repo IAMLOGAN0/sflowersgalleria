@@ -68,4 +68,26 @@ class ProductController extends Controller
             'data' => $products
         ]);
     }
+
+    public function getProductsByCategory($categoryId)
+    {
+        $products = Product::where('category_id', $categoryId)
+            ->with('category.subCategories')
+            ->get();
+        return response()->json([
+            'success' => true,
+            'data' => $products
+        ]);
+    }
+
+    public function getProductsBySubcategory($subcategoryId)
+    {
+        $products = Product::where('sub_category_id', $subcategoryId)
+            ->with('category.subCategories')
+            ->get();
+        return response()->json([
+            'success' => true,
+            'data' => $products
+        ]);
+    }
 }
