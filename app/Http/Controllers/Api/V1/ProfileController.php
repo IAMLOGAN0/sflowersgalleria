@@ -28,7 +28,7 @@ class ProfileController extends Controller
     public function updateProfile(Request $request)
     {
         $user = $request->user();
-        dd($request->all());
+
         $validator = Validator::make($request->all(), [
             'name' => 'sometimes|string|max:255',
             'email' => 'sometimes|email|unique:users,email,' . $user->id,

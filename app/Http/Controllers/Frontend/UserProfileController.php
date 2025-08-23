@@ -17,7 +17,6 @@ class UserProfileController extends Controller
 
     public function updateProfile(Request $request)
     {
-        dd($request->all());
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'max:100'],
             'email' => ['required', 'email', 'unique:users,email,'.Auth::user()->id],
