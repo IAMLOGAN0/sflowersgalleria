@@ -20,12 +20,29 @@ class LocationDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->addColumn('action', function ($query) {
-                $editBtn = "<a href='" . route('admin.locations.edit', $query->id) . "' class='btn btn-primary btn-sm'><i class='far fa-edit'></i></a>";
-                $deleteBtn = "<a href='" . route('admin.locations.destroy', $query->id) . "' class='btn btn-danger btn-sm ml-1 delete-item'><i class='far fa-trash-alt'></i></a>";
+            ->editColumn('t_time', function ($location) {
+                $slots = json_decode($location->t_time, true);
+                if (!empty($slots)) {
+                    return collect($slots)->map(function ($slot) {
+                        return "<span class='badge badge-info mr-1'>{$slot}</span>";
+                    })->implode(' ');
+                }
+                return '-';
+            })
+            ->addColumn('action', function ($location) {
+                $editBtn = "<a href='" . route('admin.locations.edit', $location->id) . "'
+                               class='btn btn-primary btn-sm'>
+                               <i class='far fa-edit'></i>
+                            </a>";
+
+                $deleteBtn = "<a href='" . route('admin.locations.destroy', $location->id) . "'
+                                 class='btn btn-danger btn-sm ml-1 delete-item'>
+                                 <i class='far fa-trash-alt'></i>
+                              </a>";
+
                 return $editBtn . $deleteBtn;
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['t_time', 'action'])
             ->setRowId('id');
     }
 
@@ -68,7 +85,7 @@ class LocationDataTable extends DataTable
             Column::make('sector')->title('Sector'),
             Column::make('pin')->title('PIN'),
             Column::make('b_time')->title('Booking Time'),
-            Column::make('t_time')->title('Timing'),
+            Column::make('t_time')->title('Time Slots'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)

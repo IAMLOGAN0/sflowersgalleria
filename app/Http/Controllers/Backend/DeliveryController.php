@@ -27,18 +27,21 @@ class DeliveryController extends Controller
             'sector'   => 'required|string|max:255',
             'pin'      => 'required|string|max:20',
             'b_time'   => 'nullable|string|max:255',
-            't_time'   => 'nullable|string|max:255',
+            't_time'   => 'nullable|array',
+            't_time.*' => 'nullable|string|max:255',
         ]);
 
         Location::create([
             'sector' => $request->sector,
             'pin'    => $request->pin,
             'b_time' => $request->b_time,
-            't_time' => $request->t_time,
+            't_time' => json_encode($request->t_time), // store as JSON
         ]);
 
-        return redirect()->route('admin.locations')->with('success', 'Delivery location created successfully!');
+        return redirect()->route('admin.locations')
+            ->with('success', 'Delivery location created successfully!');
     }
+
 
     public function editDeliveryLocation($id)
     {
@@ -49,18 +52,26 @@ class DeliveryController extends Controller
     public function updateDeliveryLocation(Request $request, $id)
     {
         $request->validate([
-            'sector' => 'required|string|max:255',
-            'pin'    => 'required|string|max:20',
-            'b_time' => 'nullable|string|max:100',
-            't_time' => 'nullable|string|max:100',
+            'sector'   => 'required|string|max:255',
+            'pin'      => 'required|string|max:20',
+            'b_time'   => 'nullable|string|max:100',
+            't_time'   => 'nullable|array',
+            't_time.*' => 'nullable|string|max:255',
         ]);
 
         $location = Location::findOrFail($id);
-        $location->update($request->only('sector', 'pin', 'b_time', 't_time'));
+
+        $location->update([
+            'sector' => $request->sector,
+            'pin'    => $request->pin,
+            'b_time' => $request->b_time,
+            't_time' => $request->t_time ? json_encode($request->t_time) : null,
+        ]);
 
         return redirect()->route('admin.locations')
             ->with('success', 'Delivery Location updated successfully.');
     }
+
 
     /**
      * Delete location.

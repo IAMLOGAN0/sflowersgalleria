@@ -19,11 +19,13 @@
                         <div class="card-body">
                             <form action="{{ route('admin.locations.update', $location->id) }}" method="POST">
                                 @csrf
+
                                 {{-- sector --}}
                                 <div class="form-group">
                                     <label for="sector">Sector Name <span class="text-danger">*</span></label>
-                                    <input type="text" id="sector" name="sector" class="form-control @error('sector') is-invalid @enderror"
-                                        value="{{ old('sector', $location->sector) }}" required>
+                                    <input type="text" id="sector" name="sector"
+                                           class="form-control @error('sector') is-invalid @enderror"
+                                           value="{{ old('sector', $location->sector) }}" required>
                                     @error('sector')
                                         <span class="invalid-feedback">{{ $message }}</span>
                                     @enderror
@@ -32,8 +34,9 @@
                                 {{-- pin --}}
                                 <div class="form-group">
                                     <label for="pin">Pincode <span class="text-danger">*</span></label>
-                                    <input type="text" id="pin" name="pin" class="form-control @error('pin') is-invalid @enderror"
-                                        value="{{ old('pin', $location->pin) }}" required>
+                                    <input type="text" id="pin" name="pin"
+                                           class="form-control @error('pin') is-invalid @enderror"
+                                           value="{{ old('pin', $location->pin) }}" required>
                                     @error('pin')
                                         <span class="invalid-feedback">{{ $message }}</span>
                                     @enderror
@@ -43,14 +46,37 @@
                                 <div class="form-group">
                                     <label for="b_time">Booking Time</label>
                                     <input type="text" id="b_time" name="b_time" class="form-control"
-                                        value="{{ old('b_time', $location->b_time) }}">
+                                           value="{{ old('b_time', $location->b_time) }}">
                                 </div>
 
-                                {{-- transit time --}}
+                                {{-- time slots --}}
                                 <div class="form-group">
-                                    <label for="t_time">Transit Time</label>
-                                    <input type="text" id="t_time" name="t_time" class="form-control"
-                                        value="{{ old('t_time', $location->t_time) }}">
+                                    <label>Time Slots</label>
+                                    <div id="time-slots">
+                                        @php
+                                            $timeSlots = old('t_time', json_decode($location->t_time, true) ?? []);
+                                        @endphp
+
+                                        @if(!empty($timeSlots))
+                                            @foreach($timeSlots as $slot)
+                                                <div class="input-group mb-2">
+                                                    <input type="text" class="form-control" name="t_time[]" value="{{ $slot }}" placeholder="e.g. 9:00pm-10:00pm">
+                                                    <div class="input-group-append">
+                                                        <button type="button" class="btn btn-danger remove-slot">-</button>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        @else
+                                            <div class="input-group mb-2">
+                                                <input type="text" class="form-control" name="t_time[]" placeholder="e.g. 9:00pm-10:00pm">
+                                                <div class="input-group-append">
+                                                    <button type="button" class="btn btn-success add-slot">+</button>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
+
+                                    <button type="button" class="btn btn-sm btn-success mt-2 add-slot">+ Add Slot</button>
                                 </div>
 
                                 <div class="form-group mt-3">
@@ -67,3 +93,25 @@
         </div>
     </section>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('add-slot')) {
+            let slotDiv = document.createElement('div');
+            slotDiv.classList.add('input-group', 'mb-2');
+            slotDiv.innerHTML = `
+                <input type="text" class="form-control" name="t_time[]" placeholder="e.g. 11:00pm-12:00pm">
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-danger remove-slot">-</button>
+                </div>
+            `;
+            document.getElementById('time-slots').appendChild(slotDiv);
+        }
+
+        if (e.target.classList.contains('remove-slot')) {
+            e.target.closest('.input-group').remove();
+        }
+    });
+</script>
+@endpush

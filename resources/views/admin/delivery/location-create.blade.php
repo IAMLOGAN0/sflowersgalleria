@@ -34,8 +34,15 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Time Slot</label>
-                                    <input type="text" class="form-control" name="t_time" value="{{ old('t_time') }}">
+                                    <label>Time Slots</label>
+                                    <div id="time-slots">
+                                        <div class="input-group mb-2">
+                                            <input type="text" class="form-control" name="t_time[]" placeholder="e.g. 9:00pm-10:00pm">
+                                            <div class="input-group-append">
+                                                <button type="button" class="btn btn-success add-slot">+</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <button type="submit" class="btn btn-primary">Create</button>
@@ -47,3 +54,26 @@
         </div>
     </section>
 @endsection
+@push('scripts')
+<script>
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('add-slot')) {
+            let slotDiv = document.createElement('div');
+            slotDiv.classList.add('input-group', 'mb-2');
+            slotDiv.innerHTML = `
+                <input type="text" class="form-control" name="t_time[]" placeholder="e.g. 11:00pm-12:00pm">
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-danger remove-slot">-</button>
+                </div>
+            `;
+            document.getElementById('time-slots').appendChild(slotDiv);
+        }
+
+        if (e.target.classList.contains('remove-slot')) {
+            e.target.closest('.input-group').remove();
+        }
+    });
+</script>
+@endpush
+
+
