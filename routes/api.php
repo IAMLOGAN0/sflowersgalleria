@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\HomepageController;
 use App\Http\Controllers\Api\V1\ProductController;
-use App\Http\Controllers\Backend\DeliveryController;
 use App\Http\Controllers\Api\V1\AuthOtpApiController;
+use App\Http\Controllers\Api\V1\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +25,12 @@ Route::get('/v1/homepage/data', [HomepageController::class, 'getHomepageData']);
 
 // ✅ Protected routes (require login)
 Route::middleware('auth:api')->group(function () {
+
+    Route::prefix('v1/profile')->group(function () {
+        Route::get('/', [ProfileController::class, 'getProfile']); // fetch profile
+        Route::post('/update', [ProfileController::class, 'updateProfile']); // update profile
+        Route::post('/update-password', [ProfileController::class, 'updatePassword']); // update password
+    });
 
     Route::prefix('v1/products')->group(function () {
         Route::get('/', [ProductController::class, 'getAllProducts']);
