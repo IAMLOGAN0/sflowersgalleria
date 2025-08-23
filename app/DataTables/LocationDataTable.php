@@ -37,7 +37,12 @@ class LocationDataTable extends DataTable
                 }
                 return '-';
             })
-            ->editColumn('b_times', fn($row) => $row->b_times)
+            ->editColumn('b_times', function($row) {
+                return collect(explode(',', $row->b_times))
+                    ->map(fn($batch) => "<span class='badge badge-primary mr-1 px-2 py-1 mt-2'>{$batch}</span>")
+                    ->implode(' ');
+            })
+
             ->editColumn('t_times', function($row) {
                 $allSlots = [];
                 foreach (explode(',', $row->t_times) as $slotJson) {
@@ -54,7 +59,7 @@ class LocationDataTable extends DataTable
 
                 if (!empty($allSlots)) {
                     return collect($allSlots)
-                        ->map(fn($slot) => "<span class='badge badge-info mr-1 px-2 py-1 mt-2'>{$slot}</span>")
+                        ->map(fn($slot) => "<span class='badge badge-info mr-1 px-2 py-1 mt-2'>" . str_replace(['"', '[', ']'], '', $slot) . "</span>")
                         ->implode(' ');
                 }
                 return '-';
@@ -65,7 +70,7 @@ class LocationDataTable extends DataTable
                 return $editBtn . $deleteBtn;
             })
             ->addColumn('pin_color', fn($row) => $this->pinColors[$row->pin] ?? '#ffffff')
-            ->rawColumns(['sectors','t_times','action']);
+            ->rawColumns(['sectors','b_times','t_times','action']);
     }
 
     /**
