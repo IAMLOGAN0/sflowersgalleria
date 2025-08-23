@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\UserAddress;
 use App\Traits\ImageUploadTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -64,6 +65,74 @@ class ProfileController extends Controller
             'success' => true,
             'message' => 'Profile updated successfully',
             'user' => $user
+        ]);
+    }
+
+    public function getAddresses(Request $request)
+    {
+        $addresses = UserAddress::where('user_id', $request->user()->id)->get();
+
+        return response()->json([
+            'success' => true,
+            'addresses' => $addresses
+        ]);
+    }
+
+    public function addAddress(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'nullable|email',
+            'phone' => 'required|string|max:20',
+            'country' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'zip' => 'required|string|max:20',
+            'address' => 'required|string',
+        ]);
+
+        $address = UserAddress::create([
+            'user_id' => $request->user()->id,
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'country' => $request->country,
+            'state' => $request->state,
+            'city' => $request->city,
+            'zip' => $request->zip,
+            'address' => $request->address,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Address added successfully',
+            'address' => $address
+        ]);
+    }
+
+    public function updateAddress(Request $request, $id)
+    {
+        $address = UserAddress::where('id', $id)->where('user_id', $request->user()->id)->firstOrFail();
+
+        $address->update($request->only([
+            'name', 'email', 'phone', 'country', 'state', 'city', 'zip', 'address'
+        ]));
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Address updated successfully',
+            'address' => $address
+        ]);
+    }
+
+    public function deleteAddress(Request $request, $id)
+    {
+        $address = UserAddress::where('id', $id)->where('user_id', $request->user()->id)->firstOrFail();
+        $address->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Address deleted successfully'
         ]);
     }
 
