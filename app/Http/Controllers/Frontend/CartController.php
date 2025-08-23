@@ -79,6 +79,15 @@ class CartController extends Controller
 
         Cart::add($cartData);
 
+        $delivery_location = [
+            "pincode" => $request->pincode,
+            "sector"  => $request->sector,
+            "slot"    => $request->slot,
+            "time"    => $request->time
+        ];
+
+        session(['delivery_location' => $delivery_location]);
+
         return response(['status' => 'success', 'message' => 'Added to cart successfully!']);
     }
 

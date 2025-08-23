@@ -70,8 +70,19 @@
                     </div>
                     <div class="col-xl-4 col-lg-5">
                         <div class="wsus__order_details" id="sticky_sidebar">
+
                             <p class="wsus__product delivery_time_label">Delivery Time</p>
-                            <span id="delivery_time" style="color: green">Standard delivery: 2-5 business days</span>
+                            @if(session('delivery_location'))
+                                @php $loc = session('delivery_location'); @endphp
+                                <span id="delivery_time" style="color: green">
+                                    Express delivery: {{ $loc['time'] }}
+                                </span>
+                            @else
+                                <span id="delivery_time" style="color: red">
+                                    Standard delivery: 2-5 business days
+                                </span>
+                            @endif
+                            {{-- <span id="delivery_time" style="color: green">Standard delivery: 2-5 business days</span> --}}
 
                             <p class="wsus__product mt-4">Shipping Methods</p>
                             @foreach ($shippingMethods as $method)

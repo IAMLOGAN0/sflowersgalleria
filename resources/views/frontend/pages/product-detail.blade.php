@@ -143,17 +143,17 @@
                                 <!-- Delivery -->
                                 <div class="delivery-box p-3 border rounded mb-4 bg-light">
                                     <h6 class="fw-bold">Delivery Options</h6>
-                                    <input type="text" class="form-control my-2" placeholder="Enter Pincode" id="pincode">
-
+                                    <input type="text" class="form-control my-2" placeholder="Enter Pincode" id="pincode" name="pincode">
+                                    <input type="hidden" id="delivery-time" name="time">
                                     <div class="sector-box">
                                         <label class="fw-semibold mt-2">Choose Sector</label>
-                                        <select class="form-select" id="sector">
+                                        <select class="form-select" id="sector" name="sector">
                                             <option disabled selected>-- Select Sector --</option>
                                         </select>
                                     </div>
 
                                     <label class="fw-semibold mt-2">Select Date & Time</label>
-                                    <select class="form-select" id="slot">
+                                    <select class="form-select" id="slot" name="slot">
                                         <option disabled selected>-- Select Slot --</option>
                                     </select>
                                 </div>
@@ -537,6 +537,7 @@
                     slots.forEach(function(slot) {
                         $("#slot").append('<option value="'+slot+'">'+slot+'</option>');
                     });
+                    $("#delivery-time").val(selectedSector.b_time);
                 }else{
                     toastr.error("Delivery is not available in your sector.");
                 }
