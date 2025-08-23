@@ -78,6 +78,16 @@ class ProfileController extends Controller
         ]);
     }
 
+    public function getAddress(Request $request, $id)
+    {
+        $address = UserAddress::where('id', $id)->where('user_id', $request->user()->id)->first();
+
+        return response()->json([
+            'success' => true,
+            'address' => $address
+        ]);
+    }
+
     public function addAddress(Request $request)
     {
         $validator = Validator::make($request->all(), [
