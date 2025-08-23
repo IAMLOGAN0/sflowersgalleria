@@ -57,7 +57,7 @@
                                             <div class="input-group">
                                                 <span class="input-group-text bg-light"><i class="fas fa-mobile-alt"></i></span>
                                                 <input type="text" name="phone" class="form-control @error('phone') is-invalid @enderror" placeholder="Enter mobile number" required>
-                                                @error('mobile_no')
+                                                @error('phone')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
                                                     </span>
