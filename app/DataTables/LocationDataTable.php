@@ -27,33 +27,45 @@ class LocationDataTable extends DataTable
         }
 
         return (new EloquentDataTable($query))
-            ->editColumn('t_time', function ($location) {
-                $slots = json_decode($location->t_time, true);
-                if (!empty($slots)) {
-                    return collect($slots)
-                        ->map(fn($slot) => "<span class='badge badge-info mr-1'>{$slot}</span>")
+            ->addIndexColumn() // Adds auto-increment ID
+            ->editColumn('sectors', function($row) {
+                $sectors = explode(',', $row->sectors);
+                if (!empty($sectors)) {
+                    return collect($sectors)
+                        ->map(fn($sector) => "<span class='badge badge-secondary mr-1 px-2 py-1 mt-2'>{$sector}</span>")
                         ->implode(' ');
                 }
                 return '-';
             })
-            ->addColumn('action', function ($location) {
-                $editBtn = "<a href='" . route('admin.locations.edit', $location->id) . "'
-                                class='btn btn-primary btn-sm'>
-                                <i class='far fa-edit'></i>
-                            </a>";
+            ->editColumn('b_times', fn($row) => $row->b_times)
+            ->editColumn('t_times', function($row) {
+                $allSlots = [];
+                foreach (explode(',', $row->t_times) as $slotJson) {
+                    $slots = json_decode($slotJson, true);
+                    if (is_array($slots)) {
+                        $allSlots = array_merge($allSlots, $slots);
+                    } elseif (!empty($slotJson)) {
+                        $allSlots[] = $slotJson;
+                    }
+                }
 
-                $deleteBtn = "<a href='" . route('admin.locations.destroy', $location->id) . "'
-                                  class='btn btn-danger btn-sm ml-1 delete-item'>
-                                  <i class='far fa-trash-alt'></i>
-                               </a>";
+                // Remove empty or whitespace-only slots
+                $allSlots = array_map('trim', array_filter($allSlots));
 
+                if (!empty($allSlots)) {
+                    return collect($allSlots)
+                        ->map(fn($slot) => "<span class='badge badge-info mr-1 px-2 py-1 mt-2'>{$slot}</span>")
+                        ->implode(' ');
+                }
+                return '-';
+            })
+            ->addColumn('action', function($row){
+                $editBtn = "<a href='" . route('admin.locations.edit', $row->pin) . "' class='btn btn-primary btn-sm'><i class='far fa-edit'></i></a>";
+                $deleteBtn = "<a href='" . route('admin.locations.destroy', $row->pin) . "' class='btn btn-danger btn-sm ml-1 delete-item'><i class='far fa-trash-alt'></i></a>";
                 return $editBtn . $deleteBtn;
             })
-            ->addColumn('pin_color', function ($location) {
-                return $this->pinColors[$location->pin] ?? '#ffffff';
-            })
-            ->rawColumns(['t_time', 'action'])
-            ->setRowId('id');
+            ->addColumn('pin_color', fn($row) => $this->pinColors[$row->pin] ?? '#ffffff')
+            ->rawColumns(['sectors','t_times','action']);
     }
 
     /**
@@ -61,7 +73,15 @@ class LocationDataTable extends DataTable
      */
     public function query(Location $model): QueryBuilder
     {
-        return $model->newQuery()->orderBy('pin'); // order by pin for grouping
+        return $model->newQuery()
+            ->selectRaw('
+                pin,
+                GROUP_CONCAT(sector SEPARATOR ",") as sectors,
+                GROUP_CONCAT(b_time SEPARATOR ",") as b_times,
+                GROUP_CONCAT(t_time SEPARATOR ",") as t_times
+            ')
+            ->groupBy('pin')
+            ->orderBy('pin');
     }
 
     /**
@@ -73,50 +93,26 @@ class LocationDataTable extends DataTable
             ->setTableId('location-table')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->orderBy(2)
+            ->orderBy(0)
+            ->addTableClass('table table-bordered table-striped table-hover') // borders + striped + hover
             ->parameters([
-                'rowGroup' => [
-                    'dataSrc' => 'pin',
-                    'startRender' => 'function(rows, group){
-                        return `<tr class="group-header">
-                                    <td colspan="5" style="background-color:#f0f0f0; font-weight:bold;">
-                                        Pincode: ${group} (${rows.count()} sectors)
-                                    </td>
-                                </tr>`;
-                    }'
-                ],
-                'rowCallback' => 'function(row, data){
-                    // Apply background color only to Pincode column (3rd column, zero-based index 2)
-                    let bgColor = data.pin_color;
-                    let textColor = getContrastYIQ(bgColor);
-                    $("td:eq(1)", row).css({
-                        "background-color": bgColor,
-                        "color": textColor,
-                        "font-weight": "bold"
-                    });
-
-                    function getContrastYIQ(hexcolor){
-                        hexcolor = hexcolor.replace("#","");
-                        let r = parseInt(hexcolor.substr(0,2),16);
-                        let g = parseInt(hexcolor.substr(2,2),16);
-                        let b = parseInt(hexcolor.substr(4,2),16);
-                        let yiq = ((r*299)+(g*587)+(b*114))/1000;
-                        return (yiq >= 128) ? "black" : "white";
-                    }
-                }',
-                'ordering' => false,
+                'dom' => '<"top"fB>rt<"bottom"lip>',
+                'pageLength' => 10,
                 'responsive' => true,
                 'autoWidth' => false,
-            ])
-            ->buttons([
-                Button::make('excel'),
-                Button::make('csv'),
-                Button::make('pdf'),
-                Button::make('print'),
-                Button::make('reset'),
-                Button::make('reload'),
+                'scrollX' => true,
+                'scrollCollapse' => true,
+                'lengthMenu' => [[10, 25, 50, 100], [10, 25, 50, 100]],
+                'buttons' => [
+                    ['extend' => 'print', 'className' => 'btn btn-primary btn-sm'],
+                    ['extend' => 'copy', 'className' => 'btn btn-primary btn-sm'],
+                    ['extend' => 'excel', 'className' => 'btn btn-primary btn-sm'],
+                    ['extend' => 'pdf', 'className' => 'btn btn-primary btn-sm'],
+                    ['extend' => 'csv', 'className' => 'btn btn-primary btn-sm'],
+                ],
             ]);
     }
+
 
     /**
      * Get the columns definition.
@@ -124,11 +120,11 @@ class LocationDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('id')->title('ID'),
+            Column::computed('DT_RowIndex')->title('ID')->addClass('text-center'),
             Column::make('pin')->title('Pincode'),
-            Column::make('sector')->title('Sector'),
-            Column::make('b_time')->title('Delivery Taken Time'),
-            Column::make('t_time')->title('Time Slots'),
+            Column::make('sectors')->title('Sectors'),
+            Column::make('b_times')->title('Delivery Taken Time'),
+            Column::make('t_times')->title('Time Slots'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)

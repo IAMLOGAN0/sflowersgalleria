@@ -51,7 +51,15 @@ class DeliveryController extends Controller
 
     public function editDeliveryLocation($id)
     {
-        $location = Location::findOrFail($id);
+
+        $locationData = Location::where('pin', $id)->get();
+        $location = (object) [
+            'id' => $locationData[0]?->id ?? null,
+            'pin' => $locationData[0]?->pin,
+            'sector' => $locationData->toArray() ?? [],
+        ];
+
+        // dd($location);
         return view('admin.delivery.location-edit', compact('location'));
     }
 
