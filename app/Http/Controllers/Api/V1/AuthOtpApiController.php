@@ -16,18 +16,26 @@ class AuthOtpApiController extends Controller
      */
     public function generateOtp(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'phone' => 'required|exists:users,phone'
+        $request->validate([
+            'phone' => 'required|string'
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'errors'  => $validator->errors()
-            ], 422);
+        // Check if user exists
+        $user = User::where('phone', $request->phone)->first();
+
+        if (!$user) {
+            // Create new user if phone not registered
+            $user = User::create([
+                'name'     => 'Demo User',           // default name
+                'username' => null,                  // optional
+                'phone'    => $request->phone,
+                'email'    => null,                  // optional, can add a fake email if needed
+                'role'     => 'user',
+                'status'   => 'active',
+                'password' => bcrypt('12345678')    // default password
+            ]);
         }
 
-        $user = User::where('phone', $request->phone)->first();
         $userOtp = UserOtp::where('user_id', $user->id)->latest()->first();
         $now = now();
 
@@ -36,8 +44,8 @@ class AuthOtpApiController extends Controller
         } else {
             $otp = rand(123456, 999999);
             $userOtp = UserOtp::create([
-                'user_id' => $user->id,
-                'otp' => $otp,
+                'user_id'   => $user->id,
+                'otp'       => $otp,
                 'expire_at' => $now->addMinutes(10)
             ]);
         }
@@ -48,9 +56,10 @@ class AuthOtpApiController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'OTP sent successfully',
-            'otp' => $otp   // ⚠️ return only for testing, remove in production
+            'otp'     => $otp   // ⚠️ return only for testing, remove in production
         ]);
     }
+
 
     /**
      * Verify OTP and return JWT Token
