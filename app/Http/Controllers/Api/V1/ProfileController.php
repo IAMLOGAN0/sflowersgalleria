@@ -80,7 +80,7 @@ class ProfileController extends Controller
 
     public function addAddress(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'nullable|email',
             'phone' => 'required|string|max:20',
@@ -90,6 +90,13 @@ class ProfileController extends Controller
             'zip' => 'required|string|max:20',
             'address' => 'required|string',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->messages()
+            ], 422);
+        }
 
         $address = UserAddress::create([
             'user_id' => $request->user()->id,
@@ -112,8 +119,25 @@ class ProfileController extends Controller
 
     public function updateAddress(Request $request, $id)
     {
-        $address = UserAddress::where('id', $id)->where('user_id', $request->user()->id)->firstOrFail();
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'nullable|email',
+            'phone' => 'required|string|max:20',
+            'country' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'zip' => 'required|string|max:20',
+            'address' => 'required|string',
+        ]);
 
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->messages()
+            ], 422);
+        }
+
+        $address = UserAddress::where('id', $id)->where('user_id', $request->user()->id)->firstOrFail();
         $address->update($request->only([
             'name', 'email', 'phone', 'country', 'state', 'city', 'zip', 'address'
         ]));
@@ -127,8 +151,18 @@ class ProfileController extends Controller
 
     public function deleteAddress(Request $request, $id)
     {
-        $address = UserAddress::where('id', $id)->where('user_id', $request->user()->id)->firstOrFail();
-        $address->delete();
+        $validator = Validator::make(['id' => $id], [
+            'id' => 'required|exists:user_addresses,id,user_id,'.$request->user()->id
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->messages()
+            ], 422);
+        }
+
+        UserAddress::where('id', $id)->where('user_id', $request->user()->id)->firstOrFail()->delete();
 
         return response()->json([
             'success' => true,
