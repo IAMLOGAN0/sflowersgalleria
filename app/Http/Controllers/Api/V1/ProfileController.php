@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Traits\ImageUploadTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 
 class ProfileController extends Controller
 {
@@ -28,11 +29,18 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'sometimes|string|max:255',
             'email' => 'sometimes|email|unique:users,email,' . $user->id,
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:51200',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->messages()
+            ], 422);
+        }
 
         if($request->hasFile('image')){
             if(File::exists(public_path($user->image))){
