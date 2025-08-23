@@ -15,7 +15,7 @@
         <!-- Category Grid -->
         <div class="row g-4 justify-content-center text-center">
             @foreach ($categories as $category)
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-6">
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-4 col-4">
                 <a href="{{ route('products.index', ['category' => $category->slug]) }}" class="text-decoration-none">
                     <div class="category-card">
                         <div class="category-img">
@@ -25,6 +25,7 @@
                     </div>
                 </a>
             </div>
+
             @endforeach
         </div>
     </div>
