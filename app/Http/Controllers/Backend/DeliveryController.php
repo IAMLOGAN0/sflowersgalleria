@@ -24,23 +24,29 @@ class DeliveryController extends Controller
     public function storeDeliveryLocation(Request $request)
     {
         $request->validate([
-            'sector'   => 'required|string|max:255',
-            'pin'      => 'required|string|max:20',
-            'b_time'   => 'nullable|string|max:255',
-            't_time'   => 'nullable|array',
-            't_time.*' => 'nullable|string|max:255',
+            'pin' => 'required|string|max:20',
+            'sectors' => 'required|array',
+            'sectors.*.name' => 'required|string|max:255',
+            'sectors.*.delivery_time' => 'nullable|string|max:255',
+            'sectors.*.slots' => 'nullable|array',
+            'sectors.*.slots.*' => 'nullable|string|max:255',
         ]);
 
-        Location::create([
-            'sector' => $request->sector,
-            'pin'    => $request->pin,
-            'b_time' => $request->b_time,
-            't_time' => json_encode($request->t_time), // store as JSON
-        ]);
+        $pin = $request->pin;
+
+        foreach ($request->sectors as $sectorData) {
+            Location::create([
+                'pin' => $pin,
+                'sector' => $sectorData['name'],
+                'b_time' => $sectorData['delivery_time'] ?? null,
+                't_time' => isset($sectorData['slots']) ? json_encode($sectorData['slots']) : null,
+            ]);
+        }
 
         return redirect()->route('admin.locations')
-            ->with('success', 'Delivery location created successfully!');
+            ->with('success', 'Delivery locations created successfully!');
     }
+
 
 
     public function editDeliveryLocation($id)
@@ -52,25 +58,34 @@ class DeliveryController extends Controller
     public function updateDeliveryLocation(Request $request, $id)
     {
         $request->validate([
-            'sector'   => 'required|string|max:255',
-            'pin'      => 'required|string|max:20',
-            'b_time'   => 'nullable|string|max:100',
-            't_time'   => 'nullable|array',
-            't_time.*' => 'nullable|string|max:255',
+            'pin' => 'required|string|max:20',
+            'sectors' => 'required|array',
+            'sectors.*.name' => 'required|string|max:255',
+            'sectors.*.delivery_time' => 'nullable|string|max:255',
+            'sectors.*.slots' => 'nullable|array',
+            'sectors.*.slots.*' => 'nullable|string|max:255',
         ]);
 
         $location = Location::findOrFail($id);
 
-        $location->update([
-            'sector' => $request->sector,
-            'pin'    => $request->pin,
-            'b_time' => $request->b_time,
-            't_time' => $request->t_time ? json_encode($request->t_time) : null,
-        ]);
+        // Delete existing sectors for this pincode (if stored as separate records)
+        // If using a normalized table with pincode_id, adjust accordingly
+        Location::where('pin', $location->pin)->delete();
+
+        // Insert each sector as a separate record
+        foreach ($request->sectors as $sectorData) {
+            Location::create([
+                'pin' => $request->pin,
+                'sector' => $sectorData['name'],
+                'b_time' => $sectorData['delivery_time'] ?? null,
+                't_time' => isset($sectorData['slots']) ? json_encode($sectorData['slots']) : null,
+            ]);
+        }
 
         return redirect()->route('admin.locations')
-            ->with('success', 'Delivery Location updated successfully.');
+            ->with('success', 'Delivery locations updated successfully.');
     }
+
 
 
     /**

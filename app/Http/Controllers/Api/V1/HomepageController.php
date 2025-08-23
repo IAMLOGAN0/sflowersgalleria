@@ -87,16 +87,23 @@ class HomepageController extends Controller
 
     public function getDeliveryLocations()
     {
-        $deliveryLocations = Location::all()->map(function ($location) {
-            return [
-                'id'                     => $location->id,
-                'sector'                 => $location->sector,
-                'pin'                    => $location->pin,
-                'delivery_taken_time'    => $location->b_time, // mapped
-                'time_slots'             => json_decode($location->t_time, true), // decode JSON to array
-            ];
-        });
+        $deliveryLocations = Location::all()
+            ->groupBy('pin') // group by Pincode
+            ->map(function ($locations, $pin) {
+                return [
+                    'pin' => $pin,
+                    'sectors' => $locations->map(function ($location) {
+                        return [
+                            'id' => $location->id,
+                            'sector' => $location->sector,
+                            'delivery_taken_time' => $location->b_time,
+                            'time_slots' => json_decode($location->t_time, true) ?? [],
+                        ];
+                    })->values(),
+                ];
+            })->values(); // reset keys
 
         return response()->json($deliveryLocations);
     }
+
 }
