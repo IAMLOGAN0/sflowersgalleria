@@ -66,5 +66,6 @@ Route::middleware('auth:api')->group(function () {
 // ✅ Auth routes (public, no middleware)
 Route::prefix('v1/auth')->group(function () {
     Route::post('/generate-otp', [AuthOtpApiController::class, 'generateOtp']);
+    Route::post('/resend-otp', [AuthOtpApiController::class, 'resendOtp']);
     Route::post('/verify-otp', [AuthOtpApiController::class, 'verifyOtp']);
 });

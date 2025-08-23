@@ -60,6 +60,45 @@ class AuthOtpApiController extends Controller
         ]);
     }
 
+    /**
+     * Resend OTP
+     */
+    public function resendOtp(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'phone' => 'required|exists:users,phone'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors'  => $validator->errors()
+            ], 422);
+        }
+
+        $user = User::where('phone', $request->phone)->first();
+        $userOtp = UserOtp::where('user_id', $user->id)->latest()->first();
+
+        if ($userOtp) {
+            $userOtp->update(['expire_at' => now()->addMinutes(10)]);
+        } else {
+            $userOtp = UserOtp::create([
+                'user_id'   => $user->id,
+                'otp'       => rand(123456, 999999),
+                'expire_at' => now()->addMinutes(10)
+            ]);
+        }
+
+        // TODO: Send OTP via SMS here
+        // $userOtp->sendSMS($user->phone);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'OTP sent successfully',
+            'otp'     => $userOtp->otp
+        ]);
+    }
+
 
     /**
      * Verify OTP and return JWT Token
