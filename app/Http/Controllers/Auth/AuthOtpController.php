@@ -34,7 +34,6 @@ class AuthOtpController extends Controller
 
         /* Add country code to mobile number */
         $phone = $request->phone;
-
         /* Generate An OTP */
         $userOtp = $this->generateOtp($phone);
         $userOtp->sendSMS($phone);
