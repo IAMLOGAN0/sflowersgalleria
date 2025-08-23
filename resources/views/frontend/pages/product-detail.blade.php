@@ -510,6 +510,8 @@
                                 response.sectors.forEach(function(sector) {
                                     $("#sector").append('<option value="'+sector.id+'">'+sector.sector+'</option>');
                                 });
+                            }else{
+                                toastr.error("Delivery is not available in your area.");
                             }
                         },
                         error: function(xhr) {
@@ -536,6 +538,8 @@
                     slots.forEach(function(slot) {
                         $("#slot").append('<option value="'+slot+'">'+slot+'</option>');
                     });
+                }else{
+                    toastr.error("Delivery is not available in your sector.");
                 }
             });
 
