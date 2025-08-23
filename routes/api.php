@@ -31,7 +31,7 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/update', [ProfileController::class, 'updateProfile']); // update profile
     });
 
-    Route::prefix('user')->group(function () {
+    Route::prefix('v1/user')->group(function () {
         Route::get('/addresses', [ProfileController::class, 'getAddresses']);
         Route::post('/addresses', [ProfileController::class, 'addAddress']);
         Route::post('/addresses/{id}', [ProfileController::class, 'updateAddress']);
