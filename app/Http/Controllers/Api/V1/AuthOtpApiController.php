@@ -29,7 +29,7 @@ class AuthOtpApiController extends Controller
                 'name'     => 'Demo User',           // default name
                 'username' => null,                  // optional
                 'phone'    => $request->phone,
-                'email'    => null,                  // optional, can add a fake email if needed
+                'email'    => 'example@gmail.com',                  // optional, can add a fake email if needed
                 'role'     => 'user',
                 'status'   => 'active',
                 'password' => bcrypt('12345678')    // default password
