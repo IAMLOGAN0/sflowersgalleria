@@ -490,7 +490,6 @@
 
             $("#pincode").on('input', function() {
                 let pincode = $(this).val().trim();
-                alert(pincode);
                 if(pincode.length === 6) { // only fetch if 6 digits
                     $.ajax({
                         url: "{{ route('admin.get-sectors-by-pincode') }}",
@@ -515,7 +514,7 @@
                             }
                         },
                         error: function(xhr) {
-                            console.log(xhr.responseText);
+                            alert(xhr.responseText);
                         }
                     });
                 } else {
