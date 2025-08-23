@@ -87,7 +87,16 @@ class HomepageController extends Controller
 
     public function getDeliveryLocations()
     {
-        $deliveryLocations = Location::all();
+        $deliveryLocations = Location::all()->map(function ($location) {
+            return [
+                'id'                     => $location->id,
+                'sector'                 => $location->sector,
+                'pin'                    => $location->pin,
+                'delivery_taken_time'    => $location->b_time, // mapped
+                'time_slots'             => json_decode($location->t_time, true), // decode JSON to array
+            ];
+        });
+
         return response()->json($deliveryLocations);
     }
 }

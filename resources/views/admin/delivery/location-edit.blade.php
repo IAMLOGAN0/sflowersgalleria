@@ -44,7 +44,7 @@
 
                                 {{-- booking time --}}
                                 <div class="form-group">
-                                    <label for="b_time">Booking Time</label>
+                                    <label for="b_time">Delivery Taken Time</label>
                                     <input type="text" id="b_time" name="b_time" class="form-control"
                                            value="{{ old('b_time', $location->b_time) }}">
                                 </div>

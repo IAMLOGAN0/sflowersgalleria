@@ -84,7 +84,7 @@ class LocationDataTable extends DataTable
             Column::make('id'),
             Column::make('sector')->title('Sector'),
             Column::make('pin')->title('PIN'),
-            Column::make('b_time')->title('Booking Time'),
+            Column::make('b_time')->title('Delivery Taken Time'),
             Column::make('t_time')->title('Time Slots'),
             Column::computed('action')
                 ->exportable(false)

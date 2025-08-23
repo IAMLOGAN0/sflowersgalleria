@@ -29,7 +29,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Booking Time</label>
+                                    <label>Delivery Taken Time</label>
                                     <input type="text" class="form-control" name="b_time" value="{{ old('b_time') }}">
                                 </div>
 
