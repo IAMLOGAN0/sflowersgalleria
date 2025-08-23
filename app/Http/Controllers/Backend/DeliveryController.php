@@ -53,6 +53,11 @@ class DeliveryController extends Controller
     {
 
         $locationData = Location::where('pin', $id)->get();
+        if($locationData->count() == 0){
+            return redirect()->route('admin.locations')
+            ->with('error', 'Delivery location not found!');
+        }
+
         $location = (object) [
             'id' => $locationData[0]?->id ?? null,
             'pin' => $locationData[0]?->pin,
