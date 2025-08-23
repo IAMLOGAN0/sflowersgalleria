@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use File;
+use Illuminate\Support\Facades\Validator;
 
 class UserProfileController extends Controller
 {
@@ -16,11 +17,15 @@ class UserProfileController extends Controller
 
     public function updateProfile(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => ['required', 'max:100'],
             'email' => ['required', 'email', 'unique:users,email,'.Auth::user()->id],
             'image' => ['image', 'max:2048']
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
         $user = Auth::user();
 
