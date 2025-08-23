@@ -51,7 +51,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="col-xl-4 col-sm-7 col-md-8 col-lg-5">
+            {{-- <div class="col-xl-4 col-sm-7 col-md-8 col-lg-5">
                 <div class="wsus__footer_content wsus__footer_content_2">
                     <h3>Subscribe To Our Newsletter</h3>
                     <p>Get all the latest information on Events, Sales and Offers.
@@ -66,7 +66,7 @@
                         <img src="{{asset('frontend/images/credit2.png')}}" alt="card" class="img-fluid">
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
     <div class="wsus__footer_bottom">

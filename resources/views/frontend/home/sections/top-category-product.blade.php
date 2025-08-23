@@ -4,7 +4,7 @@
 @endphp
 <section id="wsus__monthly_top" class="wsus__monthly_top_2">
     <div class="container">
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-xl-12 col-lg-12">
                 @if ($homepage_secion_banner_one->banner_one->status == 1)
                 <div class="wsus__monthly_top_banner">
@@ -14,7 +14,7 @@
                 </div>
                 @endif
             </div>
-        </div>
+        </div> --}}
         <div class="row">
             <div class="col-xl-12">
                 <div class="wsus__section_header for_md">

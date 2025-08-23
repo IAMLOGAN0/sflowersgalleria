@@ -22,6 +22,22 @@
         FLASH SELL END
     ==============================-->
 
+    <!--============================
+        CATEGORY PART START
+    ==============================-->
+    @include('frontend.home.sections.categories')
+    <!--============================
+        CATEGORY PART END
+    ==============================-->
+
+    <!--============================
+        SUB CATEGORY PART START
+    ==============================-->
+    @include('frontend.home.sections.sub-categories')
+    <!--============================
+       SUB CATEGORY PART END
+    ==============================-->
+
 
     <!--============================
        MONTHLY TOP PRODUCT START
@@ -35,7 +51,7 @@
     <!--============================
         BRAND SLIDER START
     ==============================-->
-    @include('frontend.home.sections.brand-slider')
+    {{-- @include('frontend.home.sections.brand-slider') --}}
     <!--============================
         BRAND SLIDER END
     ==============================-->
@@ -109,7 +125,7 @@
     <!--============================
         HOME BLOGS START
     ==============================-->
-    {{-- @include('frontend.home.sections.blog') --}}
+    @include('frontend.home.sections.blog')
     <!--============================
         HOME BLOGS END
     ==============================-->

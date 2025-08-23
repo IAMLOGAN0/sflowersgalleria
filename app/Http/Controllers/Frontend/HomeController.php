@@ -41,20 +41,11 @@ class HomeController extends Controller
 
         // banners
 
-        $homepage_secion_banner_one = Adverisement::where('key', 'homepage_secion_banner_one')->first();
-        $homepage_secion_banner_one = json_decode($homepage_secion_banner_one->value);
-
-        $homepage_secion_banner_two = Adverisement::where('key', 'homepage_secion_banner_two')->first();
-        $homepage_secion_banner_two = json_decode($homepage_secion_banner_two?->value);
-
-        $homepage_secion_banner_three = Adverisement::where('key', 'homepage_secion_banner_three')->first();
-        $homepage_secion_banner_three = json_decode($homepage_secion_banner_three?->value);
-
-        $homepage_secion_banner_four = Adverisement::where('key', 'homepage_secion_banner_four')->first();
-        $homepage_secion_banner_four = json_decode($homepage_secion_banner_four?->value);
 
         $recentBlogs = Blog::with(['category', 'user'])->where('status', 1)->orderBy('id', 'DESC')->take(8)->get();
 
+        $categories = Category::where('status', 1)->get();
+        $sub_categories = SubCategory::where('status', 1)->get();
         return view(
             'frontend.home.home',
             compact(
@@ -67,13 +58,9 @@ class HomeController extends Controller
                 'categoryProductSliderSectionOne',
                 'categoryProductSliderSectionTwo',
                 'categoryProductSliderSectionThree',
-
-                'homepage_secion_banner_one',
-                'homepage_secion_banner_two',
-                'homepage_secion_banner_three',
-                'homepage_secion_banner_four',
-                'recentBlogs'
-
+                'recentBlogs',
+                'categories',
+                'sub_categories'
             )
         );
     }

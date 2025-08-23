@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-xl-12">
                 <div class="wsus__section_header">
-                    <h3>recent blogs</h3>
+                    <h3>recent events</h3>
                     <a class="see_btn" href="{{route('blog')}}">see more <i class="fas fa-caret-right"></i></a>
                 </div>
             </div>

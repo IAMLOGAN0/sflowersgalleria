@@ -33,6 +33,7 @@
         <link rel="stylesheet" href="{{ asset('frontend/css/rtl.css') }}">
     @endif
     @vite(['resources/js/app.js'])
+    @stack('styles')
 </head>
 
 <body>
