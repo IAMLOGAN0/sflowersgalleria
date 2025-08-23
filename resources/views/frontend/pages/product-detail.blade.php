@@ -175,25 +175,28 @@
                                     </div>
 
                                     <!-- Action Buttons -->
-                                    <div class="d-flex gap-2">
+                                    <div class="d-flex flex-wrap gap-2">
                                         <button type="submit" class="btn btn-primary px-4 shadow-sm d-flex align-items-center">
                                             <i class="fas fa-shopping-cart me-2"></i> Add to Cart
                                         </button>
-                                         <a href="{{ route('cart-details') }}" class="btn btn-primary px-4 shadow-sm d-flex align-items-center">
+                                    
+                                        <a href="{{ route('cart-details') }}" class="btn btn-primary px-4 shadow-sm d-flex align-items-center">
                                             <i class="fas fa-shopping-cart me-2"></i> Go to Cart
-                                         </a>
-
-                                        <button type="button" class="btn btn-outline-secondary rounded-circle shadow-sm"
-                                            data-bs-toggle="modal" data-bs-target="#exampleModal" style="width:42px; height:42px;">
+                                        </a>
+                                    
+                                        <button type="button" 
+                                            class="btn btn-outline-secondary rounded-circle shadow-sm d-flex align-items-center justify-content-center"
+                                            data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                            style="width:42px; height:42px;">
                                             <i class="far fa-comment-alt"></i>
                                         </button>
-
-                                        {{-- Wishlist Button (if enabled) --}}
+                                    </div>
+                                    
+                                      {{-- Wishlist Button (if enabled) --}}
                                         {{-- <button type="button" class="btn btn-outline-danger rounded-circle shadow-sm add_to_wishlist"
                                             data-id="{{ $product->id }}" style="width:42px; height:42px;">
                                             <i class="far fa-heart"></i>
                                         </button> --}}
-                                    </div>
                                 </div>
 
                             </form>
