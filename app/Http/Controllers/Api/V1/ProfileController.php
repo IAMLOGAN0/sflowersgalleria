@@ -82,7 +82,7 @@ class ProfileController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'nullable|email',
+            'email' => 'required|email',
             'phone' => 'required|string|max:20',
             'country' => 'required|string|max:255',
             'state' => 'required|string|max:255',
