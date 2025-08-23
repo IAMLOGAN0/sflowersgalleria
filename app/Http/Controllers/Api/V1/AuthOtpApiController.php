@@ -22,7 +22,7 @@ class AuthOtpApiController extends Controller
 
         // Check if user exists
         $user = User::where('phone', $request->phone)->first();
-        dd($user);
+
         if (!$user) {
             // Create new user if phone not registered
             $user = User::create([
