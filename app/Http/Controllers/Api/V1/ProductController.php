@@ -72,6 +72,8 @@ class ProductController extends Controller
     public function getProductsByCategory($categoryId)
     {
         $products = Product::where('category_id', $categoryId)
+            ->where('status', 1)
+            ->where('is_approved', 1)
             ->with('category.subCategories')
             ->get();
         return response()->json([
@@ -83,6 +85,8 @@ class ProductController extends Controller
     public function getProductsBySubcategory($subcategoryId)
     {
         $products = Product::where('sub_category_id', $subcategoryId)
+            ->where('status', 1)
+            ->where('is_approved', 1)
             ->with('category.subCategories')
             ->get();
         return response()->json([
