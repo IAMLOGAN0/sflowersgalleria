@@ -29,15 +29,15 @@ class AuthOtpController extends Controller
     {
         /* Validate Data */
         $request->validate([
-            'mobile_no' => 'required|exists:users,mobile_no'
+            'phone' => 'required|exists:users,phone'
         ]);
 
         /* Add country code to mobile number */
-        $mobile_no = $request->mobile_no;
+        $phone = $request->phone;
 
         /* Generate An OTP */
-        $userOtp = $this->generateOtp($mobile_no);
-        $userOtp->sendSMS($mobile_no);
+        $userOtp = $this->generateOtp($phone);
+        $userOtp->sendSMS($phone);
 
         session(['otp' => $userOtp->otp]); // Store OTP in session for testing
 
@@ -50,9 +50,9 @@ class AuthOtpController extends Controller
      *
      * @return response()
      */
-    public function generateOtp($mobile_no)
+    public function generateOtp($phone)
     {
-        $user = User::where('mobile_no', $mobile_no)->first();
+        $user = User::where('phone', $phone)->first();
 
         /* User Does not Have Any Existing OTP */
         $userOtp = UserOtp::where('user_id', $user->id)->latest()->first();
