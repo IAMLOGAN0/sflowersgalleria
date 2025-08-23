@@ -32,6 +32,7 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/update-password', [ProfileController::class, 'updatePassword']); // update password
     });
 
+    
     Route::prefix('v1/products')->group(function () {
         Route::get('/', [ProductController::class, 'getAllProducts']);
         Route::get('/search', [ProductController::class, 'searchProducts']);
