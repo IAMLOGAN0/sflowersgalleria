@@ -30,6 +30,9 @@ class AuthOtpController extends Controller
         /* Validate Data */
         $request->validate([
             'phone' => 'required|exists:users,phone'
+        ],[
+            'phone.required' => 'Please Enter Your Mobile Number',
+            'phone.exists' => 'Mobile Number Not Found'
         ]);
 
         /* Add country code to mobile number */
