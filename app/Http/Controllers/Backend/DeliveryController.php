@@ -133,5 +133,12 @@ class DeliveryController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Orders assigned successfully!']);
     }
 
+    public function getSectorsByPincode(Request $request)
+    {
+        $pincode = $request->input('pincode');
+        $sectors = Location::where('pin', $pincode)->get();
+        return response()->json(['sectors' => $sectors]);
+    }
+
 
 }

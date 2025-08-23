@@ -143,13 +143,18 @@
                                 <!-- Delivery -->
                                 <div class="delivery-box p-3 border rounded mb-4 bg-light">
                                     <h6 class="fw-bold">Delivery Options</h6>
-                                    <input type="text" class="form-control my-2" placeholder="Enter Pincode">
+                                    <input type="text" class="form-control my-2" placeholder="Enter Pincode" id="pincode">
+
+                                    <div class="sector-box">
+                                        <label class="fw-semibold mt-2">Choose Sector</label>
+                                        <select class="form-select" id="sector">
+                                            <option disabled selected>-- Select Sector --</option>
+                                        </select>
+                                    </div>
 
                                     <label class="fw-semibold mt-2">Select Date & Time</label>
-                                    <select class="form-select">
-                                        <option>Tomorrow, 9:00 AM - 1:00 PM (Express + ₹29)</option>
-                                        <option>Tomorrow, 1:00 PM - 5:00 PM</option>
-                                        <option>Tomorrow, 5:00 PM - 9:00 PM</option>
+                                    <select class="form-select" id="slot">
+                                        <option disabled selected>-- Select Slot --</option>
                                     </select>
                                 </div>
 
@@ -481,6 +486,60 @@
                     }
                 })
             })
+            var sectors  = [];
+
+            $("#pincode").on('input', function() {
+                let pincode = $(this).val().trim();
+
+                if(pincode.length === 6) { // only fetch if 6 digits
+                    $.ajax({
+                        url: "{{ route('admin.get-sectors-by-pincode') }}",
+                        type: 'POST',
+                        data: { pincode: pincode },
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            // Clear previous options
+                            $("#sector").html('<option disabled selected>-- Select Sector --</option>');
+                            $("#slot").html('<option disabled selected>-- Select Slot --</option>');
+
+                            if(response.sectors && response.sectors.length > 0) {
+                                toastr.success("Delivery is available in your area. Please select a sector.");
+                                sectors = response.sectors; // save to global variable
+                                response.sectors.forEach(function(sector) {
+                                    $("#sector").append('<option value="'+sector.id+'">'+sector.sector+'</option>');
+                                });
+                            }
+                        },
+                        error: function(xhr) {
+                            console.log(xhr.responseText);
+                        }
+                    });
+                } else {
+                    $("#slot").html('<option disabled selected>-- Select Slot --</option>');
+                }
+            });
+
+            $("#sector").on('change', function() {
+                let sectorId = $(this).val();
+
+                // find the selected sector from stored array
+                let selectedSector = sectors.find(s => s.id == sectorId);
+
+                // clear slot dropdown
+                $("#slot").html('<option disabled selected>-- Select Slot --</option>');
+
+                if(selectedSector && selectedSector.t_time) {
+                    toastr.success("Delivery is available in your area. Please select a slot.");
+                    let slots = JSON.parse(selectedSector.t_time); // ✅ FIXED
+                    slots.forEach(function(slot) {
+                        $("#slot").append('<option value="'+slot+'">'+slot+'</option>');
+                    });
+                }
+            });
+
+
         })
     </script>
 @endpush

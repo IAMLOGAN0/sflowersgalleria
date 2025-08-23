@@ -159,6 +159,8 @@ Route::delete('delete-delivery-location/{id}', [DeliveryController::class, 'dele
 Route::get('create-delivery-location', [DeliveryController::class, 'createDeliveryLocation'])->name('locations.create');
 Route::post('store-delivery-location', [DeliveryController::class, 'storeDeliveryLocation'])->name('locations.store');
 Route::post('update-delivery-location/{id}', [DeliveryController::class, 'updateDeliveryLocation'])->name('locations.update');
+Route::post('get-sectors-by-pincode', [DeliveryController::class, 'getSectorsByPincode'])->name('get-sectors-by-pincode');
+
 
 Route::get('assign-orders-to-delivery-boy', [DeliveryController::class, 'assignOrdersToDeliveryBoy'])->name('assign-orders-to-delivery-boy');
 Route::post('assign-orders-to-delivery-boy/store', [DeliveryController::class, 'storeAssignedOrders'])->name('assign-orders.store');
