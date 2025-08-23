@@ -29,10 +29,14 @@ Route::middleware('auth:api')->group(function () {
     Route::prefix('v1/profile')->group(function () {
         Route::get('/', [ProfileController::class, 'getProfile']); // fetch profile
         Route::post('/update', [ProfileController::class, 'updateProfile']); // update profile
-        Route::post('/update-address', [ProfileController::class, 'updateAddress']); // update password
-        // Route::post('/update-password', [ProfileController::class, 'updatePassword']); // update password
     });
 
+    Route::prefix('user')->group(function () {
+        Route::get('/addresses', [ProfileController::class, 'getAddresses']);
+        Route::post('/addresses', [ProfileController::class, 'addAddress']);
+        Route::post('/addresses/{id}', [ProfileController::class, 'updateAddress']);
+        Route::delete('/addresses/{id}', [ProfileController::class, 'deleteAddress']);
+    });
 
     Route::prefix('v1/products')->group(function () {
         Route::get('/', [ProductController::class, 'getAllProducts']);
