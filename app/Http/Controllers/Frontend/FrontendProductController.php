@@ -26,6 +26,8 @@ class FrontendProductController extends Controller
                 'status' => 1,
                 'is_approved' => 1
             ])
+
+            
             ->when($request->has('range'), function($query) use ($request){
                 $price = explode(';', $request->range);
                 $from = $price[0];
