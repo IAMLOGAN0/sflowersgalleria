@@ -65,133 +65,104 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-7 col-md-7">
-                        <div class="product-details p-3">
-
-                            <!-- Product Title -->
-                            <h3 class="fw-bold mb-2">{{ $product->name }}</h3>
-
-                            <!-- Stock Info -->
+                    <div class="col-xl-7 col-md-7 col-lg-7">
+                        <div class="wsus__pro_details_text">
+                            <a class="title" href="javascript:;">{{ $product->name }}</a>
                             @if ($product->qty > 0)
-                                <p class="text-success small mb-2">
-                                    <i class="fas fa-check-circle"></i> In Stock ({{ $product->qty }} items)
-                                </p>
+                                <p class="wsus__stock_area"><span class="in_stock">in stock</span> ({{ $product->qty }}
+                                    item)</p>
                             @elseif ($product->qty === 0)
-                                <p class="text-danger small mb-2">
-                                    <i class="fas fa-times-circle"></i> Out of Stock
-                                </p>
+                                <p class="wsus__stock_area"><span class="in_stock">stock out</span> ({{ $product->qty }}
+                                    item)</p>
                             @endif
-
-                            <!-- Price -->
-                            <div class="price-box mb-3">
-                                @if (checkDiscount($product))
-                                    <h4 class="fw-bold text-dark">
-                                        {{ $settings->currency_icon }}{{ $product->offer_price }}
-                                        <span class="text-muted text-decoration-line-through fs-6">
-                                            {{ $settings->currency_icon }}{{ $product->price }}
-                                        </span>
-                                    </h4>
-                                @else
-                                    <h4 class="fw-bold text-dark">{{ $settings->currency_icon }}{{ $product->price }}</h4>
-                                @endif
-                            </div>
-
-                            <!-- Rating -->
-                            <div class="d-flex align-items-center mb-3">
+                            @if (checkDiscount($product))
+                                <h4>{{ $settings->currency_icon }}{{ $product->offer_price }}
+                                    <del>{{ $settings->currency_icon }}{{ $product->price }}</del></h4>
+                            @else
+                                <h4>{{ $settings->currency_icon }}{{ $product->price }}</h4>
+                            @endif
+                            <p class="wsus__pro_rating">
                                 @php
                                     $avgRating = $product->reviews()->avg('rating');
                                     $fullRating = round($avgRating);
                                 @endphp
-                                <div class="stars me-2">
-                                    @for ($i = 1; $i <= 5; $i++)
-                                        @if ($i <= $fullRating)
-                                            <i class="fas fa-star text-warning"></i>
-                                        @else
-                                            <i class="far fa-star text-warning"></i>
-                                        @endif
-                                    @endfor
-                                </div>
-                                <small class="text-muted">({{ count($product->reviews) }} reviews)</small>
-                            </div>
 
-                            <!-- Short Description -->
-                            <p class="text-muted mb-4">{!! $product->short_description !!}</p>
+                                @for ($i = 1; $i <= 5; $i++)
+                                    @if ($i <= $fullRating)
+                                        <i class="fas fa-star"></i>
+                                    @else
+                                        <i class="far fa-star"></i>
+                                    @endif
+                                @endfor
 
-                            <!-- Variants -->
+                                <span>({{ count($product->reviews) }} review)</span>
+                            </p>
+                            <p class="description">{!! $product->short_description !!}</p>
+
                             <form class="shopping-cart-form">
-                                <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                <div class="row">
-                                    @foreach ($product->variants as $variant)
-                                        @if ($variant->status != 0)
-                                            <div class="col-sm-6 mb-3">
-                                                <label class="fw-semibold mb-1">{{ $variant->name }}</label>
-                                                <select class="form-select" name="variants_items[]">
-                                                    @foreach ($variant->productVariantItems as $variantItem)
-                                                        @if ($variantItem->status != 0)
-                                                            <option value="{{ $variantItem->id }}"
-                                                                {{ $variantItem->is_default == 1 ? 'selected' : '' }}>
-                                                                {{ $variantItem->name }} (+ {{ $settings->currency_icon }}{{ $variantItem->price }})
-                                                            </option>
-                                                        @endif
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        @endif
-                                    @endforeach
-                                </div>
+                                <div class="wsus__selectbox">
+                                    <div class="row">
+                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                        @foreach ($product->variants as $variant)
+                                            @if ($variant->status != 0)
+                                                <div class="col-xl-6 col-sm-6">
+                                                    <h5 class="mb-2">{{ $variant->name }}: </h5>
+                                                    <select class="select_2" name="variants_items[]">
+                                                        @foreach ($variant->productVariantItems as $variantItem)
+                                                            @if ($variantItem->status != 0)
+                                                                <option value="{{ $variantItem->id }}"
+                                                                    {{ $variantItem->is_default == 1 ? 'selected' : '' }}>
+                                                                    {{ $variantItem->name }} (${{ $variantItem->price }})
+                                                                </option>
+                                                            @endif
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            @endif
+                                        @endforeach
 
-                                <!-- Delivery -->
-                                <div class="delivery-box p-3 border rounded mb-4 bg-light">
-                                    <h6 class="fw-bold">Delivery Options</h6>
-                                    <input type="text" class="form-control my-2" placeholder="Enter Pincode">
-
-                                    <label class="fw-semibold mt-2">Select Date & Time</label>
-                                    <select class="form-select">
-                                        <option>Tomorrow, 9:00 AM - 1:00 PM (Express + ₹29)</option>
-                                        <option>Tomorrow, 1:00 PM - 5:00 PM</option>
-                                        <option>Tomorrow, 5:00 PM - 9:00 PM</option>
-                                    </select>
-                                </div>
-
-                                <!-- Quantity + Actions -->
-                                <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center gap-3 mt-4">
-
-                                    <!-- Quantity Selector -->
-                                    <div class="d-flex align-items-center border rounded-pill px-2 py-1 shadow-sm bg-light">
-                                        <button type="button" class="btn btn-sm btn-light border-0 px-2" onclick="this.nextElementSibling.stepDown()">
-                                            <i class="fas fa-minus"></i>
-                                        </button>
-                                        <input type="number" class="form-control border-0 text-center shadow-none"
-                                            name="qty" min="1" max="100" value="1"
-                                            style="width: 60px; background: transparent;">
-                                        <button type="button" class="btn btn-sm btn-light border-0 px-2" onclick="this.previousElementSibling.stepUp()">
-                                            <i class="fas fa-plus"></i>
-                                        </button>
-                                    </div>
-
-                                    <!-- Action Buttons -->
-                                    <div class="d-flex gap-2">
-                                        <button type="submit" class="btn btn-primary px-4 shadow-sm d-flex align-items-center">
-                                            <i class="fas fa-shopping-cart me-2"></i> Add to Cart
-                                        </button>
-
-                                        <button type="button" class="btn btn-outline-secondary rounded-circle shadow-sm"
-                                            data-bs-toggle="modal" data-bs-target="#exampleModal" style="width:42px; height:42px;">
-                                            <i class="far fa-comment-alt"></i>
-                                        </button>
-
-                                        {{-- Wishlist Button (if enabled) --}}
-                                        {{-- <button type="button" class="btn btn-outline-danger rounded-circle shadow-sm add_to_wishlist"
-                                            data-id="{{ $product->id }}" style="width:42px; height:42px;">
-                                            <i class="far fa-heart"></i>
-                                        </button> --}}
                                     </div>
                                 </div>
 
+                                <div class="wsus__quentity">
+                                    <h5>quentity :</h5>
+                                    <div class="select_number">
+                                        <input class="number_area" name="qty" type="text" min="1"
+                                            max="100" value="1" />
+                                    </div>
+
+                                </div>
+
+                                <ul class="wsus__button_area">
+                                    <li><button type="submit" class="add_cart" href="#">add to cart</button></li>
+
+
+                                    {{-- <li><a style="border: 1px solid gray;
+                                        padding: 7px 11px;
+                                        border-radius: 100%;"
+                                            href="javascript:;" class="add_to_wishlist" data-id="{{ $product->id }}"><i
+                                                class="fal fa-heart"></i></a></li> --}}
+
+                                    <li>
+                                        <button type="button"
+                                            style="border: 1px solid gray;
+                                        padding: 7px 11px;
+                                        margin-left: 7px;
+                                        border-radius: 100%; background-color: #0088cc"
+                                            class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                            <i class="far fa-comment-alt text-light"></i>
+                                        </button>
+
+                                    </li>
+
+
+
+
+                                </ul>
                             </form>
+                            <p class="brand_model"><span>brand :</span> {{ $product->brand->name }}</p>
                         </div>
                     </div>
-
 
                 </div>
             </div>
@@ -434,14 +405,6 @@
         </div>
     </div>
 @endsection
-
-@push('styles')
-<style>
-    .delivery-box{
-        background: #fff;
-    }
-</style>
-@endpush
 
 @push('scripts')
     <script>
