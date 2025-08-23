@@ -7,6 +7,7 @@ use App\Models\Adverisement;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\ChildCategory;
+use App\Models\Location;
 use App\Models\Product;
 use App\Models\ProductReview;
 use App\Models\SubCategory;
@@ -27,7 +28,7 @@ class FrontendProductController extends Controller
                 'is_approved' => 1
             ])
 
-            
+
             ->when($request->has('range'), function($query) use ($request){
                 $price = explode(';', $request->range);
                 $from = $price[0];
@@ -128,5 +129,12 @@ class FrontendProductController extends Controller
     public function chageListView(Request $request)
     {
        Session::put('product_list_style', $request->style);
+    }
+
+    public function getSectorsByPincode(Request $request)
+    {
+        $pincode = $request->input('pincode');
+        $sectors = Location::where('pin', $pincode)->get();
+        return response()->json(['sectors' => $sectors]);
     }
 }

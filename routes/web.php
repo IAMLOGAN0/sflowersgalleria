@@ -54,7 +54,7 @@ Route::get('products', [FrontendProductController::class, 'productsIndex'])->nam
 Route::get('product-detail/{slug}', [FrontendProductController::class, 'showProduct'])->name('product-detail');
 Route::get('change-product-list-view', [FrontendProductController::class, 'chageListView'])->name('change-product-list-view');
 
-
+Route::post('get-sectors-by-pincode', [FrontendProductController::class, 'getSectorsByPincode'])->name('get-sectors-by-pincode');
 /** Cart routes */
 Route::post('add-to-cart', [CartController::class, 'addToCart'])->name('add-to-cart');
 Route::get('cart-details', [CartController::class, 'cartDetails'])->name('cart-details');
