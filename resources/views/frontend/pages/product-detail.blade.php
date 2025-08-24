@@ -6,8 +6,8 @@
 
 @section('content')
     <!--============================
-            BREADCRUMB START
-        ==============================-->
+                    BREADCRUMB START
+                ==============================-->
     <section id="wsus__breadcrumb">
         <div class="wsus_breadcrumb_overlay">
             <div class="container">
@@ -25,13 +25,13 @@
         </div>
     </section>
     <!--============================
-            BREADCRUMB END
-        ==============================-->
+                    BREADCRUMB END
+                ==============================-->
 
 
     <!--============================
-            PRODUCT DETAILS START
-        ==============================-->
+                    PRODUCT DETAILS START
+                ==============================-->
     <section id="wsus__product_details">
         <div class="container">
             <div class="wsus__details_bg">
@@ -130,7 +130,8 @@
                                                         @if ($variantItem->status != 0)
                                                             <option value="{{ $variantItem->id }}"
                                                                 {{ $variantItem->is_default == 1 ? 'selected' : '' }}>
-                                                                {{ $variantItem->name }} (+ {{ $settings->currency_icon }}{{ $variantItem->price }})
+                                                                {{ $variantItem->name }} (+
+                                                                {{ $settings->currency_icon }}{{ $variantItem->price }})
                                                             </option>
                                                         @endif
                                                     @endforeach
@@ -141,10 +142,13 @@
                                 </div>
 
                                 <!-- Delivery -->
+                                <!-- Delivery -->
                                 <div class="delivery-box p-3 border rounded mb-4 bg-light">
                                     <h6 class="fw-bold">Delivery Options</h6>
-                                    <input type="text" class="form-control my-2" placeholder="Enter Pincode" id="pincode" name="pincode">
+                                    <input type="text" class="form-control my-2" placeholder="Enter Pincode"
+                                        id="pincode" name="pincode">
                                     <input type="hidden" id="delivery-time" name="time">
+
                                     <div class="sector-box">
                                         <label class="fw-semibold mt-2">Choose Sector</label>
                                         <select class="form-select" id="sector" name="sector">
@@ -152,46 +156,58 @@
                                         </select>
                                     </div>
 
-                                    <label class="fw-semibold mt-2">Select Date & Time</label>
+                                    <!-- Date Picker -->
+                                    <label class="fw-semibold mt-2">Select Delivery Date</label>
+                                    <input type="date" class="form-control" id="delivery-date" name="delivery_date"
+                                        min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}">
+
+                                    <!-- Time Slot -->
+                                    <label class="fw-semibold mt-2">Select Time Slot</label>
                                     <select class="form-select" id="slot" name="slot">
                                         <option disabled selected>-- Select Slot --</option>
                                     </select>
+
                                     <div class="delivery-time">
                                         <label class="fw-semibold mt-2">Delivery Time</label>
-                                        <p><span id="delivery-time-span" style="color: green">Enter Pincode & sector to see delivery time</span></p>
+                                        <p><span id="delivery-time-span" style="color: green">Enter Pincode & Sector to see
+                                                delivery time</span></p>
                                     </div>
                                 </div>
 
+
                                 <!-- Quantity + Actions -->
-                                <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center gap-3 mt-4">
+                                <div
+                                    class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center gap-3 mt-4">
 
                                     <!-- Quantity Selector -->
                                     <div class="d-flex align-items-center border rounded-pill px-2 py-1 shadow-sm bg-light">
-                                        <button type="button" class="btn btn-sm btn-light border-0 px-2" onclick="this.nextElementSibling.stepDown()">
+                                        <button type="button" class="btn btn-sm btn-light border-0 px-2"
+                                            onclick="this.nextElementSibling.stepDown()">
                                             <i class="fas fa-minus"></i>
                                         </button>
                                         <input type="number" class="form-control border-0 text-center shadow-none"
                                             name="qty" min="1" max="100" value="1"
                                             style="width: 60px; background: transparent;">
-                                        <button type="button" class="btn btn-sm btn-light border-0 px-2" onclick="this.previousElementSibling.stepUp()">
+                                        <button type="button" class="btn btn-sm btn-light border-0 px-2"
+                                            onclick="this.previousElementSibling.stepUp()">
                                             <i class="fas fa-plus"></i>
                                         </button>
                                     </div>
 
                                     <!-- Action Buttons -->
-                                    <div class="d-flex flex-wrap gap-2">
-                                        <button type="submit" class="btn btn-primary px-4 shadow-sm d-flex align-items-center">
-                                            <i class="fas fa-shopping-cart me-2"></i> Add to Cart
-                                        </button>
-                                    </div>
-                                     {{-- <button type="button"
+                                    <button type="submit"
+                                        class="btn btn-primary px-4 shadow-sm d-flex align-items-center add-to-cart-btn"
+                                        disabled>
+                                        <i class="fas fa-shopping-cart me-2"></i> Add to Cart
+                                    </button>
+                                    {{-- <button type="button"
                                             class="btn btn-outline-secondary rounded-circle shadow-sm d-flex align-items-center justify-content-center"
                                             data-bs-toggle="modal" data-bs-target="#exampleModal"
                                             style="width:42px; height:42px;">
                                             <i class="far fa-comment-alt"></i>
                                         </button> --}}
-                                      {{-- Wishlist Button (if enabled) --}}
-                                        {{-- <button type="button" class="btn btn-outline-danger rounded-circle shadow-sm add_to_wishlist"
+                                    {{-- Wishlist Button (if enabled) --}}
+                                    {{-- <button type="button" class="btn btn-outline-danger rounded-circle shadow-sm add_to_wishlist"
                                             data-id="{{ $product->id }}" style="width:42px; height:42px;">
                                             <i class="far fa-heart"></i>
                                         </button> --}}
@@ -302,7 +318,8 @@
                                                                 <div class="wsus__comment_text reply">
                                                                     <h6>{{ $review->user->name }}
                                                                         <span>{{ $review->rating }} <i
-                                                                                class="fas fa-star"></i></span></h6>
+                                                                                class="fas fa-star"></i></span>
+                                                                    </h6>
                                                                     <span>{{ date('d M Y', strtotime($review->created_at)) }}</span>
                                                                     <p>{{ $review->review }}
                                                                     </p>
@@ -414,8 +431,8 @@
         </div>
     </section>
     <!--============================
-            PRODUCT DETAILS END
-        ==============================-->
+                    PRODUCT DETAILS END
+                ==============================-->
     <!-- Modal -->
     {{-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -445,115 +462,170 @@
 @endsection
 
 @push('styles')
-<style>
-    .delivery-box{
-        background: #fff;
-    }
-</style>
+    <style>
+        .delivery-box {
+            background: #fff;
+        }
+    </style>
 @endpush
 
 @push('scripts')
     <script>
         $(document).ready(function() {
-            $('.message_modal').on('submit', function(e) {
-                e.preventDefault();
-                let formData = $(this).serialize();
+            var sectors = [];
 
-                $.ajax({
-                    method: 'POST',
-                    url: '{{ route('user.send-message') }}',
-                    data: formData,
-                    beforeSend: function() {
-                        let html =
-                            `<span class="spinner-border spinner-border-sm text-light" role="status" aria-hidden="true"></span> Sending..`
+            /** 🔹 Validate Delivery Selections */
+            function validateDelivery() {
+                let pincode = $("#pincode").val().trim();
+                let sector = $("#sector").val();
+                let date = $("#delivery-date").val();
+                let slot = $("#slot").val();
 
-                        $('.send-button').html(html);
-                        $('.send-button').prop('disabled', true);
+                if (pincode.length === 6 && sector && date && slot) {
+                    $(".add-to-cart-btn").prop("disabled", false);
+                } else {
+                    $(".add-to-cart-btn").prop("disabled", true);
+                }
+            }
 
+            /** 🔹 Filter Slots Based on Date */
+            function filterSlotsByDate(selectedSector) {
+                let selectedDate = $("#delivery-date").val();
+                let today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
 
-                    },
-                    success: function(response) {
-                        $('.message-box').val('');
-                        $('.modal-body').append(
-                            `<div class="alert alert-success mt-2"><a href="{{ route('user.messages.index') }}" class="text-primary">Click here</a> for go to messenger.</div>`
-                            )
-                        toastr.success(response.message);
-                    },
-                    error: function(xhr, status, error) {
-                        toastr.error(xhr.responseJSON.message);
-                        $('.send-button').html('Send');
-                        $('.send-button').prop('disabled', false);
-                    },
-                    complete: function() {
-                        $('.send-button').html('Send');
-                        $('.send-button').prop('disabled', false);
+                $("#slot").html('<option disabled selected>-- Select Slot --</option>');
+
+                if (!selectedSector || !selectedSector.t_time) return;
+
+                let slots = JSON.parse(selectedSector.t_time);
+                let availableSlots = [];
+
+                if (selectedDate === today) {
+                    let now = new Date();
+
+                    slots.forEach(function(slot) {
+                        let slotStart = slot.split("-")[0].trim();
+                        let slotDateTime = parseSlotTime(slotStart, selectedDate);
+
+                        if (slotDateTime > now) {
+                            availableSlots.push(slot);
+                        }
+                    });
+
+                    if (availableSlots.length === 0) {
+                        toastr.error("No slots left for today. Please choose another date.");
+                        $("#slot").html('<option disabled selected>No slots available today</option>');
+                        $("#delivery-time").val(selectedSector.b_time);
+                        $("#delivery-time-span")
+                            .html('Express delivery: No slots available today')
+                            .css("color", "red");
+
+                        return;
                     }
-                })
-            })
-            var sectors  = [];
+                } else {
+                    availableSlots = slots; // Future date → show all slots
+                    $("#delivery-time").val(selectedSector.b_time);
+                    $("#delivery-time-span").html('Express delivery: ' + selectedSector.b_time).css("color",
+                        "green");
+                }
 
+                availableSlots.forEach(function(slot) {
+                    $("#slot").append('<option value="' + slot + '">' + slot + '</option>');
+                });
+            }
+
+            /** 🔹 Convert "9pm" or "1am" to JS Date object */
+            function parseSlotTime(timeStr, dateStr) {
+                let d = new Date(dateStr + " 00:00");
+                let match = timeStr.match(/(\d+)(am|pm)/i);
+
+                if (!match) return d;
+
+                let hour = parseInt(match[1]);
+                let meridian = match[2].toLowerCase();
+
+                if (meridian === "pm" && hour !== 12) hour += 12;
+                if (meridian === "am" && hour === 12) hour = 0;
+
+                d.setHours(hour, 0, 0, 0);
+                return d;
+            }
+
+            /** 🔹 Watch all inputs for validation */
+            $("#pincode, #sector, #delivery-date, #slot").on("input change", validateDelivery);
+
+            // Initially disable Add to Cart
+            $(".add-to-cart-btn").prop("disabled", true);
+
+            /** 🔹 Pincode AJAX */
             $("#pincode").on('input', function() {
                 let pincode = $(this).val().trim();
-                if(pincode.length === 6) { // only fetch if 6 digits
+                if (pincode.length === 6) {
                     $.ajax({
                         url: "{{ route('get-sectors-by-pincode') }}",
                         type: 'POST',
-                        data: { pincode: pincode },
+                        data: {
+                            pincode: pincode
+                        },
                         headers: {
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         },
                         success: function(response) {
-                            // Clear previous options
-                            $("#sector").html('<option disabled selected>-- Select Sector --</option>');
-                            $("#slot").html('<option disabled selected>-- Select Slot --</option>');
+                            $("#sector").html(
+                                '<option disabled selected>-- Select Sector --</option>');
+                            $("#slot").html(
+                                '<option disabled selected>-- Select Slot --</option>');
 
-                            if(response.sectors && response.sectors.length > 0) {
-                                toastr.success("Delivery is available in your area. Please select a sector.");
-                                sectors = response.sectors; // save to global variable
+                            if (response.sectors && response.sectors.length > 0) {
+                                toastr.success(
+                                    "Delivery is available in your area. Please select a sector."
+                                );
+                                sectors = response.sectors;
                                 response.sectors.forEach(function(sector) {
-                                    $("#sector").append('<option value="'+sector.id+'">'+sector.sector+'</option>');
+                                    $("#sector").append('<option value="' + sector.id +
+                                        '">' + sector.sector + '</option>');
                                 });
-                            }else{
+                            } else {
                                 toastr.error("Delivery is not available in your area.");
                             }
-                        },
-                        error: function(xhr) {
-                            alert(xhr.responseText);
+                            validateDelivery();
                         }
                     });
-                } else {
-                    $("#slot").html('<option disabled selected>-- Select Slot --</option>');
                 }
             });
 
+            /** 🔹 On Sector Change */
             $("#sector").on('change', function() {
                 let sectorId = $(this).val();
-
-                // find the selected sector from stored array
                 let selectedSector = sectors.find(s => s.id == sectorId);
 
-                // clear slot dropdown
                 $("#slot").html('<option disabled selected>-- Select Slot --</option>');
 
-                if(selectedSector && selectedSector.t_time) {
-                    toastr.success("Delivery is available in your area. Please select a slot.");
-                    let slots = JSON.parse(selectedSector.t_time); // ✅ FIXED
-                    slots.forEach(function(slot) {
-                        $("#slot").append('<option value="'+slot+'">'+slot+'</option>');
-                    });
-                    $("#delivery-time").val(selectedSector.b_time);
-                    $("#delivery-time-span").html('');
-                    $("#delivery-time-span").html('Express delivery: '+selectedSector.b_time);
+                if (selectedSector && selectedSector.t_time) {
+                    filterSlotsByDate(selectedSector);
 
-                }else{
-                    toastr.error("Delivery is not available in your sector.");
+                } else {
                     $("#delivery-time").val('');
-                    $("#delivery-time-span").html('');
                     $("#delivery-time-span").html('Standard delivery: 2-5 business days');
                 }
+                validateDelivery();
             });
 
+            /** 🔹 On Date Change */
+            $("#delivery-date").on("change", function() {
+                let sectorId = $("#sector").val();
+                let selectedSector = sectors.find(s => s.id == sectorId);
 
-        })
+                if (selectedSector) {
+                    filterSlotsByDate(selectedSector);
+                }
+                validateDelivery();
+            });
+
+            /** 🔹 On Slot Change */
+            $("#slot").on("change", validateDelivery);
+        });
+
+        
     </script>
 @endpush

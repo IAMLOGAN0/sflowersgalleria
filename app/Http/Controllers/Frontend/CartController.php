@@ -34,7 +34,6 @@ class CartController extends Controller
     /** Add item to cart */
     public function addToCart(Request $request)
     {
-
         $product = Product::findOrFail($request->product_id);
 
         // check product quantity
@@ -83,7 +82,8 @@ class CartController extends Controller
             "pincode" => $request->pincode,
             "sector"  => $request->sector,
             "slot"    => $request->slot,
-            "time"    => $request->time
+            "time"    => $request->time,
+            "date"    => $request->delivery_date
         ];
 
         session(['delivery_location' => $delivery_location]);
