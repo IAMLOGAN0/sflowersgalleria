@@ -58,7 +58,8 @@
                                                         style="font-weight: 500; color: #111;"> Select this address </span>
                                                 </div> <!-- Arrow will stay on the right automatically -->
                                             </div>
-                                        </button> </h2>
+                                        </button>
+                                    </h2>
                                     <div id="collapse{{ $index }}" class="accordion-collapse collapse"
                                         aria-labelledby="heading{{ $index }}" data-bs-parent="#addressesAccordion">
                                         <div class="accordion-body p-3">
