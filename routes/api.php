@@ -22,6 +22,22 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // ✅ Public route (homepage data without login)
 Route::get('/v1/homepage/data', [HomepageController::class, 'getHomepageData']);
 
+Route::prefix('v1/products')->group(function () {
+    Route::get('/', [ProductController::class, 'getAllProducts']);
+    Route::get('/search', [ProductController::class, 'searchProducts']);
+    Route::get('/{slug}', [ProductController::class, 'getProductDetails']);
+    Route::get('/category/{categoryId}', [ProductController::class, 'getProductsByCategory']);
+    Route::get('/subcategory/{subcategoryId}', [ProductController::class, 'getProductsBySubcategory']);
+});
+
+Route::prefix('v1/categories')->group(function () {
+    Route::get('/', [HomepageController::class, 'getAllCategoriesWithSubcategories']);
+    Route::get('/{id}/subcategories', [HomepageController::class, 'getSubcategoriesByCategoryId']);
+});
+
+Route::prefix('v1/delivery')->group(function () {
+    Route::get('locations', [HomepageController::class, 'getDeliveryLocations']);
+});
 
 // ✅ Protected routes (require login)
 Route::middleware('auth:api')->group(function () {
@@ -39,19 +55,6 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('/addresses/{id}', [ProfileController::class, 'deleteAddress']);
     });
 
-    Route::prefix('v1/products')->group(function () {
-        Route::get('/', [ProductController::class, 'getAllProducts']);
-        Route::get('/search', [ProductController::class, 'searchProducts']);
-        Route::get('/{slug}', [ProductController::class, 'getProductDetails']);
-        Route::get('/category/{categoryId}', [ProductController::class, 'getProductsByCategory']);
-        Route::get('/subcategory/{subcategoryId}', [ProductController::class, 'getProductsBySubcategory']);
-    });
-
-    Route::prefix('v1/categories')->group(function () {
-        Route::get('/', [HomepageController::class, 'getAllCategoriesWithSubcategories']);
-        Route::get('/{id}/subcategories', [HomepageController::class, 'getSubcategoriesByCategoryId']);
-    });
-
     Route::prefix('v1/events')->group(function () {
         Route::get('/', [EventsController::class, 'getAllEvents']);
         Route::get('/categories', [EventsController::class, 'getAllCategories']);
@@ -63,10 +66,6 @@ Route::middleware('auth:api')->group(function () {
     Route::prefix('v1/delivery-boy')->group(function () {
         Route::post('order-status', [DeliveryBoyController::class, 'changeOrderStatus']);
         Route::post('orders', [DeliveryBoyController::class, 'getOrders']);
-    });
-
-    Route::prefix('v1/delivery')->group(function () {
-        Route::get('locations', [HomepageController::class, 'getDeliveryLocations']);
     });
 
     // ✅ Authenticated user APIs
