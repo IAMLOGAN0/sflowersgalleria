@@ -58,8 +58,11 @@
                                                 <div class="d-flex align-items-center" style="gap: 0.5rem;"> <input
                                                         class="form-check-input shipping_address" type="radio"
                                                         name="selected_address" id="addressRadio{{ $index }}"
-                                                        data-id="{{ $address->id }}" data-zip="{{ $address->zip }}"> <span
-                                                        style="font-weight: 500; color: #111;"> Select this address </span>
+                                                        data-id="{{ $address->id }}" data-zip="{{ $address->zip }}">
+                                                         <span style="cursor:pointer; font-weight: 500; color: #111;"
+            onclick="document.getElementById('addressRadio{{ $index }}').click();">
+        Select this address
+      </span>
                                                 </div> <!-- Arrow will stay on the right automatically -->
                                             </div>
                                         </button>
