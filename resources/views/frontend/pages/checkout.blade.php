@@ -72,7 +72,7 @@
                         <div class="wsus__order_details" id="sticky_sidebar">
 
                             <p class="wsus__product delivery_time_label">Delivery Time</p>
-                            @if(session('delivery_location'))
+                            @if(session('delivery_location') !== null && session('delivery_location')['time'] !== null)
                                 @php $loc = session('delivery_location'); @endphp
                                 <span id="delivery_time" style="color: green">
                                     Express delivery: {{ $loc['time'] }}
@@ -86,7 +86,7 @@
 
                             <p class="wsus__product mt-4">Shipping Methods</p>
                             @foreach ($shippingMethods as $method)
-                                @if ($method->type === 'min_cost' && getCartTotal() >= $method->min_cost)
+                                @if ($method->type == 'min_cost' && getCartTotal() >= $method->min_cost)
                                     <div class="form-check">
                                         <input class="form-check-input shipping_method" type="radio" name="exampleRadios" id="exampleRadios1"
                                             value="{{$method->id}}" data-id="{{$method->cost}}">
@@ -95,7 +95,9 @@
                                             <span>cost: ({{$settings->currency_icon}}{{$method->cost}})</span>
                                         </label>
                                     </div>
+
                                 @elseif ($method->type === 'flat_cost')
+                                 {{ $method->min_cost }}
                                     <div class="form-check">
                                         <input class="form-check-input shipping_method" type="radio" name="exampleRadios" id="exampleRadios1"
                                             value="{{$method->id}}" data-id="{{$method->cost}}">
@@ -149,23 +151,23 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="wsus__check_single_form">
-                                            <input type="text" placeholder="Name *" name="name" value="{{old('name')}}">
+                                            <input type="text" placeholder="Name *" required name="name" value="{{old('name')}}">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="wsus__check_single_form">
-                                            <input type="text" placeholder="Phone *" name="phone" value="{{old('phone')}}">
+                                            <input type="text" placeholder="Phone *" required name="phone" value="{{old('phone')}}">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="wsus__check_single_form">
-                                            <input type="email" placeholder="Email *" name="email" value="{{old('email')}}">
+                                            <input type="email" placeholder="Email *" required name="email" value="{{old('email')}}">
                                         </div>
                                     </div>
 
                                     <div class="col-md-6">
                                         <div class="wsus__check_single_form">
-                                            <select class="select_2" name="country">
+                                            <select class="select_2" name="country" required>
                                                 <option value="">Country / Region *</option>
                                                 @foreach (config('settings.country_list') as $key => $county)
                                                     <option {{$county === old('country') ? 'selected' : ''}} value="{{$county}}">{{$county}}</option>
@@ -176,24 +178,24 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="wsus__check_single_form">
-                                            <input type="text" placeholder="State *" name="state" value="{{old('state')}}">
+                                            <input type="text" placeholder="State *" required name="state" value="{{old('state')}}">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="wsus__check_single_form">
-                                            <input type="text" placeholder="Town / City *" name="city" value="{{old('city')}}">
+                                            <input type="text" placeholder="Town / City *" required name="city" value="{{old('city')}}">
                                         </div>
                                     </div>
 
                                     <div class="col-md-6">
                                         <div class="wsus__check_single_form">
-                                            <input id="zipInput" type="text" placeholder="Zip *" name="zip" value="{{old('zip')}}">
+                                            <input id="zipInput" type="text" placeholder="Zip *" required name="zip" value="{{old('zip')}}">
                                         </div>
                                     </div>
 
                                     <div class="col-md-12">
                                         <div class="wsus__check_single_form">
-                                            <input type="text" placeholder="Address *" name="address" value="{{old('address')}}">
+                                            <input type="text" placeholder="Address *" required name="address" value="{{old('address')}}">
                                         </div>
                                     </div>
 
@@ -251,7 +253,7 @@
                 data: {zip: zip},
                 success: function(data){
                     if(data.status === 'success'){
-                        $('#delivery_time').text('Express delivery: '+data.data.b_time);
+                        $('#delivery_time').text('Express delivery: '+data.data.b_time).css('color', 'green');
                         toastr.success('Delivery is available in your area');
                     }else{
                         $('#delivery_time').text('Standard delivery: 2-5 business days');

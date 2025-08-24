@@ -77,6 +77,11 @@
                                             <div class="input-group">
                                                 <span class="input-group-text bg-light"><i class="fas fa-user"></i></span>
                                                 <input type="text" name="name" class="form-control" placeholder="Full Name" required>
+                                                @error('name')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
                                             </div>
                                         </div>
                                         <div class="mb-3">
@@ -84,6 +89,11 @@
                                             <div class="input-group">
                                                 <span class="input-group-text bg-light"><i class="fas fa-envelope"></i></span>
                                                 <input type="email" name="email" class="form-control" placeholder="Email Address" required>
+                                                @error('email')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
                                             </div>
                                         </div>
                                         <div class="mb-3">
@@ -91,6 +101,11 @@
                                             <div class="input-group">
                                                 <span class="input-group-text bg-light"><i class="fas fa-mobile-alt"></i></span>
                                                 <input type="text" name="phone" class="form-control" placeholder="Mobile Number" required>
+                                                @error('phone')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
                                             </div>
                                         </div>
                                         <div class="mb-3">
@@ -98,6 +113,11 @@
                                             <div class="input-group">
                                                 <span class="input-group-text bg-light"><i class="fas fa-lock"></i></span>
                                                 <input type="password" name="password" class="form-control" placeholder="Password" required>
+                                                @error('password')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
                                             </div>
                                         </div>
                                         <div class="mb-3">
@@ -122,3 +142,42 @@
        LOGIN/REGISTER PAGE END
     ==============================-->
 @endsection
+@push('scripts')
+<script>
+    $(document).ready(function () {
+        // Sign Up form submission (same logic as Login)
+        $('form[action="{{ route('register') }}"]').on('submit', function (e) {
+            e.preventDefault();  // Prevent the default form submit
+
+            var form = $(this);
+            var formData = form.serialize();  // Serialize form data
+
+            $.ajax({
+                url: form.attr('action'),  // Form action (route)
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    // Handle successful registration, redirect or show message
+                    if (response.success) {
+                        window.location.href = response.redirect_url;
+                    }
+                },
+                error: function (xhr) {
+                    var errors = xhr.responseJSON.errors;  // Get errors from response
+
+                    // Clear previous errors on this form
+                    form.find('.invalid-feedback').remove();
+
+                    // Loop through errors and display them only on this form
+                    $.each(errors, function (key, messages) {
+                        var input = form.find('[name="' + key + '"]');
+                        input.addClass('is-invalid');
+                        input.after('<span class="invalid-feedback">' + messages[0] + '</span>');
+                    });
+                }
+            });
+        });
+    });
+</script>
+@endpush
+

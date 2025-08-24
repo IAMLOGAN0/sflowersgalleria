@@ -156,6 +156,10 @@
                                     <select class="form-select" id="slot" name="slot">
                                         <option disabled selected>-- Select Slot --</option>
                                     </select>
+                                    <div class="delivery-time">
+                                        <label class="fw-semibold mt-2">Delivery Time</label>
+                                        <p><span id="delivery-time-span" style="color: green">Enter Pincode & sector to see delivery time</span></p>
+                                    </div>
                                 </div>
 
                                 <!-- Quantity + Actions -->
@@ -179,14 +183,13 @@
                                         <button type="submit" class="btn btn-primary px-4 shadow-sm d-flex align-items-center">
                                             <i class="fas fa-shopping-cart me-2"></i> Add to Cart
                                         </button>
-                                        <button type="button" 
+                                    </div>
+                                     {{-- <button type="button"
                                             class="btn btn-outline-secondary rounded-circle shadow-sm d-flex align-items-center justify-content-center"
                                             data-bs-toggle="modal" data-bs-target="#exampleModal"
                                             style="width:42px; height:42px;">
                                             <i class="far fa-comment-alt"></i>
-                                        </button>
-                                    </div>
-                                    
+                                        </button> --}}
                                       {{-- Wishlist Button (if enabled) --}}
                                         {{-- <button type="button" class="btn btn-outline-danger rounded-circle shadow-sm add_to_wishlist"
                                             data-id="{{ $product->id }}" style="width:42px; height:42px;">
@@ -414,7 +417,7 @@
             PRODUCT DETAILS END
         ==============================-->
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    {{-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -438,7 +441,7 @@
 
             </div>
         </div>
-    </div>
+    </div> --}}
 @endsection
 
 @push('styles')
@@ -539,8 +542,14 @@
                         $("#slot").append('<option value="'+slot+'">'+slot+'</option>');
                     });
                     $("#delivery-time").val(selectedSector.b_time);
+                    $("#delivery-time-span").html('');
+                    $("#delivery-time-span").html('Express delivery: '+selectedSector.b_time);
+
                 }else{
                     toastr.error("Delivery is not available in your sector.");
+                    $("#delivery-time").val('');
+                    $("#delivery-time-span").html('');
+                    $("#delivery-time-span").html('Standard delivery: 2-5 business days');
                 }
             });
 

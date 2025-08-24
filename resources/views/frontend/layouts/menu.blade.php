@@ -91,19 +91,19 @@
     <span class="wsus__mobile_menu_close"><i class="fal fa-times"></i></span>
     <ul class="wsus__mobile_menu_header_icon d-inline-flex">
 
-        <li><a href="{{ route('user.wishlist.index') }}"><i class="fal fa-heart"></i><span id="wishlist_count">
+        {{-- <li><a href="{{ route('user.wishlist.index') }}"><i class="fal fa-heart"></i><span id="wishlist_count">
                     @if (auth()->check())
                         {{ \App\Models\Wishlist::where('user_id', auth()->user()->id)->count() }}
                     @else
                         0
                     @endif
-                </span></a></li>
+                </span></a></li> --}}
 
         @if (auth()->check())
             @if (auth()->user()->role === 'user')
                 <li><a href="{{ route('user.dashboard') }}"><i class="fal fa-user"></i></a></li>
-            @elseif (auth()->user()->role === 'vendor')
-                <li><a href="{{ route('vendor.dashbaord') }}"><i class="fal fa-user"></i></a></li>
+            {{-- @elseif (auth()->user()->role === 'vendor')
+                <li><a href="{{ route('vendor.dashbaord') }}"><i class="fal fa-user"></i></a></li> --}}
             @elseif (auth()->user()->role === 'admin')
                 <li><a href="{{ route('admin.dashbaord') }}"><i class="fal fa-user"></i></a></li>
             @endif
@@ -135,7 +135,7 @@
                     <ul class="wsus_mobile_menu_category">
                         @foreach ($categories as $categoryItem)
                             <li>
-                                <a href="#"
+                                <a href="{{ route('products.index', ['category' => $categoryItem->slug]) }}"
                                     class="{{ count($categoryItem->subCategories) > 0 ? 'accordion-button' : '' }} collapsed"
                                     data-bs-toggle="collapse"
                                     data-bs-target="#flush-collapseThreew-{{ $loop->index }}" aria-expanded="false"
@@ -148,7 +148,7 @@
                                         <div class="accordion-body">
                                             <ul>
                                                 @foreach ($categoryItem->subCategories as $subCategoryItem)
-                                                    <li><a href="#">{{ $subCategoryItem->name }}</a></li>
+                                                    <li><a href="{{ route('products.index', ['subcategory' => $subCategoryItem->slug]) }}">{{ $subCategoryItem->name }}</a></li>
                                                 @endforeach
                                             </ul>
                                         </div>
