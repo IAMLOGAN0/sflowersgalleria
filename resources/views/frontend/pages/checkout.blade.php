@@ -38,9 +38,13 @@
                     <div class="wsus__check_form">
                         <div class="d-flex">
                             <h5>Shipping Details </h5>
-                            <a href="javascript:;" style="margin-left:auto;" class="common_btn" data-bs-toggle="modal"
+                            <a href="javascript:;" style="margin-left:auto;" class="common_btn d-none d-md-block" data-bs-toggle="modal"
                                 data-bs-target="#exampleModal">add
                                 new address</a>
+                            <button type="button" class="btn btn-primary btn-sm d-block d-md-none w-100" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal">
+                                <i class="fas fa-plus"></i> Add new address
+                            </button>
                         </div>
 
                         <div class="accordion address-accordion" id="addressesAccordion">
