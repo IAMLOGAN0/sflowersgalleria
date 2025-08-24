@@ -6,8 +6,8 @@
 
 @section('content')
     <!--============================
-                BREADCRUMB START
-            ==============================-->
+                    BREADCRUMB START
+                ==============================-->
     <section id="wsus__breadcrumb">
         <div class="wsus_breadcrumb_overlay">
             <div class="container">
@@ -24,13 +24,13 @@
         </div>
     </section>
     <!--============================
-                BREADCRUMB END
-            ==============================-->
+                    BREADCRUMB END
+                ==============================-->
 
 
     <!--============================
-                CHECK OUT PAGE START
-            ==============================-->
+                    CHECK OUT PAGE START
+                ==============================-->
     <section id="wsus__cart_view">
         <div class="container">
             <div class="row">
@@ -38,11 +38,11 @@
                     <div class="wsus__check_form">
                         <div class="d-flex">
                             <h5>Shipping Details </h5>
-                            <a href="javascript:;" style="margin-left:auto;" class="common_btn d-none d-md-block" data-bs-toggle="modal"
-                                data-bs-target="#exampleModal">add
+                            <a href="javascript:;" style="margin-left:auto;" class="common_btn d-none d-md-block"
+                                data-bs-toggle="modal" data-bs-target="#exampleModal">add
                                 new address</a>
-                            <button type="button" class="btn btn-primary btn-sm d-block d-md-none w-100" data-bs-toggle="modal"
-                                data-bs-target="#exampleModal">
+                            <button type="button" class="btn btn-primary btn-sm d-block d-md-none w-100"
+                                data-bs-toggle="modal" data-bs-target="#exampleModal">
                                 <i class="fas fa-plus"></i> Add new address
                             </button>
                         </div>
@@ -59,10 +59,10 @@
                                                         class="form-check-input shipping_address" type="radio"
                                                         name="selected_address" id="addressRadio{{ $index }}"
                                                         data-id="{{ $address->id }}" data-zip="{{ $address->zip }}">
-                                                         <span style="cursor:pointer; font-weight: 500; color: #111;"
-            onclick="document.getElementById('addressRadio{{ $index }}').click();">
-        Select this address
-      </span>
+                                                    <span style="cursor:pointer; font-weight: 500; color: #111;"
+                                                        onclick="document.getElementById('addressRadio{{ $index }}').click();">
+                                                        Select this address
+                                                    </span>
                                                 </div> <!-- Arrow will stay on the right automatically -->
                                             </div>
                                         </button>
@@ -286,8 +286,8 @@
         </div>
     </div>
     <!--============================
-                CHECK OUT PAGE END
-            ==============================-->
+                    CHECK OUT PAGE END
+                ==============================-->
 @endsection
 
 @push('scripts')
