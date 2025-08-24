@@ -6,8 +6,8 @@
 
 @section('content')
     <!--============================
-            BREADCRUMB START
-        ==============================-->
+                BREADCRUMB START
+            ==============================-->
     <section id="wsus__breadcrumb">
         <div class="wsus_breadcrumb_overlay">
             <div class="container">
@@ -24,13 +24,13 @@
         </div>
     </section>
     <!--============================
-            BREADCRUMB END
-        ==============================-->
+                BREADCRUMB END
+            ==============================-->
 
 
     <!--============================
-            CHECK OUT PAGE START
-        ==============================-->
+                CHECK OUT PAGE START
+            ==============================-->
     <section id="wsus__cart_view">
         <div class="container">
             <div class="row">
@@ -43,27 +43,37 @@
                                 new address</a>
                         </div>
 
-                        <div class="row">
-                            @foreach ($addresses as $address)
-                                <div class="col-xl-6">
-                                    <div class="wsus__checkout_single_address">
-                                        <div class="form-check">
-                                            <input class="form-check-input shipping_address" data-zip="{{ $address->zip }}"
-                                                data-id="{{ $address->id }}" type="radio" name="flexRadioDefault"
-                                                id="flexRadioDefault1">
-                                            <label class="form-check-label" for="flexRadioDefault1">
-                                                Select Address
-                                            </label>
+                        <div class="accordion address-accordion" id="addressesAccordion">
+                            @foreach ($addresses as $index => $address)
+                                <div class="accordion-item mb-3">
+                                    <h2 class="accordion-header" id="heading{{ $index }}"> <button
+                                            class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#collapse{{ $index }}" aria-expanded="false"
+                                            aria-controls="collapse{{ $index }}">
+                                            <div class="d-flex align-items-center justify-content-between w-100">
+                                                <div class="d-flex align-items-center" style="gap: 0.5rem;"> <input
+                                                        class="form-check-input shipping_address" type="radio"
+                                                        name="selected_address" id="addressRadio{{ $index }}"
+                                                        data-id="{{ $address->id }}" data-zip="{{ $address->zip }}"> <span
+                                                        style="font-weight: 500; color: #111;"> Select this address </span>
+                                                </div> <!-- Arrow will stay on the right automatically -->
+                                            </div>
+                                        </button> </h2>
+                                    <div id="collapse{{ $index }}" class="accordion-collapse collapse"
+                                        aria-labelledby="heading{{ $index }}" data-bs-parent="#addressesAccordion">
+                                        <div class="accordion-body p-3">
+                                            <div class="address-card">
+                                                <ul>
+                                                    <li><strong>Name:</strong> <span>{{ $address->name }}</span></li>
+                                                    <li><strong>Phone:</strong> <span>{{ $address->phone }}</span></li>
+                                                    <li><strong>Email:</strong> <span>{{ $address->email }}</span></li>
+                                                    <li><strong>Country:</strong> <span>{{ $address->country }}</span></li>
+                                                    <li><strong>City:</strong> <span>{{ $address->city }}</span></li>
+                                                    <li><strong>Zip Code:</strong> <span>{{ $address->zip }}</span></li>
+                                                    <li><strong>Address:</strong> <span>{{ $address->address }}</span></li>
+                                                </ul>
+                                            </div>
                                         </div>
-                                        <ul>
-                                            <li><span>Name :</span> {{ $address->name }}</li>
-                                            <li><span>Phone :</span> {{ $address->phone }}</li>
-                                            <li><span>Email :</span> {{ $address->email }}</li>
-                                            <li><span>Country :</span> {{ $address->country }}</li>
-                                            <li><span>City :</span> {{ $address->city }}</li>
-                                            <li><span>Zip Code :</span> {{ $address->zip }}</li>
-                                            <li><span>Address :</span> {{ $address->address }}</li>
-                                        </ul>
                                     </div>
                                 </div>
                             @endforeach
@@ -268,8 +278,8 @@
         </div>
     </div>
     <!--============================
-            CHECK OUT PAGE END
-        ==============================-->
+                CHECK OUT PAGE END
+            ==============================-->
 @endsection
 
 @push('scripts')
@@ -515,9 +525,11 @@
                 let slot = $(this).val();
                 let date = $("#delivery-date").val();
                 if (slot && date) {
-                        $("#delivery-time-span").html("<span style='color: green'>We will deliver your order on</span> <br>" + date + " <span style='color: green'>at</span> " + slot + ".")
-                                    .css("font-weight", "bold")
-                                    .css("font-size", "1.1rem");
+                    $("#delivery-time-span").html(
+                            "<span style='color: green'>We will deliver your order on</span> <br>" + date +
+                            " <span style='color: green'>at</span> " + slot + ".")
+                        .css("font-weight", "bold")
+                        .css("font-size", "1.1rem");
                 }
             });
 
@@ -560,7 +572,11 @@
                             // Restore session slot (select existing option, don’t append)
                             if (deliveryLocation.slot) {
                                 $("#slot").val(deliveryLocation.slot);
-                                $("#delivery-time-span").html("<span style='color: green'>We will deliver your order on</span> <br>" + deliveryLocation.date + " <span style='color: green'>at</span> " + deliveryLocation.slot + ".")
+                                $("#delivery-time-span").html(
+                                        "<span style='color: green'>We will deliver your order on</span> <br>" +
+                                        deliveryLocation.date +
+                                        " <span style='color: green'>at</span> " + deliveryLocation
+                                        .slot + ".")
                                     .css("font-weight", "bold")
                                     .css("font-size", "1.1rem");
                             }
