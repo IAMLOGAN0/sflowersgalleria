@@ -18,6 +18,7 @@ use App\Models\Product;
 use App\Models\Slider;
 use App\Models\SubCategory;
 use App\Models\Vendor;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Response;
 
@@ -87,17 +88,20 @@ class HomepageController extends Controller
 
     public function getDeliveryLocations()
     {
+
         $deliveryLocations = Location::all()
             ->groupBy('pin') // group by Pincode
             ->map(function ($locations, $pin) {
                 return [
                     'pin' => $pin,
                     'sectors' => $locations->map(function ($location) {
+
+                        dd(json_decode($location->t_time, true));
                         return [
                             'id' => $location->id,
-                            'sector' => $location->sector,
-                            'delivery_taken_time' => $location->b_time,
-                            'time_slots' => json_decode($location->t_time, true) ?? [],
+                            'sector' => trim($location->sector),
+                            'delivery_taken_time' => trim($location->b_time),
+                            'time_slots' => json_decode(trim($location->t_time), true) ?? [],
                         ];
                     })->values(),
                 ];
