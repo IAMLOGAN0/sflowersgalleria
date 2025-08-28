@@ -23,6 +23,7 @@ use App\Http\Controllers\Frontend\WishlistController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthOtpController;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -168,6 +169,6 @@ Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'user', 'as' => 
 });
 
 Route::get('/clear-cache', function () {
-    Artisan::call('cache:clear');
+    Artisan::call('optimize:clear');
     return "Cache is cleared";
 });
