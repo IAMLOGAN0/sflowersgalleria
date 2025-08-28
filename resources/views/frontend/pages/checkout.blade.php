@@ -469,49 +469,39 @@
 
             /** 🔹 Pincode AJAX */
             $("#pincode").on('input', function() {
-    let pincode = $(this).val().trim();
-    if (pincode.length === 6) {
-        $.ajax({
-            url: "{{ route('get-sectors-by-pincode') }}",
-            type: 'POST',
-            data: { pincode: pincode },
-            headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-            success: function(response) {
-                $("#sector").val(''); // clear input
-                $("#slot").html('<option disabled selected>-- Select Slot --</option>');
+                let pincode = $(this).val().trim();
+                if (pincode.length === 6) {
+                    $.ajax({
+                        url: "{{ route('get-sectors-by-pincode') }}",
+                        type: 'POST',
+                        data: {
+                            pincode: pincode
+                        },
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            $("#sector").html(
+                                '<option disabled selected>-- Select Sector --</option>');
+                            $("#slot").html(
+                                '<option disabled selected>-- Select Slot --</option>');
 
-                if (response.sectors && response.sectors.length > 0) {
-                    toastr.success("Delivery is available in your area. Please select a sector.");
-
-                    // prepare data for autocomplete
-                    let sectorNames = response.sectors.map(function(sector) {
-                        return {
-                            label: sector.sector,
-                            value: sector.sector,
-                            id: sector.id
-                        };
-                    });
-
-                    // initialize autocomplete
-                    $("#sector").autocomplete({
-                        source: sectorNames,
-                        minLength: 0, // show suggestions immediately
-                        select: function(event, ui) {
-                            // save sector id somewhere (e.g. hidden input)
-                            $("#sector_id").val(ui.item.id);
+                            if (response.sectors && response.sectors.length > 0) {
+                                toastr.success(
+                                    "Delivery is available in your area. Please select a sector."
+                                );
+                                sectors = response.sectors;
+                                response.sectors.forEach(function(sector) {
+                                    $("#sector").append('<option value="' + sector.id +
+                                        '">' + sector.sector + '</option>');
+                                });
+                            } else {
+                                toastr.error("Delivery is not available in your area.");
+                            }
                         }
-                    }).focus(function() {
-                        $(this).autocomplete("search", ""); // show all when focus
                     });
-
-                } else {
-                    toastr.error("Delivery is not available in your area.");
                 }
-            }
-        });
-    }
-});
-
+            });
 
             // On sector change → filter slots
             $("#sector").on('change', function() {
