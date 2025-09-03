@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\HomepageController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\AuthOtpApiController;
+use App\Http\Controllers\Api\V1\CartController;
 use App\Http\Controllers\Api\V1\ProfileController;
 
 /*
@@ -54,6 +55,15 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/addresses/{id}', [ProfileController::class, 'updateAddress']);
         Route::delete('/addresses/{id}', [ProfileController::class, 'deleteAddress']);
     });
+
+    Route::middleware('auth:api')->prefix('v1/cart')->group(function () {
+        Route::post('/add', [CartController::class, 'addToCart']);
+        Route::get('/', [CartController::class, 'getCart']);
+        Route::post('/update/{id}', [CartController::class, 'updateQuantity']);
+        Route::delete('/remove/{id}', [CartController::class, 'removeItem']);
+        Route::delete('/clear', [CartController::class, 'clearCart']);
+    });
+
 
     Route::prefix('v1/events')->group(function () {
         Route::get('/', [EventsController::class, 'getAllEvents']);

@@ -36,58 +36,89 @@
             <div class="row">
                 <div class="col-xl-8 col-lg-7">
                     <div class="wsus__check_form">
-                        <div class="d-flex">
-                            <h5>Shipping Details </h5>
-                            <a href="javascript:;" style="margin-left:auto;" class="common_btn d-none d-md-block"
-                                data-bs-toggle="modal" data-bs-target="#exampleModal">add
-                                new address</a>
-                            <button type="button" class="btn btn-primary btn-sm d-block d-md-none w-100"
-                                data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                <i class="fas fa-plus"></i> Add new address
-                            </button>
+                        <div class="d-flex align-items-center mb-4">
+                            <h4 class="fw-bold mb-0">Order & Delivery Details</h4>
                         </div>
 
-                        <div class="accordion address-accordion" id="addressesAccordion">
-                            @foreach ($addresses as $index => $address)
-                                <div class="accordion-item mb-3">
-                                    <h2 class="accordion-header" id="heading{{ $index }}"> <button
-                                            class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                            data-bs-target="#collapse{{ $index }}" aria-expanded="false"
-                                            aria-controls="collapse{{ $index }}">
-                                            <div class="d-flex align-items-center justify-content-between w-100">
-                                                <div class="d-flex align-items-center" style="gap: 0.5rem;"> <input
-                                                        class="form-check-input shipping_address" type="radio"
-                                                        name="selected_address" id="addressRadio{{ $index }}"
-                                                        data-id="{{ $address->id }}" data-zip="{{ $address->zip }}">
-                                                    <span style="cursor:pointer; font-weight: 500; color: #111;"
-                                                        onclick="document.getElementById('addressRadio{{ $index }}').click();">
-                                                        Select this address
-                                                    </span>
-                                                </div> <!-- Arrow will stay on the right automatically -->
-                                            </div>
-                                        </button>
-                                    </h2>
-                                    <div id="collapse{{ $index }}" class="accordion-collapse collapse"
-                                        aria-labelledby="heading{{ $index }}" data-bs-parent="#addressesAccordion">
-                                        <div class="accordion-body p-3">
-                                            <div class="address-card">
-                                                <ul>
-                                                    <li><strong>Name:</strong> <span>{{ $address->name }}</span></li>
-                                                    <li><strong>Phone:</strong> <span>{{ $address->phone }}</span></li>
-                                                    <li><strong>Email:</strong> <span>{{ $address->email }}</span></li>
-                                                    <li><strong>Country:</strong> <span>{{ $address->country }}</span></li>
-                                                    <li><strong>City:</strong> <span>{{ $address->city }}</span></li>
-                                                    <li><strong>Zip Code:</strong> <span>{{ $address->zip }}</span></li>
-                                                    <li><strong>Address:</strong> <span>{{ $address->address }}</span></li>
-                                                </ul>
-                                            </div>
+                        <div class="">
+                            @foreach ($cartItems as $index => $item)
+                            <div class="gift-box mb-4 p-4 rounded-3 shadow-sm border bg-white">
+
+                                <!-- Item Info -->
+                                <div class="d-flex align-items-center mb-4">
+                                    <img src="{{ asset($item->options->image) }}"
+                                        alt="{{ $item->name }}"
+                                        class="rounded shadow-sm"
+                                        width="100" height="100" style="object-fit: cover;">
+
+                                    <div class="ms-3">
+                                        <h6 class="fw-semibold mb-1">{{ $item->name }}</h6>
+                                        <p class="text-muted mb-1 small">Price: <span class="fw-semibold text-dark">{{ $settings->currency_icon.$item->price }}</span></p>
+                                        <p class="text-muted small mb-0">Qty: <span class="fw-semibold text-dark">{{ $item->qty }}</span></p>
+                                    </div>
+                                </div>
+
+                                <!-- Delivery Date & Slot -->
+                                <div class="mb-4">
+                                    <label class="fw-semibold mb-2 d-block">Delivery Schedule</label>
+                                    <div class="row g-2">
+                                        <div class="col-md-6">
+                                            <input type="date"
+                                                class="form-control"
+                                                name="delivery_date[{{$item->rowId}}]"
+                                                value="{{ date('Y-m-d') }}">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <select class="form-select" name="delivery_slot[{{$item->rowId}}]">
+                                                <option value="12-1">12:00 - 13:00</option>
+                                                <option value="13-2">13:00 - 14:00</option>
+                                                <option value="18-20">18:00 - 20:00</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
+
+                                <!-- Delivery Address -->
+                                <div class="mb-4">
+                                    <label class="fw-semibold mb-2 d-block">Delivery Address</label>
+                                    <div class="input-group">
+                                        <select class="form-select addressField" name="address[{{$item->rowId}}]">
+                                            @foreach($addresses as $address)
+                                                <option value="{{ $address->id }}">{{ $address->full_address }}</option>
+                                            @endforeach
+                                        </select>
+                                        <button type="button" class="btn btn-outline-primary addNewAddress">+ Add New</button>
+                                    </div>
+                                </div>
+
+                                <!-- Occasion -->
+                                <div class="mb-4">
+                                    <label class="fw-semibold mb-2 d-block">Occasion</label>
+                                    <select class="form-select" name="occasion[{{$item->rowId}}]">
+                                        <option>Birthday</option>
+                                        <option>Anniversary</option>
+                                        <option>Congratulations</option>
+                                        <option>Get Well Soon</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+
+                                <!-- Free Message Card -->
+                                <div class="mb-2">
+                                    <label class="fw-semibold mb-2 d-block">Free Message Card</label>
+                                    <textarea class="form-control"
+                                            rows="3"
+                                            name="message[{{$item->rowId}}]"
+                                            placeholder="Write a personalized message..."></textarea>
+                                    <small class="text-muted">We’ll print this message on a complimentary card.</small>
+                                </div>
+
+                            </div>
                             @endforeach
                         </div>
                     </div>
                 </div>
+
                 <div class="col-xl-4 col-lg-5">
                     <div class="wsus__order_details" id="sticky_sidebar">
                         @php
@@ -95,58 +126,7 @@
                             $selectedDate = $deliveryLocation['date'] ?? date('Y-m-d');
                         @endphp
 
-                        <div class="">
-                            <h6 class="fw-bold">Delivery Options</h6>
-                            <input type="text" class="form-control my-2" placeholder="Enter Pincode" id="pincode"
-                                name="pincode" value="{{ $deliveryLocation['pincode'] ?? '' }}">
-                            <input type="hidden" id="delivery-time" name="time"
-                                value="{{ $deliveryLocation['slot'] ?? '' }}">
-
-                            <div class="sector-box">
-                                <label class="fw-semibold mt-2">Choose Sector</label>
-                                <select class="form-select" id="sector" name="sector">
-                                    <option disabled selected>-- Select Sector --</option>
-                                    {{-- You can inject sectors dynamically here --}}
-                                </select>
-                            </div>
-
-                            <!-- Date Picker -->
-                            <label class="fw-semibold mt-2">Select Delivery Date</label>
-                            <input type="date" class="form-control" id="delivery-date" name="delivery_date"
-                                min="{{ date('Y-m-d') }}" value="{{ $selectedDate }}">
-
-                            <!-- Time Slot -->
-                            <label class="fw-semibold mt-2">Select Time Slot</label>
-                            <select class="form-select" id="slot" name="slot">
-                                <option disabled selected>-- Select Slot --</option>
-                            </select>
-
-                            <div class="delivery-time">
-                                <label class="fw-semibold mt-2">Delivery Information</label>
-                                <p>
-                                    <span id="delivery-time-span" style="color: green">
-
-                                    </span>
-                                </p>
-                            </div>
-                        </div>
-
-
-
-                        {{-- <p class="wsus__product delivery_time_label">Delivery Time</p>
-                            @if (session('delivery_location') !== null && session('delivery_location')['time'] !== null)
-                                @php $loc = session('delivery_location'); @endphp
-                                <span id="delivery_time" style="color: green">
-                                    Express delivery: {{ $loc['time'] }}
-                                </span>
-                            @else
-                                <span id="delivery_time" style="color: red">
-                                    Standard delivery: 2-5 business days
-                                </span>
-                            @endif --}}
-                        {{-- <span id="delivery_time" style="color: green">Standard delivery: 2-5 business days</span> --}}
-
-                        <p class="wsus__product mt-4">Shipping Methods</p>
+                        <p class="wsus__product">Shipping Methods</p>
                         @foreach ($shippingMethods as $method)
                             @if ($method->type == 'min_cost' && getCartTotal() >= $method->min_cost)
                                 <div class="form-check">
@@ -210,7 +190,7 @@
                     </div>
                     <div class="modal-body p-0">
                         <div class="wsus__check_form p-3">
-                            <form action="{{ route('user.checkout.address.create') }}" method="POST">
+                            <form id="addressForm">
                                 @csrf
                                 <div class="row">
                                     <div class="col-md-12">
@@ -392,6 +372,30 @@
                             toastr.success('Delivery is available in your area');
                         } else {
                             toastr.error('Delivery is not available in your area');
+                        }
+                    },
+                    error: function(data) {
+                        console.log(data);
+                    }
+                })
+            });
+
+            $(".addNewAddress").on('click', function() {
+                $('#exampleModal').modal('show');
+            });
+
+            $("#addressForm").on('submit', function(e) {
+                e.preventDefault();
+                let data = $(this).serialize();
+                $.ajax({
+                    url: "{{ route('user.checkout.address.create') }}",
+                    method: 'POST',
+                    data: data,
+                    success: function(data) {
+                        if (data.status === 'success') {
+                            $('#exampleModal').modal('hide');
+                            $('.addressField').html(data.data);
+                            toastr.success(data.message);
                         }
                     },
                     error: function(data) {

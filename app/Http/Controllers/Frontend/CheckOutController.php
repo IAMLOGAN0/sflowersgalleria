@@ -9,14 +9,15 @@ use App\Models\UserAddress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-
+use Cart;
 class CheckOutController extends Controller
 {
     public function index()
     {
         $addresses = UserAddress::where('user_id', Auth::user()->id)->get();
         $shippingMethods = ShippingRule::where('status', 1)->get();
-        return view('frontend.pages.checkout', compact('addresses', 'shippingMethods'));
+        $cartItems = Cart::content();
+        return view('frontend.pages.checkout', compact('addresses', 'shippingMethods', 'cartItems'));
     }
 
     public function createAddress(Request $request)
@@ -44,10 +45,17 @@ class CheckOutController extends Controller
         $address->address = $request->address;
         $address->save();
 
-        toastr('Address created successfully!', 'success', 'Success');
+        // get updated addresses for current user
+        $addresses = UserAddress::where('user_id', Auth::id())->get();
 
-        return redirect()->back();
+        // prepare updated HTML for select dropdown
+        $html = view('frontend.partials.address_dropdown', compact('addresses'))->render();
 
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Address added successfully!',
+            'data'    => $html
+        ]);
     }
 
     public function checkOutFormSubmit(Request $request)
