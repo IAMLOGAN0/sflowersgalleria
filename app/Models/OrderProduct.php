@@ -9,6 +9,8 @@ class OrderProduct extends Model
 {
     use HasFactory;
 
+    protected $table = 'order_products';
+
     public function vendor()
     {
         return $this->belongsTo(Vendor::class);

@@ -88,7 +88,7 @@ class PaymentController extends Controller
 
             $orderOccation = Session::get('occasion')[$item->rowId] ?? '';
             $orderMessage = Session::get('message')[$item->rowId] ?? '';
-
+            dd($orderMessage, $orderOccation, $orderAddress);
             $product = Product::find($item->id);
             $orderProduct = new OrderProduct();
             $orderProduct->order_id = $order->id;
