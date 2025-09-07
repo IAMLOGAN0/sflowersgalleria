@@ -95,8 +95,6 @@ class HomepageController extends Controller
                 return [
                     'pin' => $pin,
                     'sectors' => $locations->map(function ($location) {
-
-                        dd(json_decode($location->t_time, true));
                         return [
                             'id' => $location->id,
                             'sector' => trim($location->sector),
