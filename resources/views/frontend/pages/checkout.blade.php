@@ -45,35 +45,32 @@
                             <div class="gift-box mb-4 p-4 rounded-3 shadow-sm border bg-white">
 
                                 <!-- Item Info -->
-                                <div class="d-flex align-items-center mb-4">
-                                    <img src="{{ asset($item->options->image) }}"
-                                        alt="{{ $item->name }}"
-                                        class="rounded shadow-sm"
-                                        width="100" height="100" style="object-fit: cover;">
+                                <div class="gift-box mb-3  rounded-3  bg-white">
+                                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start">
 
-                                    <div class="ms-3">
-                                        <h6 class="fw-semibold mb-1">{{ $item->name }}</h6>
-                                        <p class="text-muted mb-1 small">Price: <span class="fw-semibold text-dark">{{ $settings->currency_icon.$item->price }}</span></p>
-                                        <p class="text-muted small mb-0">Qty: <span class="fw-semibold text-dark">{{ $item->qty }}</span></p>
-                                    </div>
-                                </div>
+                                        <!-- Left: Product Info -->
+                                        <div class="d-flex">
+                                            <img src="{{ asset($item->options->image) }}"
+                                                alt="{{ $item->name }}"
+                                                class="rounded shadow-sm"
+                                                width="90" height="90" style="object-fit: cover;">
 
-                                <!-- Delivery Date & Slot -->
-                                <div class="mb-4">
-                                    <label class="fw-semibold mb-2 d-block">Delivery Schedule</label>
-                                    <div class="row g-2">
-                                        <div class="col-md-6">
-                                            <input type="date"
-                                                class="form-control"
-                                                name="delivery_date[{{$item->rowId}}]"
-                                                value="{{ date('Y-m-d') }}">
+                                            <div class="ms-3">
+                                                <h6 class="fw-semibold mb-1">{{ $item->name }}</h6>
+                                                <p class="text-muted small mb-1">₹{{ $item->price }} × {{ $item->qty }}</p>
+                                            </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <select class="form-select" name="delivery_slot[{{$item->rowId}}]">
-                                                <option value="12-1">12:00 - 13:00</option>
-                                                <option value="13-2">13:00 - 14:00</option>
-                                                <option value="18-20">18:00 - 20:00</option>
-                                            </select>
+
+                                        <!-- Right: Delivery Info -->
+                                        <div class="mt-3 mt-md-0 text-md-end">
+                                            <p class="fw-semibold mb-1">Delivery On</p>
+                                            <span class="badge bg-success fs-6 px-2 py-1">
+                                                {{ \Carbon\Carbon::parse($item->options->order_date)->format('D, jS M, Y') }}
+                                            </span>
+                                            <p class="text-muted small mb-2">
+                                                {{ $item->options->order_slot }}
+                                            </p>
+                                            {{-- <button class="btn btn-outline-secondary btn-sm">CHANGE ></button> --}}
                                         </div>
                                     </div>
                                 </div>
@@ -87,7 +84,7 @@
                                                 <option value="{{ $address->id }}">{{ $address->full_address }}</option>
                                             @endforeach
                                         </select>
-                                        <button type="button" class="btn btn-outline-primary addNewAddress">+ Add New</button>
+                                        <button type="button" class="btn btn-outline-primary addNewAddress" data-pincode="{{ $item->options->order_pincode }}">+ Add New</button>
                                     </div>
                                 </div>
 
@@ -121,17 +118,12 @@
 
                 <div class="col-xl-4 col-lg-5">
                     <div class="wsus__order_details" id="sticky_sidebar">
-                        @php
-                            $deliveryLocation = session('delivery_location');
-                            $selectedDate = $deliveryLocation['date'] ?? date('Y-m-d');
-                        @endphp
-
                         <p class="wsus__product">Shipping Methods</p>
                         @foreach ($shippingMethods as $method)
                             @if ($method->type == 'min_cost' && getCartTotal() >= $method->min_cost)
                                 <div class="form-check">
                                     <input class="form-check-input shipping_method" type="radio" name="exampleRadios"
-                                        id="exampleRadios1" value="{{ $method->id }}" data-id="{{ $method->cost }}">
+                                        id="exampleRadios1" value="{{ $method->id }}"  data-id="{{ $method->cost }}">
                                     <label class="form-check-label" for="exampleRadios1">
                                         {{ $method->name }}
                                         <span>cost: ({{ $settings->currency_icon }}{{ $method->cost }})</span>
@@ -167,10 +159,8 @@
                                 </label>
                             </div>
                         </div>
-                        <form action="" id="checkOutForm">
+                        <form action="" id="checkOutForm" style="display: none">
                             <input type="hidden" name="shipping_method_id" value="" id="shipping_method_id">
-                            <input type="hidden" name="shipping_address_id" value="" id="shipping_address_id">
-
                         </form>
                         <a href="" id="submitCheckoutForm" class="common_btn">Place Order</a>
                     </div>
@@ -239,7 +229,7 @@
 
                                     <div class="col-md-6">
                                         <div class="wsus__check_single_form">
-                                            <input id="zipInput" type="text" placeholder="Zip *" required
+                                            <input id="zipInput" type="number" placeholder="Zip *" readonly
                                                 name="zip" value="{{ old('zip') }}">
                                         </div>
                                     </div>
@@ -325,7 +315,7 @@
                 e.preventDefault();
                 if ($('#shipping_method_id').val() == "") {
                     toastr.error('Shipping method is requred');
-                } else if ($('#shipping_address_id').val() == "") {
+                } else if ($('.addressField').filter(function() { return $(this).val() != ""; }).length == 0) {
                     toastr.error('Shipping address is requred');
                 } else if (!$('.agree_term').prop('checked')) {
                     toastr.error('You have to agree website terms and conditions');
@@ -363,29 +353,9 @@
 
             });
 
-            $('#zipInput').on('blur', function() {
-                let zip = $(this).val();
-                $.ajax({
-                    url: "{{ route('user.check.pincode') }}",
-                    method: 'POST',
-                    data: {
-                        zip: zip
-                    },
-                    success: function(data) {
-                        if (data.status === 'success') {
-                            console.log(data);
-                            toastr.success('Delivery is available in your area');
-                        } else {
-                            toastr.error('Delivery is not available in your area');
-                        }
-                    },
-                    error: function(data) {
-                        console.log(data);
-                    }
-                })
-            });
-
             $(".addNewAddress").on('click', function() {
+                $pincode = $(this).attr('data-pincode');
+                $("#zipInput").val($pincode);
                 $('#exampleModal').modal('show');
             });
 

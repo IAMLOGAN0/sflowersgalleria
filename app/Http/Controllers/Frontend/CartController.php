@@ -65,28 +65,26 @@ class CartController extends Controller
             $productPrice = $product->price;
         }
 
-        $cartData = [];
-        $cartData['id'] = $product->id;
-        $cartData['name'] = $product->name;
-        $cartData['qty'] = $request->qty;
-        $cartData['price'] = $productPrice;
-        $cartData['weight'] = 10;
-        $cartData['options']['variants'] = $variants;
-        $cartData['options']['variants_total'] = $variantTotalAmount;
-        $cartData['options']['image'] = $product->thumb_image;
-        $cartData['options']['slug'] = $product->slug;
-
-        Cart::add($cartData);
-
-        $delivery_location = [
-            "pincode" => $request->pincode,
-            "sector"  => $request->sector,
-            "slot"    => $request->slot,
-            "time"    => $request->time,
-            "date"    => $request->delivery_date
+        $cartData = [
+            'id'      => $product->id,
+            'name'    => $product->name,
+            'qty'     => $request->qty,
+            'price'   => $productPrice,
+            'weight'  => 10,
+            'options' => [
+                'order_pincode'  => $request->pincode,
+                'order_sector'   => $request->sector,
+                'order_slot'     => $request->slot,
+                'order_time'     => $request->time,
+                'order_date'     => $request->delivery_date,
+                'variants'       => $variants,
+                'variants_total' => $variantTotalAmount,
+                'image'          => $product->thumb_image,
+                'slug'           => $product->slug,
+            ],
         ];
 
-        session(['delivery_location' => $delivery_location]);
+        Cart::add($cartData);
 
         return response(['status' => 'success', 'message' => 'Added to cart successfully!']);
     }

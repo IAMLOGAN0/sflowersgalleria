@@ -60,10 +60,8 @@ class CheckOutController extends Controller
 
     public function checkOutFormSubmit(Request $request)
     {
-        dd($request->all());    
        $request->validate([
         'shipping_method_id' => ['required', 'integer'],
-        'shipping_address_id' => ['required', 'integer'],
        ]);
 
        $shippingMethod = ShippingRule::findOrFail($request->shipping_method_id);
@@ -75,10 +73,21 @@ class CheckOutController extends Controller
                 'cost' => $shippingMethod->cost
            ]);
        }
-       $address = UserAddress::findOrFail($request->shipping_address_id)->toArray();
-       if($address){
-           Session::put('address', $address);
+    //    $address = UserAddress::findOrFail($request->shipping_address_id)->toArray();
+    //    if($address){
+    //        Session::put('address', $address);
+    //    }
+       $tempAddressArray = [];
+       $tempOccasionsArray = $request->occasion;
+       $tempMessagesArray = $request->message;
+       foreach($request->address as $key => $value){
+            $address = UserAddress::findOrFail($value)->toArray();
+            $tempArray[$key] = $address;
        }
+
+       Session::put('address', $tempAddressArray);
+       Session::put('occasion', $tempOccasionsArray);
+       Session::put('message', $tempMessagesArray);
 
        return response(['status' => 'success', 'redirect_url' => route('user.payment')]);
     }

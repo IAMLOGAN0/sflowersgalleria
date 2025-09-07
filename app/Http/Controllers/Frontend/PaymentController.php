@@ -24,9 +24,6 @@ class PaymentController extends Controller
 {
     public function index()
     {
-        if(!Session::has('address')){
-            return redirect()->route('user.checkout');
-        }
         return view('frontend.pages.payment');
     }
 
@@ -77,7 +74,6 @@ class PaymentController extends Controller
         $order->product_qty = \Cart::content()->count();
         $order->payment_method = $paymentMethod;
         $order->payment_status = $paymentStatus;
-        $order->order_address = json_encode(Session::get('address'));
         $order->shpping_method = json_encode(Session::get('shipping_method'));
         $order->coupon = json_encode(Session::get('coupon'));
         $order->order_status = 'pending';
@@ -85,6 +81,13 @@ class PaymentController extends Controller
 
         // store order products
         foreach(\Cart::content() as $item){
+
+            $address = Session::get('address')[$item->rowId] ?? [];
+            $orderAddress = json_encode($address);
+
+            $orderOccation = Session::get('occasion')[$item->rowId] ?? '';
+            $orderMessage = Session::get('message')[$item->rowId] ?? '';
+
             $product = Product::find($item->id);
             $orderProduct = new OrderProduct();
             $orderProduct->order_id = $order->id;
@@ -95,6 +98,13 @@ class PaymentController extends Controller
             $orderProduct->variant_total = $item->options->variants_total;
             $orderProduct->unit_price = $item->price;
             $orderProduct->qty = $item->qty;
+            $orderProduct->delivery_address = $orderAddress;
+            $orderProduct->delivery_date = $item->options->order_date;
+            $orderProduct->delivery_pincode = $item->options->order_pincode;
+            $orderProduct->delivery_sector = $item->options->order_sector;
+            $orderProduct->delivery_slot = $item->options->order_slot;
+            $orderProduct->occation = $orderOccation;
+            $orderProduct->message = $orderMessage;
             $orderProduct->save();
 
             // update product quantity
@@ -119,9 +129,11 @@ class PaymentController extends Controller
     public function clearSession()
     {
         \Cart::destroy();
-        Session::forget('address');
         Session::forget('shipping_method');
         Session::forget('coupon');
+        Session::forget('address');
+        Session::forget('message');
+        Session::forget('occasion');
     }
 
 
