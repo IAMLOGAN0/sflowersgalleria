@@ -329,30 +329,35 @@
                     toastr.error('Shipping address is requred');
                 } else if (!$('.agree_term').prop('checked')) {
                     toastr.error('You have to agree website terms and conditions');
-                } else {
-                    $.ajax({
-                        url: "{{ route('user.checkout.form-submit') }}",
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        data: $('#checkOutForm').serialize(),
-                        beforeSend: function() {
-                            $('#submitCheckoutForm').html(
-                                '<i class="fas fa-spinner fa-spin fa-1x"></i>')
-                        },
-                        success: function(data) {
-                            if (data.status === 'success') {
-                                $('#submitCheckoutForm').text('Place Order')
-                                // redirect user to next page
-                                window.location.href = data.redirect_url;
+                    } else {
+                        // move inputs from gift-box into the form
+                        $('.gift-box').find('input, select, textarea').each(function() {
+                            $('#checkOutForm').append($(this).clone());
+                        });
+
+                        $.ajax({
+                            url: "{{ route('user.checkout.form-submit') }}",
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            data: $('#checkOutForm').serialize(),
+                            beforeSend: function() {
+                                $('#submitCheckoutForm').html(
+                                    '<i class="fas fa-spinner fa-spin fa-1x"></i>')
+                            },
+                            success: function(data) {
+                                if (data.status === 'success') {
+                                    $('#submitCheckoutForm').text('Place Order')
+                                    // redirect user to next page
+                                    window.location.href = data.redirect_url;
+                                }
+                            },
+                            error: function(data) {
+                                console.log(data);
                             }
-                        },
-                        error: function(data) {
-                            console.log(data);
-                        }
-                    })
-                }
+                        })
+                    }
 
 
 

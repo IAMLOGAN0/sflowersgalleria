@@ -60,6 +60,7 @@ class CheckOutController extends Controller
 
     public function checkOutFormSubmit(Request $request)
     {
+        dd($request->all());    
        $request->validate([
         'shipping_method_id' => ['required', 'integer'],
         'shipping_address_id' => ['required', 'integer'],

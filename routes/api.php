@@ -40,6 +40,23 @@ Route::prefix('v1/delivery')->group(function () {
     Route::get('locations', [HomepageController::class, 'getDeliveryLocations']);
 });
 
+Route::prefix('v1/events')->group(function () {
+    Route::get('/', [EventsController::class, 'getAllEvents']);
+    Route::get('/categories', [EventsController::class, 'getAllCategories']);
+    Route::get('/{categorySlug}', [EventsController::class, 'getEventsByCategorySlug']);
+    Route::get('/{categorySlug}/{eventSlug}', [EventsController::class, 'getEventDetails']);
+    Route::get('/{categorySlug}/{eventSlug}/comments', [EventsController::class, 'getCommentsByEventSlug']);
+});
+
+Route::prefix('v1/cart')->group(function () {
+    Route::post('/add', [CartController::class, 'addToCart']);
+    Route::get('/', [CartController::class, 'getCart']);
+    Route::post('/update/{id}', [CartController::class, 'updateQuantity']);
+    Route::delete('/remove/{id}', [CartController::class, 'removeItem']);
+    Route::delete('/clear', [CartController::class, 'clearCart']);
+});
+
+
 // ✅ Protected routes (require login)
 Route::middleware('auth:api')->group(function () {
 
@@ -56,22 +73,6 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('/addresses/{id}', [ProfileController::class, 'deleteAddress']);
     });
 
-    Route::prefix('v1/cart')->group(function () {
-        Route::post('/add', [CartController::class, 'addToCart']);
-        Route::get('/', [CartController::class, 'getCart']);
-        Route::post('/update/{id}', [CartController::class, 'updateQuantity']);
-        Route::delete('/remove/{id}', [CartController::class, 'removeItem']);
-        Route::delete('/clear', [CartController::class, 'clearCart']);
-    });
-
-
-    Route::prefix('v1/events')->group(function () {
-        Route::get('/', [EventsController::class, 'getAllEvents']);
-        Route::get('/categories', [EventsController::class, 'getAllCategories']);
-        Route::get('/{categorySlug}', [EventsController::class, 'getEventsByCategorySlug']);
-        Route::get('/{categorySlug}/{eventSlug}', [EventsController::class, 'getEventDetails']);
-        Route::get('/{categorySlug}/{eventSlug}/comments', [EventsController::class, 'getCommentsByEventSlug']);
-    });
 
     Route::prefix('v1/delivery-boy')->group(function () {
         Route::post('order-status', [DeliveryBoyController::class, 'changeOrderStatus']);
