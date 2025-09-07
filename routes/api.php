@@ -54,9 +54,9 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/address/{id}', [ProfileController::class, 'getAddress']);
         Route::post('/addresses/{id}', [ProfileController::class, 'updateAddress']);
         Route::delete('/addresses/{id}', [ProfileController::class, 'deleteAddress']);
-    });  
+    });
 
-    Route::middleware('auth:api')->prefix('v1/cart')->group(function () {
+    Route::prefix('v1/cart')->group(function () {
         Route::post('/add', [CartController::class, 'addToCart']);
         Route::get('/', [CartController::class, 'getCart']);
         Route::post('/update/{id}', [CartController::class, 'updateQuantity']);
