@@ -12,6 +12,7 @@ use App\Models\Product;
 use App\Models\RazorpaySetting;
 use App\Models\StripeSetting;
 use App\Models\Transaction;
+use App\Models\UserAddress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -82,7 +83,8 @@ class PaymentController extends Controller
         // store order products
         foreach(\Cart::content() as $item){
 
-            $address = Session::get('address')[$item->rowId] ?? [];
+            $addressId = Session::get('address')[$item->rowId] ?? [];
+            $address = UserAddress::findOrFail($addressId)->toArray();
             $orderAddress = json_encode($address);
 
             $orderOccation = Session::get('occasion')[$item->rowId] ?? '';

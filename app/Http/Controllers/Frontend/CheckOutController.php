@@ -73,18 +73,10 @@ class CheckOutController extends Controller
                 'cost' => $shippingMethod->cost
            ]);
        }
-    //    $address = UserAddress::findOrFail($request->shipping_address_id)->toArray();
-    //    if($address){
-    //        Session::put('address', $address);
-    //    }
-       $tempAddressArray = [];
+
+       $tempAddressArray = $request->address;
        $tempOccasionsArray = $request->occasion;
        $tempMessagesArray = $request->message;
-       foreach($request->address as $key => $value){
-            $address = UserAddress::findOrFail($value)->toArray();
-            $tempArray[$key] = $address;
-       }
-
        Session::put('address', $tempAddressArray);
        Session::put('occasion', $tempOccasionsArray);
        Session::put('message', $tempMessagesArray);

@@ -16,7 +16,7 @@ class UserOrderController extends Controller
 
     public function show(string $id)
     {
-        $order = Order::findOrFail($id);
+        $order = Order::findOrFail($id); 
         return view('frontend.dashboard.order.show', compact('order'));
     }
 }
