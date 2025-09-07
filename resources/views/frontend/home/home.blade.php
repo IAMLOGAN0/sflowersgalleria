@@ -1,6 +1,6 @@
 @extends('frontend.layouts.master')
 @section('title')
-{{$settings->site_name}} || e-Commerce HTML Template
+{{$settings->site_name}}
 @endsection
 
 @section('content')
