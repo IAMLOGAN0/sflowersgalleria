@@ -71,7 +71,7 @@ class CartController extends Controller
     /** Get all cart items */
     public function getCart(Request $request)
     {
-        $items = CartItem::with('product', 'product.variants', 'product.variantsItems')
+        $items = CartItem::with('product', 'product.variants', 'product.category', 'product.productImageGalleries')
         ->where('user_id', $request->user()->id)
         ->get();
         return response()->json(['status' => 'success', 'data' => $items]);
