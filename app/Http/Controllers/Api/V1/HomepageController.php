@@ -55,7 +55,7 @@ class HomepageController extends Controller
             'top_product' => fn ($q) => $q->where('product_type', 'top_product'),
             'best_product' => fn ($q) => $q->where('product_type', 'best_product'),
             'plants' => fn ($q) => $q->whereHas('category', fn ($cat) => $cat->where('slug', 'plants')),
-            'event_corporate_gifts' => fn ($q) => $q->whereHas('category', fn ($cat) => $cat->where('slug', 'event-corporate-gifts')),
+            // 'event_corporate_gifts' => fn ($q) => $q->whereHas('category', fn ($cat) => $cat->where('slug', 'event-corporate-gifts')),
             'luxury' => fn ($q) => $q->whereHas('category', fn ($cat) => $cat->where('slug', 'luxury')),
             'cakes' => fn ($q) => $q->whereHas('category', fn ($cat) => $cat->where('slug', 'cakes')),
         ];
@@ -70,7 +70,7 @@ class HomepageController extends Controller
 
         return $typeBaseProducts;
     }
-    
+
 
     public function getAllCategoriesWithSubcategories()
     {
