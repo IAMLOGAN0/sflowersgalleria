@@ -14,5 +14,9 @@ class CartItem extends Model
     protected $casts = [
         'variants' => 'array',
     ];
+
+    public function products()  {
+        return $this->belongsTo(Product::class, 'product_id');
+    }
 }
 

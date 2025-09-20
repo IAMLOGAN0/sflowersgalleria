@@ -42,26 +42,35 @@ class HomepageController extends Controller
 
     public function getTypeBaseProduct()
     {
+        // Base query builder with common relations and conditions
+        $baseQuery = Product::withAvg('reviews', 'rating')
+            ->withCount('reviews')
+            ->with(['variants', 'category', 'productImageGalleries'])
+            ->where(['is_approved' => 1, 'status' => 1]);
+
+        // Define product types mapped to query conditions
+        $configs = [
+            'new_arrival' => fn ($q) => $q->where('product_type', 'new_arrival'),
+            'featured_product' => fn ($q) => $q->where('product_type', 'featured_product'),
+            'top_product' => fn ($q) => $q->where('product_type', 'top_product'),
+            'best_product' => fn ($q) => $q->where('product_type', 'best_product'),
+            'plants' => fn ($q) => $q->whereHas('category', fn ($cat) => $cat->where('slug', 'plants')),
+            'event_corporate_gifts' => fn ($q) => $q->whereHas('category', fn ($cat) => $cat->where('slug', 'event-corporate-gifts')),
+            'luxury' => fn ($q) => $q->whereHas('category', fn ($cat) => $cat->where('slug', 'luxury')),
+            'cakes' => fn ($q) => $q->whereHas('category', fn ($cat) => $cat->where('slug', 'cakes')),
+        ];
+
+        // Run queries dynamically
         $typeBaseProducts = [];
-
-        $typeBaseProducts['new_arrival'] = Product::withAvg('reviews', 'rating')->withCount('reviews')
-            ->with(['variants', 'category', 'productImageGalleries'])
-            ->where(['product_type' => 'new_arrival', 'is_approved' => 1, 'status' => 1])->orderBy('id', 'DESC')->take(8)->get();
-
-        $typeBaseProducts['featured_product'] = Product::withAvg('reviews', 'rating')->withCount('reviews')
-            ->with(['variants', 'category', 'productImageGalleries'])
-            ->where(['product_type' => 'featured_product', 'is_approved' => 1, 'status' => 1])->orderBy('id', 'DESC')->take(8)->get();
-
-        $typeBaseProducts['top_product'] = Product::withAvg('reviews', 'rating')->withCount('reviews')
-            ->with(['variants', 'category', 'productImageGalleries'])
-            ->where(['product_type' => 'top_product', 'is_approved' => 1, 'status' => 1])->orderBy('id', 'DESC')->take(8)->get();
-
-        $typeBaseProducts['best_product'] = Product::withAvg('reviews', 'rating')->withCount('reviews')
-            ->with(['variants', 'category', 'productImageGalleries'])
-            ->where(['product_type' => 'best_product', 'is_approved' => 1, 'status' => 1])->orderBy('id', 'DESC')->take(8)->get();
+        foreach ($configs as $key => $callback) {
+            $query = (clone $baseQuery); // clone so builder isn't mutated
+            $callback($query);
+            $typeBaseProducts[$key] = $query->orderBy('id', 'DESC')->take(8)->get();
+        }
 
         return $typeBaseProducts;
     }
+    
 
     public function getAllCategoriesWithSubcategories()
     {
