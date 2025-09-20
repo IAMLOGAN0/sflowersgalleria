@@ -60,7 +60,7 @@ class CartController extends Controller
                 'price' => $productPrice,
                 'variants' => $variants,
                 'variants_total' => $variantTotalAmount,
-                'image' => $a->thumb_image,
+                'image' => $product->thumb_image,
                 'slug' => $product->slug,
             ]);
         }
