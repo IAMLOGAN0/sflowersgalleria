@@ -48,7 +48,7 @@ Route::prefix('v1/events')->group(function () {
     Route::get('/{categorySlug}/{eventSlug}/comments', [EventsController::class, 'getCommentsByEventSlug']);
 });
 
-Route::prefix('v1/cart')->group(function () {
+Route::prefix('v1/  ')->group(function () {
     Route::post('/add', [CartController::class, 'addToCart']);
     Route::get('/', [CartController::class, 'getCart']);
     Route::post('/update/{id}', [CartController::class, 'updateQuantity']);
