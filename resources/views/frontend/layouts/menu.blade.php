@@ -60,7 +60,7 @@
                         {{-- <li><a class="{{setActive(['vendor.index'])}}" href="{{route('vendor.index')}}">vendors</a></li> --}}
                         {{-- <li><a class="{{ setActive(['flash-sale']) }}" href="{{ route('flash-sale') }}">flash Sale</a>
                         </li> --}}
-                        <li><a class="{{ setActive(['blog']) }}" href="{{ route('blog') }}">events</a></li>
+                        <li><a class="{{ setActive(['blog']) }}" href="{{ route('blog-category') }}">events</a></li>
                         <li><a class="{{ setActive(['about']) }}" href="{{ route('about') }}">about</a></li>
                         <li><a class="{{ setActive(['contact']) }}" href="{{ route('contact') }}">contact</a></li>
 
@@ -169,7 +169,7 @@
 
                         {{-- <li><a href="{{ route('vendor.index') }}">vendor</a></li> --}}
 
-                        <li><a href="{{ route('blog') }}">Events</a></li>
+                        <li><a href="{{ route('blog-category') }}">Events</a></li>
                         <li><a href="{{ route('about') }}">about us</a></li>
                         <li><a href="{{ route('contact') }}">contact</a></li>
                         <li><a href="{{ route('product-traking.index') }}">track order</a></li>

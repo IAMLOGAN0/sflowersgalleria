@@ -10,6 +10,12 @@ use Illuminate\Http\Request;
 
 class BlogController extends Controller
 {
+    public function blogCategories(Request $request)
+    {
+        $categories = BlogCategory::where('status',1)->paginate(12);
+        return view('frontend.pages.blog-category', compact('categories'));
+    }
+
     public function blog(Request $request)
     {
         if ($request->has('search')) {

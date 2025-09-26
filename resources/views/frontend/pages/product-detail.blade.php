@@ -200,6 +200,13 @@
                                         disabled>
                                         <i class="fas fa-shopping-cart me-2"></i> Add to Cart
                                     </button>
+
+                                    <button type="button"
+                                        class="btn btn-primary px-4 shadow-sm d-flex align-items-center gift-now-btn"
+                                        disabled>
+                                        <i class="fas fa-gift me-2"></i> Gift Now
+                                    </button>
+
                                     {{-- <button type="button"
                                             class="btn btn-outline-secondary rounded-circle shadow-sm d-flex align-items-center justify-content-center"
                                             data-bs-toggle="modal" data-bs-target="#exampleModal"
@@ -483,10 +490,32 @@
 
                 if (pincode.length === 6 && sector && date && slot) {
                     $(".add-to-cart-btn").prop("disabled", false);
+                    $(".gift-now-btn").prop("disabled", false);
                 } else {
                     $(".add-to-cart-btn").prop("disabled", true);
+                    $(".gift-now-btn").prop("disabled", true);
                 }
             }
+
+            $(".gift-now-btn").on("click", function() {
+                let form = $(".shopping-cart-form");
+                let formData = form.serialize();
+                $.ajax({
+                    method: 'POST',
+                    data: formData,
+                    url: "{{ route('add-to-cart') }}",
+                    success: function(data) {
+                        if(data.status === 'success'){
+                            window.location.href = "{{ route('user.checkout') }}";
+                        }else if (data.status === 'error'){
+                            toastr.error(data.message);
+                        }
+                    },
+                    error: function(data) {
+
+                    }
+                })
+            });
 
             /** 🔹 Filter Slots Based on Date */
             function filterSlotsByDate(selectedSector) {
@@ -626,6 +655,6 @@
             $("#slot").on("change", validateDelivery);
         });
 
-        
+
     </script>
 @endpush

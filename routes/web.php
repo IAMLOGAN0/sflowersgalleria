@@ -92,7 +92,9 @@ Route::get('product-traking', [ProductTrackController::class, 'index'])->name('p
 
 /** blog routes */
 Route::get('event-details/{slug}', [BlogController::class, 'blogDetails'])->name('blog-details');
-Route::get('event', [BlogController::class, 'blog'])->name('blog');
+Route::get('events', [BlogController::class, 'blog'])->name('blog');
+Route::get('event-categories', [BlogController::class, 'blogCategories'])->name('blog-category');
+
 
 /** Product routes */
 Route::get('show-product-modal/{id}', [HomeController::class, 'ShowProductModal'])->name('show-product-modal');

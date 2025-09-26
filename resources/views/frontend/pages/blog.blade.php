@@ -16,7 +16,7 @@
                     <div class="col-12">
                         <h4>our latest events</h4>
                         <ul>
-                            <li><a href="#">home</a></li>
+                            <li><a href="/">home</a></li>
                             <li><a href="#">events</a></li>
                         </ul>
                     </div>
@@ -34,13 +34,13 @@
     ==============================-->
     <section id="wsus__blogs">
         <div class="container">
-           @if (request()->has('search'))
+           {{-- @if (request()->has('search'))
            <h5>Search: {{request()->search}}</h5>
            <hr>
            @elseif (request()->has('category'))
            <h5>Search: {{request()->category}}</h5>
            <hr>
-           @endif
+           @endif --}}
             <div class="row">
                 @foreach ($blogs as $blog)
                 <div class="col-xl-3">
@@ -58,7 +58,6 @@
                     </div>
                 </div>
                 @endforeach
-
             </div>
             @if (count($blogs) === 0)
             <div class="row">
