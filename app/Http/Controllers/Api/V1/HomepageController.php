@@ -24,13 +24,32 @@ use Illuminate\Support\Facades\Response;
 
 class HomepageController extends Controller
 {
+    // public function getHomepageData(Request $request)
+    // {
+    //     $sliders = Slider::where('status', 1)->orderBy('serial', 'asc')->get();
+    //     $categories = Category::where('status', 1)->get();
+    //     $typeBaseProducts = $this->getTypeBaseProduct();
+    //     $events = Blog::with('category')->where('status', 1)->get()->groupBy('category.name');
+    //     $event_category = BlogCategory::where('status', 1)->get();
+    //     return response()->json([
+    //         'sliders' => $sliders,
+    //         'categories' => $categories,
+    //         'typeBaseProducts' => $typeBaseProducts,
+    //         'events' => $events,
+    //         'event_categories' => $event_category
+    //     ]);
+    // }
+
     public function getHomepageData(Request $request)
     {
-        $sliders = Slider::where('status', 1)->orderBy('serial', 'asc')->get();
-        $categories = Category::where('status', 1)->get();
-        $typeBaseProducts = $this->getTypeBaseProduct();
-        $events = Blog::with('category')->where('status', 1)->get()->groupBy('category.name');
-        $event_category = BlogCategory::where('status', 1)->get();
+        $perPage = $request->get('per_page', 10); // default 10
+
+        $sliders = Slider::where('status', 1)->orderBy('serial', 'asc')->paginate($perPage);
+        $categories = Category::where('status', 1)->paginate($perPage);
+        $typeBaseProducts = $this->getTypeBaseProduct($perPage);
+        $events = Blog::with('category')->where('status', 1)->paginate($perPage);
+        $event_category = BlogCategory::where('status', 1)->paginate($perPage);
+
         return response()->json([
             'sliders' => $sliders,
             'categories' => $categories,
@@ -40,32 +59,60 @@ class HomepageController extends Controller
         ]);
     }
 
-    public function getTypeBaseProduct()
+
+    // public function getTypeBaseProduct()
+    // {
+    //     // Base query builder with common relations and conditions
+    //     $baseQuery = Product::withAvg('reviews', 'rating')
+    //         ->withCount('reviews')
+    //         ->with(['variants', 'category', 'productImageGalleries'])
+    //         ->where(['is_approved' => 1, 'status' => 1]);
+
+    //     // Define product types mapped to query conditions
+    //     $configs = [
+    //         'new_arrival' => fn ($q) => $q->where('product_type', 'new_arrival'),
+    //         'featured_product' => fn ($q) => $q->where('product_type', 'featured_product'),
+    //         'top_product' => fn ($q) => $q->where('product_type', 'top_product'),
+    //         'best_product' => fn ($q) => $q->where('product_type', 'best_product'),
+    //         'plants' => fn ($q) => $q->whereHas('category', fn ($cat) => $cat->where('slug', 'plants')),
+    //         // 'event_corporate_gifts' => fn ($q) => $q->whereHas('category', fn ($cat) => $cat->where('slug', 'event-corporate-gifts')),
+    //         'luxury' => fn ($q) => $q->whereHas('category', fn ($cat) => $cat->where('slug', 'luxury')),
+    //         'cakes' => fn ($q) => $q->whereHas('category', fn ($cat) => $cat->where('slug', 'cakes')),
+    //     ];
+
+    //     // Run queries dynamically
+    //     $typeBaseProducts = [];
+    //     foreach ($configs as $key => $callback) {
+    //         $query = (clone $baseQuery); // clone so builder isn't mutated
+    //         $callback($query);
+    //         $typeBaseProducts[$key] = $query->orderBy('id', 'DESC')->take(10)->get();
+    //     }
+
+    //     return $typeBaseProducts;
+    // }
+
+    public function getTypeBaseProduct($perPage = 10)
     {
-        // Base query builder with common relations and conditions
         $baseQuery = Product::withAvg('reviews', 'rating')
             ->withCount('reviews')
             ->with(['variants', 'category', 'productImageGalleries'])
             ->where(['is_approved' => 1, 'status' => 1]);
 
-        // Define product types mapped to query conditions
         $configs = [
             'new_arrival' => fn ($q) => $q->where('product_type', 'new_arrival'),
             'featured_product' => fn ($q) => $q->where('product_type', 'featured_product'),
             'top_product' => fn ($q) => $q->where('product_type', 'top_product'),
             'best_product' => fn ($q) => $q->where('product_type', 'best_product'),
             'plants' => fn ($q) => $q->whereHas('category', fn ($cat) => $cat->where('slug', 'plants')),
-            // 'event_corporate_gifts' => fn ($q) => $q->whereHas('category', fn ($cat) => $cat->where('slug', 'event-corporate-gifts')),
             'luxury' => fn ($q) => $q->whereHas('category', fn ($cat) => $cat->where('slug', 'luxury')),
             'cakes' => fn ($q) => $q->whereHas('category', fn ($cat) => $cat->where('slug', 'cakes')),
         ];
 
-        // Run queries dynamically
         $typeBaseProducts = [];
         foreach ($configs as $key => $callback) {
-            $query = (clone $baseQuery); // clone so builder isn't mutated
+            $query = (clone $baseQuery);
             $callback($query);
-            $typeBaseProducts[$key] = $query->orderBy('id', 'DESC')->take(8)->get();
+            $typeBaseProducts[$key] = $query->orderBy('id', 'DESC')->paginate($perPage);
         }
 
         return $typeBaseProducts;
@@ -116,5 +163,17 @@ class HomepageController extends Controller
 
         return response()->json($deliveryLocations);
     }
+
+    public function getRandomFlowers(Request $request)
+    {
+        $count = $request->get('count', 10); // default 4 flowers
+        $flowers = Product::whereHas('category', fn ($cat) => $cat->where('slug', 'flowers'))
+                    ->inRandomOrder()
+                    ->take($count)
+                    ->get();
+
+        return response()->json($flowers);
+    }
+
 
 }

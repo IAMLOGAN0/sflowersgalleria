@@ -23,6 +23,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // ✅ Public route (homepage data without login)
 Route::get('/v1/homepage/data', [HomepageController::class, 'getHomepageData']);
 
+Route::get('/v1/flowers/random', [HomepageController::class, 'getRandomFlowers']);
+
+
 Route::prefix('v1/products')->group(function () {
     Route::get('/', [ProductController::class, 'getAllProducts']);
     Route::get('/search', [ProductController::class, 'searchProducts']);
