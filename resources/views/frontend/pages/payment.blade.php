@@ -4,6 +4,30 @@
 {{$settings->site_name}} || Payment
 @endsection
 
+@push('styles')
+<style>
+    .wsus__payment_menu .nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* space between buttons */
+}
+
+.wsus__payment_menu .nav-link {
+    flex: 1 1 auto; /* all buttons take equal width */
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* Optional: adjust padding for mobile */
+@media (max-width: 576px) {
+    .wsus__payment_menu .nav-link {
+        font-size: 14px;
+        padding: 8px 10px;
+    }
+}
+
+</style>
+@endpush
 @section('content')
     <!--============================
         BREADCRUMB START
@@ -51,13 +75,14 @@
                                     data-bs-target="#v-pills-stripe" type="button" role="tab"
                                     aria-controls="v-pills-stripe" aria-selected="false">Stripe</button> --}}
 
-                                <button class="nav-link common_btn active" id="v-pills-profile-tab" data-bs-toggle="pill"
-                                data-bs-target="#v-pills-razorpay" type="button" role="tab"
-                                aria-controls="v-pills-stripe" aria-selected="false">RazorPay</button>
+                               <button class="nav-link common_btn active" id="v-pills-razorpay-tab" data-bs-toggle="pill"
+        data-bs-target="#v-pills-razorpay" type="button" role="tab"
+        aria-controls="v-pills-razorpay" aria-selected="true">RazorPay</button>
 
-                                <button class="nav-link common_btn" id="v-pills-profile-tab" data-bs-toggle="pill"
-                                data-bs-target="#v-pills-cod" type="button" role="tab"
-                                aria-controls="v-pills-stripe" aria-selected="false">COD</button>
+<button class="nav-link common_btn" id="v-pills-cod-tab" data-bs-toggle="pill"
+        data-bs-target="#v-pills-cod" type="button" role="tab"
+        aria-controls="v-pills-cod" aria-selected="false">COD</button>
+
 
 
                             </div>
