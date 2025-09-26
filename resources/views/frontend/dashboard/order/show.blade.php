@@ -32,6 +32,16 @@
         margin-bottom: 5px;
         font-weight: 600;
     }
+    .invoice-table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .invoice-table {
+        min-width: 600px;
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
     .invoice-table th {
         background: #f8f9fa;
         padding: 12px;
@@ -75,9 +85,44 @@
     .print-btn {
         margin-top: 30px;
     }
+
     @media print {
         .print-btn, .sidebar { display: none !important; }
         body { background: #fff !important; }
+    }
+
+    /* Mobile Responsive Table */
+    @media (max-width: 576px) {
+        .invoice-table thead {
+            display: none;
+        }
+        .invoice-table tbody tr {
+            display: block;
+            margin-bottom: 15px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        .invoice-table tbody td {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 10px;
+            border: none;
+            border-bottom: 1px solid #f1f1f1;
+        }
+        .invoice-table tbody td::before {
+            content: attr(data-label);
+            font-weight: 600;
+            color: #555;
+        }
+
+        /* Stack addresses and totals */
+        .row.mt-4 > [class^="col-"] {
+            margin-bottom: 15px;
+        }
+        .totals-box {
+            max-width: 100%;
+        }
     }
 </style>
 @endpush
@@ -109,50 +154,52 @@
                         </div>
 
                         <!-- Products -->
-                        <table class="table invoice-table">
-                            <thead>
-                                <tr>
-                                    <th>Product</th>
-                                    <th>Variants</th>
-                                    <th>Unit Price</th>
-                                    <th>Qty</th>
-                                    <th>Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($order->orderProducts as $product)
-                                    @php
-                                        $variants = json_decode($product->variants);
-                                        $shipAddress = json_decode($product->delivery_address);
-                                        $billAddress = json_decode($product->delivery_address ?? []);
-                                    @endphp
+                        <div class="invoice-table-wrapper">
+                            <table class="table invoice-table">
+                                <thead>
                                     <tr>
-                                        <td>
-                                            <strong>{{ $product->product_name }}</strong><br>
-                                            <small class="text-muted">{{ $product->vendor->shop_name ?? 'Vendor' }}</small>
-                                        </td>
-                                        <td>
-                                            @if(!empty($variants))
-                                                @foreach ($variants as $key => $item)
-                                                    <div>{{ $key }}: {{ $item->name }} ({{ $settings->currency_icon }}{{ $item->price }})</div>
-                                                @endforeach
-                                            @else
-                                                <span>-</span>
-                                            @endif
-                                        </td>
-                                        <td>{{ $settings->currency_icon }}{{ $product->unit_price }}</td>
-                                        <td>{{ $product->qty }}</td>
-                                        <td class="fw-bold">{{ $settings->currency_icon }}{{ $product->unit_price * $product->qty }}</td>
+                                        <th>Product</th>
+                                        <th>Variants</th>
+                                        <th>Unit Price</th>
+                                        <th>Qty</th>
+                                        <th>Total</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach ($order->orderProducts as $product)
+                                        @php
+                                            $variants = json_decode($product->variants);
+                                            $shipAddress = json_decode($product->delivery_address);
+                                            $billAddress = json_decode($product->delivery_address ?? []);
+                                        @endphp
+                                        <tr>
+                                            <td data-label="Product">
+                                                <strong>{{ $product->product_name }}</strong><br>
+                                                <small class="text-muted">{{ $product->vendor->shop_name ?? 'Vendor' }}</small>
+                                            </td>
+                                            <td data-label="Variants">
+                                                @if(!empty($variants))
+                                                    @foreach ($variants as $key => $item)
+                                                        <div>{{ $key }}: {{ $item->name }} ({{ $settings->currency_icon }}{{ $item->price }})</div>
+                                                    @endforeach
+                                                @else
+                                                    <span>-</span>
+                                                @endif
+                                            </td>
+                                            <td data-label="Unit Price">{{ $settings->currency_icon }}{{ $product->unit_price }}</td>
+                                            <td data-label="Qty">{{ $product->qty }}</td>
+                                            <td data-label="Total" class="fw-bold">{{ $settings->currency_icon }}{{ $product->unit_price * $product->qty }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
 
                         <!-- Addresses -->
                         <div class="row mt-4">
                             <div class="col-md-6">
                                 <h6 class="fw-bold">Billing Address</h6>
-                                <div class="address-box">
+                                <div class="address-box mt-1">
                                     <p class="mb-1"><strong>{{ $billAddress->name ?? '' }}</strong></p>
                                     <p class="mb-1">{{ $billAddress->phone ?? '' }}</p>
                                     <p class="mb-0">{{ $billAddress->address ?? '' }}, {{ $billAddress->city ?? '' }}, {{ $billAddress->country ?? '' }} - {{ $billAddress->zip ?? '' }}</p>
@@ -160,7 +207,7 @@
                             </div>
                             <div class="col-md-6">
                                 <h6 class="fw-bold">Shipping Address</h6>
-                                <div class="address-box">
+                                <div class="address-box mt-1">
                                     <p class="mb-1"><strong>{{ $shipAddress->name ?? '' }}</strong></p>
                                     <p class="mb-1">{{ $shipAddress->phone ?? '' }}</p>
                                     <p class="mb-0">{{ $shipAddress->address ?? '' }}, {{ $shipAddress->city ?? '' }}, {{ $shipAddress->country ?? '' }} - {{ $shipAddress->zip ?? '' }}</p>
@@ -171,7 +218,7 @@
                         <!-- Totals -->
                         <div class="totals-box mt-4">
                             <div><span>Sub Total:</span> <span>{{ $settings->currency_icon }} {{ $order->sub_total }}</span></div>
-                            <div><span>Shipping Fee:</span> <span><td>{{ @$settings->currency_icon }} {{ @$shipping->cost ?? 0 }}</td></span></div>
+                            <div><span>Shipping Fee:</span> <span>{{ $settings->currency_icon }} {{ @$shipping->cost ?? 0 }}</span></div>
                             <div><span>Coupon:</span> <span>- {{ $settings->currency_icon }} {{ $coupon->discount ?? 0 }}</span></div>
                             <div class="grand-total"><span>Total Amount:</span> <span>{{ $settings->currency_icon }} {{ $order->amount }}</span></div>
                         </div>
