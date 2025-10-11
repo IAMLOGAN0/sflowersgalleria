@@ -5,14 +5,14 @@
 @endsection
 
 @section('content')
-<section id="wsus__dashboard">
-    <div class="container-fluid">
-        @include('frontend.dashboard.layouts.sidebar')
-
-        <div class="row">
-            <div class="col-xl-9 col-xxl-10 col-lg-9 ms-auto">
+<section id="wsus__dashboard" class="py-4">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-8 col-lg-9 col-md-10">
                 <div class="dashboard_content mt-2 mt-md-0">
-                    <h3><i class="far fa-user"></i> My Orders</h3>
+                    <h3 class="dashboard-title text-center mb-3">
+                        <i class="far fa-user me-2"></i> My Orders
+                    </h3>
 
                     @forelse($orders as $order)
                         <div class="card mb-3 shadow-sm order-card">
@@ -35,7 +35,7 @@
                                     </div>
                                 </div>
 
-                                <div class="mt-3 d-flex justify-content-between flex-wrap">
+                                <div class="mt-3 d-flex justify-content-between flex-wrap align-items-center">
                                     <div>
                                         <p class="mb-1"><strong>Items:</strong> {{ $order->product_qty }}</p>
                                         <p class="mb-1"><strong>Payment:</strong>
@@ -50,7 +50,7 @@
                                     <div class="text-end">
                                         <h5 class="mb-1">{{ $order->currency_icon }}{{ $order->amount }}</h5>
                                         <a href="{{ route('user.orders.show', $order->id) }}"
-                                           class="btn btn-sm btn-primary">
+                                           class="btn btn-sm btn-primary rounded-pill px-3">
                                            View Details
                                         </a>
                                     </div>
@@ -58,10 +58,10 @@
                             </div>
                         </div>
                     @empty
-                        <p>No orders found.</p>
+                        <p class="text-center text-muted mt-4">No orders found.</p>
                     @endforelse
 
-                    <div class="mt-3">
+                    <div class="mt-4 d-flex justify-content-center">
                         {{ $orders->links() }}
                     </div>
                 </div>
@@ -73,13 +73,61 @@
 
 @push('styles')
 <style>
-    .order-card {
-        border-radius: 10px;
-        transition: 0.2s ease-in-out;
+    #wsus__dashboard {
+        background-color: #f8f9fa;
+        min-height: 100vh;
     }
+
+    .order-card {
+        border: none;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        background-color: #fff;
+    }
+
     .order-card:hover {
-        transform: scale(1.01);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        transform: translateY(-3px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    .dashboard_content h3 {
+        font-weight: 700;
+        color: #333;
+    }
+
+    .badge {
+        font-size: 0.85rem;
+        padding: 6px 10px;
+        border-radius: 10px;
+    }
+
+    /* Make sure title is always visible */
+    .dashboard-title {
+        margin-bottom: 1.5rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #333;
+        word-wrap: break-word;
+        white-space: normal;
+    }
+
+    .dashboard-title i {
+        color: var(--bs-primary, #0d6efd);
+    }
+
+    /* Fix possible overflow/hidden issues */
+    #wsus__dashboard .dashboard_content {
+        overflow: visible !important;
+    }
+
+    /* Adjust for mobile screens */
+    @media (max-width: 575.98px) {
+        .dashboard-title {
+            font-size: 1.25rem;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 45px;
+        }
     }
 </style>
 @endpush

@@ -1,71 +1,60 @@
 @extends('frontend.dashboard.layouts.master')
 
 @section('title')
-{{$settings->site_name}} || Dahsboard
+  {{ $settings->site_name }} || Dashboard
 @endsection
 
 @section('content')
-<section id="wsus__dashboard">
+  <div class="container-fluid">
+    <h3 class="fw-bold mb-4">Welcome Back, {{ auth()->user()->name }} 👋</h3>
+    <div class="row g-4">
+      <div class="col-sm-6 col-md-4 col-xl-2">
+        <div class="dashboard-card">
+          <i class="fas fa-shopping-bag"></i>
+          <p>Total Orders</p>
+          <h4>{{ $totalOrder }}</h4>
+        </div>
+      </div>
 
-    <div class="container-fluid">
-      @include('frontend.dashboard.layouts.sidebar')
-      <div class="row">
-        <div class="col-xl-9 col-xxl-10 col-lg-9 ms-auto">
-            <h3>User Dashboard</h3>
-            <br>
-          <div class="dashboard_content">
-            <div class="wsus__dashboard">
-              <div class="row">
-                <div class="col-xl-2 col-6 col-md-4">
-                  <a class="wsus__dashboard_item red" href="{{route('user.orders.index')}}">
-                    <i class="fas fa-cart-plus"></i>
-                    <p>Total Order</p>
-                    <h4 style="color:#ffff">{{$totalOrder}}</h4>
-                  </a>
-                </div>
-                <div class="col-xl-2 col-6 col-md-4">
-                  <a class="wsus__dashboard_item green" href="dsahboard_download.html">
-                    <i class="fas fa-cart-plus"></i>
-                    <p>Pending Orders</p>
-                    <h4 style="color:#ffff">{{$pendingOrder}}</h4>
-                  </a>
-                </div>
-                <div class="col-xl-2 col-6 col-md-4">
-                  <a class="wsus__dashboard_item sky" href="dsahboard_review.html">
-                    <i class="fas fa-cart-plus"></i>
-                    <p>Complete Orders</p>
-                    <h4 style="color:#ffff">{{$completeOrder}}</h4>
-                  </a>
-                </div>
-                <div class="col-xl-2 col-6 col-md-4">
-                  <a class="wsus__dashboard_item blue" href="{{route('user.review.index')}}">
-                    <i class="fas fa-star"></i>
-                    <p>Reviews</p>
-                    <h4 style="color:#ffff">{{$reviews}}</h4>
-                  </a>
-                </div>
+      <div class="col-sm-6 col-md-4 col-xl-2">
+        <div class="dashboard-card">
+          <i class="fas fa-clock"></i>
+          <p>Pending Orders</p>
+          <h4>{{ $pendingOrder }}</h4>
+        </div>
+      </div>
 
-                <div class="col-xl-2 col-6 col-md-4">
-                  <a class="wsus__dashboard_item purple" href="{{route('user.wishlist.index')}}">
-                    <i class="fas fa-star"></i>
-                    <p>Wishlist</p>
-                    <h4 style="color:#ffff">{{$wishlist}}</h4>
-                  </a>
-                </div>
+      <div class="col-sm-6 col-md-4 col-xl-2">
+        <div class="dashboard-card">
+          <i class="fas fa-check-circle"></i>
+          <p>Completed Orders</p>
+          <h4>{{ $completeOrder }}</h4>
+        </div>
+      </div>
 
-                <div class="col-xl-2 col-6 col-md-4">
-                    <a class="wsus__dashboard_item orange" href="{{route('user.profile')}}">
-                      <i class="fas fa-user-shield"></i>
-                      <p>profile</p>
-                      <h4 style="color:#ffff">-</h4>
-                    </a>
-                </div>
-              </div>
+      <div class="col-sm-6 col-md-4 col-xl-2">
+        <div class="dashboard-card">
+          <i class="fas fa-star"></i>
+          <p>Reviews</p>
+          <h4>{{ $reviews }}</h4>
+        </div>
+      </div>
 
-            </div>
-          </div>
+      <div class="col-sm-6 col-md-4 col-xl-2">
+        <div class="dashboard-card">
+          <i class="fas fa-heart"></i>
+          <p>Wishlist</p>
+          <h4>{{ $wishlist }}</h4>
+        </div>
+      </div>
+
+      <div class="col-sm-6 col-md-4 col-xl-2">
+        <div class="dashboard-card">
+          <i class="fas fa-user-shield"></i>
+          <p>Profile</p>
+          <h4>-</h4>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 @endsection

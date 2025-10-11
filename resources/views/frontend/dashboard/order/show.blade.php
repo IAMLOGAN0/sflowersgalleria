@@ -124,19 +124,46 @@
             max-width: 100%;
         }
     }
+     /* Make sure title is always visible */
+    .dashboard-title {
+        margin-bottom: 1.5rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #333;
+        word-wrap: break-word;
+        white-space: normal;
+    }
+
+    .dashboard-title i {
+        color: var(--bs-primary, #0d6efd);
+    }
+
+    /* Fix possible overflow/hidden issues */
+    #wsus__dashboard .dashboard_content {
+        overflow: visible !important;
+    }
+
+    /* Adjust for mobile screens */
+    @media (max-width: 575.98px) {
+        .dashboard-title {
+            font-size: 1.25rem;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 70px;
+        }
+    }
 </style>
 @endpush
 
 @section('content')
 <section id="wsus__dashboard">
     <div class="container-fluid">
-        @include('frontend.dashboard.layouts.sidebar')
         <div class="row">
             <div class="col-xl-9 col-xxl-10 col-lg-9 ms-auto">
                 <div class="dashboard_content mt-2 mt-md-0">
-
-                    <h3><i class="far fa-file-invoice"></i> Order Invoice</h3>
-
+                     <h3 class="dashboard-title text-center">
+                        <i class="far fa-file-invoice"></i> Order Invoice
+                    </h3>
                     <div class="invoice-container mt-3">
                         <!-- Header -->
                         <div class="d-flex justify-content-between align-items-center invoice-header">
@@ -243,3 +270,4 @@
     });
 </script>
 @endpush
+
