@@ -156,7 +156,7 @@
 @endpush
 
 @section('content')
-<section id="wsus__dashboard">
+<section id="wsus__banner">
     <div class="container-fluid">
         <div class="row">
             <div class="col-xl-9 col-xxl-10 col-lg-9 ms-auto">

@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-<section id="wsus__dashboard" class="py-4">
+<section id="wsus__banner" class="py-4">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-9 col-lg-10 col-md-11">

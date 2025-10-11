@@ -67,10 +67,45 @@
 
                     </ul>
                     <ul class="wsus__menu_item wsus__menu_item_right">
-                        <li><a href="{{ route('product-traking.index') }}">track order</a></li>
+                        {{-- <li><a href="{{ route('product-traking.index') }}">track order</a></li> --}}
                         @if (auth()->check())
                             @if (auth()->user()->role === 'user')
-                                <li><a href="{{ route('user.dashboard') }}">my account</a></li>
+                                <li class="dropdown custom-dropdown">
+                                    <a class="dropdown-toggle" href="#" id="accountDropdown" role="button">
+                                        <i class="fas fa-user"></i> My Account
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="accountDropdown">
+                                        <li class="dropdown-item {{ setActive(['user.dashboard']) }}">
+                                            <a  href="{{ route('user.dashboard') }}">
+                                                <i class="fas fa-chart-bar"></i> Dashboard
+                                            </a>
+                                        </li>
+                                        <li class="dropdown-item {{ setActive(['user.orders.index']) }}">
+                                            <a  href="{{ route('user.orders.index') }}">
+                                                <i class="fas fa-list-ul"></i> Orders
+                                            </a>
+                                        </li>
+                                        <li class="dropdown-item {{ setActive(['user.profile']) }}">
+                                            <a  href="{{ route('user.profile') }}">
+                                                <i class="fas fa-user-circle"></i> My Profile
+                                            </a>
+                                        </li>
+                                        <li class="dropdown-item {{ setActive(['user.address.index']) }}">
+                                            <a  href="{{ route('user.address.index') }}">
+                                                <i class="fas fa-map-marker-alt"></i> Addresses
+                                            </a>
+                                        </li>
+                                        <li><hr></li>
+                                        <li>
+                                            <form method="POST" action="{{ route('logout') }}">
+                                                @csrf
+                                                <button type="submit" class="dropdown-item logout" style="margin-top: 0px; margin-left: 15px;">
+                                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                                </button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </li>
                             @elseif (auth()->user()->role === 'vendor')
                                 <li><a href="{{ route('vendor.dashbaord') }}">Vendor Dashboard</a></li>
                             @elseif (auth()->user()->role === 'admin')

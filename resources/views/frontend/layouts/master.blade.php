@@ -34,6 +34,120 @@
     @endif
     @vite(['resources/js/app.js'])
     @stack('styles')
+        <style>
+        /* Main Account Button */
+        .custom-dropdown > a {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 10px;
+            color: #333;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border-radius: 6px;
+        }
+
+        .custom-dropdown > a:hover {
+            background: transparent;
+            color: #007bff;
+        }
+
+        /* Dropdown Menu */
+        .custom-dropdown .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 78%;
+            right: 0;
+            background: #fff;
+            min-width: 165px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            padding: 2px 0; /* very compact */
+            list-style: none;
+            z-index: 999;
+        }
+
+        /* Show Menu on Hover */
+        .custom-dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        /* Dropdown Item */
+        .custom-dropdown .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px; /* tighter spacing */
+            color: #333;
+            font-size: 14px;
+            line-height: 1.3;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-radius: 5px;
+        }
+
+        .custom-dropdown .dropdown-menu > li {
+            margin-left: 0 !important;
+        }
+
+        /* Icon Style */
+        .custom-dropdown .dropdown-item i {
+            font-size: 14px;
+            color: #6c757d;
+            transition: color 0.2s ease;
+        }
+
+        /* Hover + Active States */
+        .custom-dropdown .dropdown-item:hover {
+            background: #f5f7fa;
+            color: #007bff;
+        }
+
+        .custom-dropdown .dropdown-item:hover i,
+        .custom-dropdown .dropdown-item.active i {
+            color: #007bff;
+        }
+
+        .custom-dropdown .dropdown-item.active {
+            color: #007bff !important;
+            font-weight: 500;
+            background: #e8eaec;
+        }
+        .custom-dropdown .dropdown-item.active,
+        .custom-dropdown .dropdown-item.active a {
+            color: #007bff !important;
+            font-weight: 500;
+            background: #e8eaec;
+        }
+
+        /* Divider */
+        .custom-dropdown .dropdown-menu hr {
+            margin: 4px 0;
+            border: none;
+            border-top: 1px solid #eee;
+        }
+
+        /* Logout Button */
+        .custom-dropdown .dropdown-item.logout {
+            color: #dc3545;
+            font-weight: 500;
+        }
+
+        .custom-dropdown .dropdown-item.logout:hover {
+            background: #dc3545;
+            color: #fff;
+        }
+
+        .custom-dropdown .dropdown-item.logout:hover i {
+            color: #fff;
+        }
+
+
+
+
+    </style>
 </head>
 
 <body>

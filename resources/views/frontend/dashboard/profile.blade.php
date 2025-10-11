@@ -8,12 +8,12 @@
   <!--=============================
     DASHBOARD START
   ==============================-->
-  <section id="wsus__dashboard">
+  <section id="wsus__banner">
     <div class="container-fluid">
       <div class="row">
         <div class="row justify-content-center">
             <div class="col-xl-8 col-lg-9 col-md-10">
-                <div class="dashboard_content mt-2 mt-md-0">
+                <div class="dashboard_content mt-5">
                     <h3 class="dashboard-title text-center">
                         <i class="far fa-user me-2"></i> profile
                     </h3>
