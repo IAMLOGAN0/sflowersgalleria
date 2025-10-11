@@ -1,3 +1,16 @@
+@php
+    $categories = \App\Models\Category::where('status', 1)
+        ->with([
+            'subCategories' => function ($query) {
+                $query->where('status', 1)->with([
+                    'childCategories' => function ($query) {
+                        $query->where('status', 1);
+                    },
+                ]);
+            },
+        ])
+        ->get();
+@endphp
 <!DOCTYPE html>
 <html lang="en">
 
@@ -34,6 +47,120 @@
     @endif
     @vite(['resources/js/app.js'])
     @stack('styles')
+    <style>
+        /* Main Account Button */
+        .custom-dropdown > a {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 10px;
+            color: #333;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border-radius: 6px;
+        }
+
+        .custom-dropdown > a:hover {
+            background: transparent;
+            color: #007bff;
+        }
+
+        /* Dropdown Menu */
+        .custom-dropdown .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 78%;
+            right: 0;
+            background: #fff;
+            min-width: 165px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            padding: 2px 0; /* very compact */
+            list-style: none;
+            z-index: 999;
+        }
+
+        /* Show Menu on Hover */
+        .custom-dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        /* Dropdown Item */
+        .custom-dropdown .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px; /* tighter spacing */
+            color: #333;
+            font-size: 14px;
+            line-height: 1.3;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-radius: 5px;
+        }
+
+        .custom-dropdown .dropdown-menu > li {
+            margin-left: 0 !important;
+        }
+
+        /* Icon Style */
+        .custom-dropdown .dropdown-item i {
+            font-size: 14px;
+            color: #6c757d;
+            transition: color 0.2s ease;
+        }
+
+        /* Hover + Active States */
+        .custom-dropdown .dropdown-item:hover {
+            background: #f5f7fa;
+            color: #007bff;
+        }
+
+        .custom-dropdown .dropdown-item:hover i,
+        .custom-dropdown .dropdown-item.active i {
+            color: #007bff;
+        }
+
+        .custom-dropdown .dropdown-item.active {
+            color: #007bff !important;
+            font-weight: 500;
+            background: #e8eaec;
+        }
+        .custom-dropdown .dropdown-item.active,
+        .custom-dropdown .dropdown-item.active a {
+            color: #007bff !important;
+            font-weight: 500;
+            background: #e8eaec;
+        }
+
+        /* Divider */
+        .custom-dropdown .dropdown-menu hr {
+            margin: 4px 0;
+            border: none;
+            border-top: 1px solid #eee;
+        }
+
+        /* Logout Button */
+        .custom-dropdown .dropdown-item.logout {
+            color: #dc3545;
+            font-weight: 500;
+        }
+
+        .custom-dropdown .dropdown-item.logout:hover {
+            background: #dc3545;
+            color: #fff;
+        }
+
+        .custom-dropdown .dropdown-item.logout:hover i {
+            color: #fff;
+        }
+
+
+
+
+    </style>
 </head>
 
 <body>
@@ -60,19 +187,33 @@
                             <i class="far fa-bars"></i>
                         </div>
                         <ul class="wsus_menu_cat_item show_home toggle_menu">
-                            <li><a href="{{ route('user.orders.index') }}" class="{{ setActive(['user.orders.*']) }}"><i class="fas fa-list-ul"></i> Orders</a></li>
-                            {{-- <li><a href="{{ route('user.review.index') }}" class="{{ setActive(['user.review.*']) }}"><i class="fas fa-star"></i> Reviews</a></li> --}}
-                            <li><a href="{{ route('user.profile') }}" class="{{ setActive(['user.profile']) }}"><i class="fas fa-user-circle"></i> My Profile</a></li>
-                            <li><a href="{{ route('user.address.index') }}" class="{{ setActive(['user.address.*']) }}"><i class="fas fa-map-marker-alt"></i> Addresses</a></li>
+                            @foreach ($categories as $category)
+                                <li><a class="{{ count($category->subCategories) > 0 ? 'wsus__droap_arrow' : '' }}"
+                                        href="{{ route('products.index', ['category' => $category->slug]) }}"><i
+                                            class="{{ $category->icon }}"></i> {{ $category->name }} </a>
+                                    @if (count($category->subCategories) > 0)
+                                        <ul class="wsus_menu_cat_droapdown">
+                                            @foreach ($category->subCategories as $subCategory)
+                                                <li><a
+                                                        href="{{ route('products.index', ['subcategory' => $subCategory->slug]) }}">{{ $subCategory->name }}
+                                                        <i
+                                                            class="{{ count($subCategory->childCategories) > 0 ? 'fas fa-angle-right' : '' }}"></i></a>
+                                                    @if (count($subCategory->childCategories) > 0)
+                                                        <ul class="wsus__sub_category">
+                                                            @foreach ($subCategory->childCategories as $childCategory)
+                                                                <li><a
+                                                                        href="{{ route('products.index', ['childcategory' => $childCategory->slug]) }}">{{ $childCategory->name }}</a>
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    @endif
+                                                </li>
+                                            @endforeach
 
-                            <li>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();">
-                                    <i class="fas fa-sign-out-alt"></i> Logout
-                                    </a>
-                                </form>
-                            </li>
+                                        </ul>
+                                    @endif
+                                </li>
+                            @endforeach
                         </ul>
 
                         <ul class="wsus__menu_item">
@@ -82,10 +223,47 @@
                             <li><a class="{{ setActive(['contact']) }}" href="{{ route('contact') }}">contact</a></li>
                         </ul>
                         <ul class="wsus__menu_item wsus__menu_item_right">
-                            <li><a href="{{ route('product-traking.index') }}">Track order</a></li>
+                            {{-- <li><a href="{{ route('product-traking.index') }}">Track order</a></li> --}}
                             @if (auth()->check())
                                 @if (auth()->user()->role === 'user')
-                                    <li><a href="{{ route('user.dashboard') }}">My Account</a></li>
+                                    {{-- <li><a href="{{ route('user.dashboard') }}">My Account</a></li> --}}
+                                    <li class="dropdown custom-dropdown">
+                                        <a class="dropdown-toggle" href="#" id="accountDropdown" role="button">
+                                            <i class="fas fa-user"></i> My Account
+                                        </a>
+                                        <ul class="dropdown-menu" aria-labelledby="accountDropdown">
+                                            <li class="dropdown-item {{ setActive(['user.dashboard']) }}">
+                                                <a  href="{{ route('user.dashboard') }}">
+                                                    <i class="fas fa-chart-bar"></i> Dashboard
+                                                </a>
+                                            </li>
+                                            <li class="dropdown-item {{ setActive(['user.orders.index']) }}">
+                                                <a  href="{{ route('user.orders.index') }}">
+                                                    <i class="fas fa-list-ul"></i> Orders
+                                                </a>
+                                            </li>
+                                            <li class="dropdown-item {{ setActive(['user.profile']) }}">
+                                                <a  href="{{ route('user.profile') }}">
+                                                    <i class="fas fa-user-circle"></i> My Profile
+                                                </a>
+                                            </li>
+                                            <li class="dropdown-item {{ setActive(['user.address.index']) }}">
+                                                <a  href="{{ route('user.address.index') }}">
+                                                    <i class="fas fa-map-marker-alt"></i> Addresses
+                                                </a>
+                                            </li>
+                                            <li><hr></li>
+                                            <li>
+                                                <form method="POST" action="{{ route('logout') }}">
+                                                    @csrf
+                                                    <button type="submit" class="dropdown-item logout">
+                                                        <i class="fas fa-sign-out-alt"></i> Logout
+                                                    </button>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </li>
+
                                 @elseif (auth()->user()->role === 'vendor')
                                     <li><a href="{{ route('vendor.dashbaord') }}">Vendor Dashboard</a></li>
                                 @elseif (auth()->user()->role === 'admin')

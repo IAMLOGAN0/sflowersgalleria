@@ -8,7 +8,7 @@
 <section id="wsus__dashboard" class="py-4">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-xl-8 col-lg-9 col-md-10">
+            <div class="col-xl-9 col-lg-9 col-md-10">
                 <div class="dashboard_content mt-2 mt-md-0">
                     <h3 class="dashboard-title text-center mb-3">
                         <i class="far fa-user me-2"></i> My Orders
