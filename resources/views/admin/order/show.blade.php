@@ -1,9 +1,12 @@
 @php
-    $address = json_decode($order->order_address);
+
+    $address = json_decode($order->orderProducts[0]?->delivery_address);
+    // $address = json_decode($order->order_address);
     $shipping = json_decode($order->shpping_method);
     $coupon = json_decode($order->coupon);
 
 @endphp
+
 @extends('admin.layouts.master')
 
 @section('content')
