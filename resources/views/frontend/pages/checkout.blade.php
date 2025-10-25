@@ -3,6 +3,20 @@
 @section('title')
     {{ $settings->site_name }} || Checkout
 @endsection
+@push('styles')
+<style>
+    /* Modern hover/focus effects */
+    #coupon_form input:focus {
+        box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+        border-color: #007bff;
+        outline: none;
+    }
+
+    #coupon_form button:hover {
+        background-color: #0056b3;
+    }
+</style>
+@endpush
 
 @section('content')
     <!--============================
@@ -145,10 +159,20 @@
                         <div class="wsus__order_details_summery">
                             <p>subtotal: <span>{{ $settings->currency_icon }}{{ getCartTotal() }}</span></p>
                             <p>shipping fee(+): <span id="shipping_fee">{{ $settings->currency_icon }}0</span></p>
-                            <p>coupon(-): <span>{{ $settings->currency_icon }}{{ getCartDiscount() }}</span></p>
+                            <p>coupon(-): <span id="discount">{{ $settings->currency_icon }}{{ getCartDiscount() }}</span></p>
                             <p><b>total:</b> <span><b id="total_amount"
                                         data-id="{{ getMainCartTotal() }}">{{ $settings->currency_icon }}{{ getMainCartTotal() }}</b></span>
                             </p>
+                            <form id="coupon_form" class="d-flex align-items-center gap-2 p-2 bg-white rounded-3 shadow-sm">
+                                <input type="text" 
+                                    class="form-control flex-grow-1 rounded-3 border-secondary" 
+                                    placeholder="Enter coupon code" 
+                                    name="coupon_code" 
+                                    value="{{ session()->has('coupon') ? session()->get('coupon')['coupon_code'] : '' }}">
+                                <button type="submit" class="btn btn-primary rounded-3 px-4">
+                                    Apply
+                                </button>
+                            </form>
                         </div>
                         <div class="terms_area">
                             <div class="form-check">
@@ -378,6 +402,51 @@
                     }
                 })
             });
+
+            // applay coupon on cart
+
+        $('#coupon_form').on('submit', function(e){
+            e.preventDefault();
+            let formData = $(this).serialize();
+            $.ajax({
+                method: 'GET',
+                url: "{{ route('apply-coupon') }}",
+                data: formData,
+                success: function(data) {
+                   if(data.status === 'error'){
+                    toastr.error(data.message)
+                   }else if (data.status === 'success'){
+                    calculateCouponDescount()
+                    toastr.success(data.message)
+
+                    // Update UI to show coupon applied
+                    $('#coupon_form button').text('Applied').prop('disabled', true).addClass('btn-success');
+                    $('#coupon_form input[name="coupon_code"]').prop('disabled', true);
+                   }
+                },
+                error: function(data) {
+                    console.log(data);
+                }
+            })
+
+        })
+
+        // calculate discount amount
+        function calculateCouponDescount(){
+            $.ajax({
+                method: 'GET',
+                url: "{{ route('coupon-calculation') }}",
+                success: function(data) {
+                    if(data.status === 'success'){
+                        $('#discount').text('{{$settings->currency_icon}}'+data.discount);
+                        $('#total_amount').text('{{$settings->currency_icon}}'+data.cart_total);
+                    }
+                },
+                error: function(data) {
+                    console.log(data);
+                }
+            })
+        }
 
         })
     </script>

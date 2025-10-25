@@ -158,10 +158,10 @@
 @section('content')
 <section id="wsus__banner">
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-xl-9 col-xxl-10 col-lg-9 ms-auto">
+        <div class="row justify-content-center">
+            <div class="col-xl-9 col-xxl-10 col-lg-9">
                 <div class="dashboard_content mt-2 mt-md-0">
-                     <h3 class="dashboard-title text-center">
+                     <h3 class="dashboard-title text-center mt-3">
                         <i class="far fa-file-invoice"></i> Order Invoice
                     </h3>
                     <div class="invoice-container mt-3">
