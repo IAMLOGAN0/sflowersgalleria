@@ -20,7 +20,7 @@
                             data-description="Payment for product"
                             data-prefill.name="{{Auth::user()->name}}"
                             data-prefill.email="{{Auth::user()->email}}"
-                            data-theme.color="#ff7529"
+                            data-theme.color="#28a745"
                         >
 
                         </script>

@@ -9607,7 +9607,7 @@ a:not([href]):not([class]):hover {
     text-transform: capitalize;
     font-weight: 600;
     color: #fff;
-    background: #08C;
+    background: green;
     padding: 12px 25px;
     border: none;
     border-radius: 30px;
