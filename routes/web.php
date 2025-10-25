@@ -25,6 +25,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthOtpController;
 use Illuminate\Support\Facades\Artisan;
 
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
