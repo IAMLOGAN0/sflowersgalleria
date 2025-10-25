@@ -106,4 +106,25 @@ class CartController extends Controller
         CartItem::where('user_id', $request->user()->id)->delete();
         return response()->json(['status' => 'success', 'message' => 'Cart cleared']);
     }
+
+    public function couponCalculation(Request $request)
+    {
+        $cupon_code = $request->input('cupon_code');
+        $coupon = Coupon::where(['code' => $cupon_code, 'status' => 1])->first();
+        if($coupon){
+            $coupon = Session::get('coupon');
+            $subTotal = getCartTotal();
+            if($coupon->discount_type === 'amount'){
+                $total = $subTotal - $coupon->discount;
+                return response(['status' => 'success', 'cart_total' => $total, 'discount' => $coupon->discount]);
+            }elseif($coupon['discount_type'] === 'percent'){
+                $discount = $subTotal - ($subTotal * $coupon->discount / 100);
+                $total = $subTotal - $discount;
+                return response(['status' => 'success', 'cart_total' => $total, 'discount' => $discount]);
+            }
+        }else {
+            $total = getCartTotal();
+            return response(['status' => 'success', 'cart_total' => $total, 'discount' => 0]);
+        }
+    }
 }

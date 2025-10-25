@@ -1,0 +1,229 @@
+<?php
+
+namespace App\Http\Controllers\Api\V1;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Order;
+use App\Models\OrderProduct;
+use App\Models\Product;
+use App\Models\Transaction;
+use App\Models\ShippingRule;
+use App\Models\GeneralSetting;
+use App\Models\UserAddress;
+use App\Models\Coupon;
+use App\Models\CartItem;
+
+class OrderController extends Controller
+{
+    /**
+     * Store order after payment success (app handled)
+     */
+    public function storeOrder(Request $request)
+    {
+        $request->validate([
+            'shipping_method_id' => ['required', 'integer'],
+            'coupon' => ['nullable', 'string'],
+            'order_data' => ['nullable', 'string'],
+            'payment_method' => 'required|string',
+            'payment_status' => 'required|boolean',
+            'transaction_id' => 'required|string',
+            'paid_amount' => 'required|numeric',
+            'paid_currency' => 'required|string',
+        ]);
+
+        $user_id = $request->user()->id;
+
+        /** ───── Shipping Method ───── */
+        $shippingMethodModel = ShippingRule::findOrFail($request->shipping_method_id);
+        $shippingMethod = [
+            'id' => $shippingMethodModel->id,
+            'name' => $shippingMethodModel->name,
+            'type' => $shippingMethodModel->type,
+            'cost' => $shippingMethodModel->cost
+        ];
+
+        /** ───── Coupon Handling ───── */
+        $couponModel = Coupon::where('code', $request->coupon)->first();
+        if ($couponModel) {
+            if ($couponModel->total_used >= $couponModel->quantity) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Coupon usage limit exceeded'
+                ], 400);
+            }
+
+            $coupon = [
+                'coupon_name' => $couponModel->coupon_name,
+                'coupon_code' => $couponModel->coupon_code,
+                'discount_type' => $couponModel->discount_type,
+                'discount' => $couponModel->discount
+            ];
+        } else {
+            $coupon = null;
+        }
+
+        /** ───── Cart Items ───── */
+        $cart_items = CartItem::with('product')
+            ->where('user_id', $user_id)
+            ->get();
+
+        if ($cart_items->isEmpty()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Cart is empty'
+            ], 400);
+        }
+
+        $order_data = $request->order_data ? json_decode($request->order_data, true) : [];
+        $setting = GeneralSetting::first();
+
+        /** ───── Order Creation ───── */
+        $order = new Order();
+        $order->invocie_id = rand(100000, 999999);
+        $order->user_id = $user_id;
+        $order->sub_total = $this->getCartTotal($user_id);
+        $order->amount = $this->getFinalPayableAmount($user_id, $couponModel, $shippingMethodModel);
+        $order->currency_name = $setting->currency_name;
+        $order->currency_icon = $setting->currency_icon;
+        $order->product_qty = $cart_items->sum('qty');
+        $order->payment_method = $request->payment_method;
+        $order->payment_status = $request->payment_status;
+        $order->shpping_method = json_encode($shippingMethod);
+        $order->coupon = $coupon ? json_encode($coupon) : null;
+        $order->order_status = 'pending';
+        $order->save();
+
+        /** ───── Save Order Products ───── */
+        foreach ($cart_items as $key => $item) {
+            $data = $order_data[$key] ?? [];
+
+            $address = isset($data['address_id'])
+                ? UserAddress::find($data['address_id'])?->toArray()
+                : null;
+
+            $product = Product::find($item->product_id);
+            if (! $product) {
+                continue;
+            }
+
+            $orderProduct = new OrderProduct();
+            $orderProduct->order_id = $order->id;
+            $orderProduct->product_id = $product->id;
+            $orderProduct->vendor_id = $product->vendor_id;
+            $orderProduct->product_name = $product->name;
+            $orderProduct->variants = json_encode($item->variants);
+            $orderProduct->variant_total = $item->variants_total;
+            $orderProduct->unit_price = $item->price;
+            $orderProduct->qty = $item->qty;
+            $orderProduct->delivery_address = json_encode($address);
+            $orderProduct->delivery_date = $data['order_date'] ?? null;
+            $orderProduct->delivery_pincode = $data['order_pincode'] ?? null;
+            $orderProduct->delivery_sector = $data['order_sector'] ?? null;
+            $orderProduct->delivery_slot = $data['order_slot'] ?? null;
+            $orderProduct->occation = $data['occation'] ?? '';
+            $orderProduct->message = $data['message'] ?? '';
+            $orderProduct->save();
+
+            // Update stock
+            $product->decrement('qty', $item->qty);
+        }
+
+        /** ───── Transaction ───── */
+        $transaction = new Transaction();
+        $transaction->order_id = $order->id;
+        $transaction->transaction_id = $request->transaction_id;
+        $transaction->payment_method = $request->payment_method;
+        $transaction->amount = $this->getFinalPayableAmount($user_id, $couponModel, $shippingMethodModel);
+        $transaction->amount_real_currency = $request->paid_amount;
+        $transaction->amount_real_currency_name = $request->paid_currency;
+        $transaction->save();
+
+        /** ───── Coupon Update ───── */
+        if ($couponModel) {
+            $couponModel->increment('total_used');
+        }
+
+        /** ───── Clear Cart ───── */
+        $cart_items->each->delete();
+
+        /** ───── Response ───── */
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Order created successfully',
+            'data' => [
+                'order_id' => $order->id,
+                'invoice' => $order->invocie_id,
+                'total_amount' => $order->amount,
+                'currency' => $order->currency_name,
+                'product_count' => $order->product_qty
+            ]
+        ]);
+    }
+
+    /**
+     * Get all orders for logged-in user
+     */
+    public function orderList(Request $request)
+    {
+        $orders = Order::with('orderProducts.product')
+            ->where('user_id', $request->user()->id)
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'orders' => $orders
+        ]);
+    }
+
+    /**
+     * Get single order detail
+     */
+    public function orderDetail(Request $request,$id)
+    {
+        $order = Order::with('orderProducts.product')
+            ->where('user_id', $request->user()->id)
+            ->findOrFail($id);
+
+        return response()->json([
+            'status' => 'success',
+            'order' => $order
+        ]);
+    }
+
+    /** ───── Helpers ───── */
+    private function getCartTotal($user_id)
+    {
+        $cartItems = CartItem::where('user_id', $user_id)->get();
+        $total = 0;
+
+        foreach ($cartItems as $item) {
+            $total += ($item->price + $item->variants_total) * $item->qty;
+        }
+
+        return $total;
+    }
+
+    private function getMainCartTotal($user_id, $coupon)
+    {
+        $subTotal = $this->getCartTotal($user_id);
+
+        if ($coupon) {
+            if ($coupon->discount_type === 'amount') {
+                return max(0, $subTotal - $coupon->discount);
+            } elseif ($coupon->discount_type === 'percent') {
+                $discount = ($subTotal * $coupon->discount / 100);
+                return max(0, $subTotal - $discount);
+            }
+        }
+
+        return $subTotal;
+    }
+
+    private function getFinalPayableAmount($user_id, $coupon, $shippingMethod)
+    {
+        return $this->getMainCartTotal($user_id, $coupon) + ($shippingMethod->cost ?? 0);
+    }
+}

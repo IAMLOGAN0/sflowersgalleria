@@ -51,8 +51,7 @@ Route::prefix('v1/events')->group(function () {
     Route::get('/{categorySlug}/{eventSlug}/comments', [EventsController::class, 'getCommentsByEventSlug']);
 });
 
-
-
+Route::post('v1/apply-coupon', [CartController::class, 'couponCalculation'])->name('coupon-calculation');
 
 // ✅ Protected routes (require login)
 Route::middleware('auth:api')->group(function () {
@@ -77,6 +76,15 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/addresses/{id}', [ProfileController::class, 'updateAddress']);
         Route::delete('/addresses/{id}', [ProfileController::class, 'deleteAddress']);
     });
+
+     // 🛒 Order Routes
+    Route::prefix('v1/order')->group(function () {
+        Route::post('/store', [OrderController::class, 'storeOrder']);
+        Route::get('/list', [OrderController::class, 'orderList']);
+        Route::get('/detail/{id}', [OrderController::class, 'orderDetail']);
+    });
+
+
 
 
     Route::prefix('v1/delivery-boy')->group(function () {
