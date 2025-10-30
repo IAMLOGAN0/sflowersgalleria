@@ -94,11 +94,13 @@ class ProfileController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email',
             'phone' => 'required|string|max:20',
-            'country' => 'required|string|max:255',
-            'state' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
-            'zip' => 'required|string|max:20',
             'address' => 'required|string',
+            'pincode' => 'required|string|max:20',
+            'sector' => 'nullable|string|max:255',
+            'landmark' => 'nullable|string|max:255',
+            'city' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+            'type' => 'required|in:home,office,other',
         ]);
 
         if ($validator->fails()) {
@@ -113,11 +115,13 @@ class ProfileController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'country' => $request->country,
-            'state' => $request->state,
-            'city' => $request->city,
-            'zip' => $request->zip,
             'address' => $request->address,
+            'pincode' => $request->pincode,
+            'sector' => $request->sector,
+            'landmark' => $request->landmark,
+            'city' => $request->city,
+            'country' => $request->country,
+            'type' => $request->type,
         ]);
 
         return response()->json([
@@ -131,13 +135,15 @@ class ProfileController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'nullable|email',
+            'email' => 'required|email',
             'phone' => 'required|string|max:20',
-            'country' => 'required|string|max:255',
-            'state' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
-            'zip' => 'required|string|max:20',
             'address' => 'required|string',
+            'pincode' => 'required|string|max:20',
+            'sector' => 'nullable|string|max:255',
+            'landmark' => 'nullable|string|max:255',
+            'city' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+            'type' => 'required|in:home,office,other',
         ]);
 
         if ($validator->fails()) {
@@ -149,7 +155,7 @@ class ProfileController extends Controller
 
         $address = UserAddress::where('id', $id)->where('user_id', $request->user()->id)->firstOrFail();
         $address->update($request->only([
-            'name', 'email', 'phone', 'country', 'state', 'city', 'zip', 'address'
+            'name', 'email', 'phone', 'address', 'pincode', 'sector', 'landmark', 'city', 'country', 'type'
         ]));
 
         return response()->json([
