@@ -101,7 +101,7 @@ class ProfileController extends Controller
             'landmark' => 'nullable|string|max:255',
             'city' => 'required|string|max:255',
             'country' => 'required|string|max:255',
-            'type' => 'required|in:home,office,other',
+            'type' => 'required',
             ]);
 
             if ($validator->fails()) {
