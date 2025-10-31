@@ -102,6 +102,7 @@ class ProfileController extends Controller
             'city' => 'required|string|max:255',
             'country' => 'required|string|max:255',
             'type' => 'required',
+            'alt_phone' => 'nullable|string|max:20',
             ]);
 
             if ($validator->fails()) {
@@ -123,6 +124,7 @@ class ProfileController extends Controller
             'city' => $request->city,
             'country' => $request->country,
             'type' => $request->type,
+            'alt_phone' => $request->alt_phone,
             ]);
 
             return response()->json([
@@ -152,6 +154,7 @@ class ProfileController extends Controller
             'city' => 'required|string|max:255',
             'country' => 'required|string|max:255',
             'type' => 'required|in:home,office,other',
+            'alt_phone' => 'nullable|string|max:20',
         ]);
 
         if ($validator->fails()) {
@@ -163,7 +166,7 @@ class ProfileController extends Controller
 
         $address = UserAddress::where('id', $id)->where('user_id', $request->user()->id)->firstOrFail();
         $address->update($request->only([
-            'name', 'email', 'phone', 'address', 'pincode', 'sector', 'landmark', 'city', 'country', 'type'
+            'name', 'email', 'phone', 'alt_phone', 'address', 'pincode', 'sector', 'landmark', 'city', 'country', 'type'
         ]));
 
         return response()->json([
