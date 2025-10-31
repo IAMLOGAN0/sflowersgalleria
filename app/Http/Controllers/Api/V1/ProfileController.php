@@ -90,7 +90,8 @@ class ProfileController extends Controller
 
     public function addAddress(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        try {
+            $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email',
             'phone' => 'required|string|max:20',
@@ -101,16 +102,16 @@ class ProfileController extends Controller
             'city' => 'required|string|max:255',
             'country' => 'required|string|max:255',
             'type' => 'required|in:home,office,other',
-        ]);
+            ]);
 
-        if ($validator->fails()) {
+            if ($validator->fails()) {
             return response()->json([
                 'success' => false,
                 'errors' => $validator->messages()
             ], 422);
-        }
+            }
 
-        $address = UserAddress::create([
+            $address = UserAddress::create([
             'user_id' => $request->user()->id,
             'name' => $request->name,
             'email' => $request->email,
@@ -122,13 +123,20 @@ class ProfileController extends Controller
             'city' => $request->city,
             'country' => $request->country,
             'type' => $request->type,
-        ]);
+            ]);
 
-        return response()->json([
+            return response()->json([
             'success' => true,
             'message' => 'Address added successfully',
             'address' => $address
-        ]);
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+            'success' => false,
+            'message' => 'Failed to add address',
+            'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function updateAddress(Request $request, $id)
