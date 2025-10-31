@@ -23,6 +23,7 @@ class UserAddress extends Model
         'state',
         'country',
         'type',
+        'alt_phone',
     ];
 
     public function user()
