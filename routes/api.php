@@ -9,7 +9,7 @@ use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\AuthOtpApiController;
 use App\Http\Controllers\Api\V1\CartController;
 use App\Http\Controllers\Api\V1\ProfileController;
-
+use App\Http\Controllers\Api\V1\OrderController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
