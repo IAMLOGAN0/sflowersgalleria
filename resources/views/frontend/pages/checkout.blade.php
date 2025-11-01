@@ -98,7 +98,8 @@
                                                 <option value="{{ $address->id }}">{{ $address->full_address }}</option>
                                             @endforeach
                                         </select>
-                                        <button type="button" class="btn btn-outline-primary addNewAddress" data-pincode="{{ $item->options->order_pincode }}">+ Add New</button>
+
+                                        <button type="button" class="btn btn-outline-primary addNewAddress" data-pincode="{{ $item->options->order_pincode }}" data-sector="{{ $item->options->order_sector }}">+ Add New</button>
                                     </div>
                                 </div>
 
@@ -222,7 +223,7 @@
                                     </div>
 
                                     <div class="col-12">
-                                        <input type="text" class="form-control" name="phone" placeholder="Mobile Number *" required value="{{ old('phone') }}">
+                                        <input type="number" class="form-control" name="phone" placeholder="Mobile Number *" required value="{{ old('phone') }}">
                                     </div>
 
                                     {{-- Receiver’s Address --}}
@@ -235,7 +236,10 @@
                                     </div>
 
                                     <div class="col-md-6">
-                                        <input type="number" class="form-control" id="pincode" name="pincode" placeholder="Pincode *" required value="{{ old('pincode') }}">
+                                        <input id="zipInput" type="number" readonly class="form-control" name="pincode" placeholder="Pincode *" required value="{{ old('pincode') }}">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" readonly name="sector" placeholder="Sector" id="sector" required value="{{ old('sector') }}">
                                     </div>
 
                                     <div class="col-12">
@@ -381,6 +385,25 @@
 
             $(".addNewAddress").on('click', function() {
                 $pincode = $(this).attr('data-pincode');
+                $sector = $(this).attr('data-sector');
+                if($sector){
+                    // fetch sector data
+                    $.ajax({
+                        url: "{{ route('cart.get-sector') }}",
+                        method: 'POST',
+                        data: {sector_id: $sector},
+                        success: function(data) {
+                            if (data.status === 'success') {
+                                console.log(data.sector);
+                                $("#sector").val(data.sector.sector);
+                                // you can use data.sector to prefill any other fields if needed
+                            }
+                        },
+                        error: function(data) {
+                            console.log(data);
+                        }
+                    })
+                }
                 $("#zipInput").val($pincode);
                 $('#exampleModal').modal('show');
             });

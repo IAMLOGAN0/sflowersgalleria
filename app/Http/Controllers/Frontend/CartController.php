@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Adverisement;
 use App\Models\Coupon;
+use App\Models\Location;
 use App\Models\Product;
 use App\Models\ProductVariantItem;
 use Illuminate\Http\Request;
@@ -219,6 +220,17 @@ class CartController extends Controller
             $total = getCartTotal();
             return response(['status' => 'success', 'cart_total' => $total, 'discount' => 0]);
         }
+    }
+
+    public function getSector(Request $request)
+    {
+        $sector_id = $request->sector_id;
+        $sector = Location::where('id', $sector_id)->first();
+        if(!$sector){
+            return response()->json(['status' => 'error', 'message' => 'Delivery location not found!']);
+        }
+
+        return response()->json(['status' => 'success', 'sector' => $sector]);
     }
 
 }
