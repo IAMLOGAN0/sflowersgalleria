@@ -37,8 +37,8 @@ class DeliveryController extends Controller
         foreach ($request->sectors as $sectorData) {
             Location::create([
                 'pin' => $pin,
-                'sector' => $sectorData['name'],
-                'b_time' => $sectorData['delivery_time'] ?? null,
+                'sector' => strtolower($sectorData['name']),
+                'b_time' => strtolower($sectorData['delivery_time']) ?? null,
                 't_time' => isset($sectorData['slots']) ? json_encode($sectorData['slots']) : null,
             ]);
         }

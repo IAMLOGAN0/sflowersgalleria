@@ -81,7 +81,7 @@ class LocationDataTable extends DataTable
         return $model->newQuery()
             ->selectRaw('
                 pin,
-                GROUP_CONCAT(sector SEPARATOR ",") as sectors,
+                GROUP_CONCAT(sector SEPARATOR ",") as sector,
                 GROUP_CONCAT(b_time SEPARATOR ",") as b_times,
                 GROUP_CONCAT(t_time SEPARATOR ",") as t_times
             ')

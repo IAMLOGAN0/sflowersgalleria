@@ -23,26 +23,32 @@ class CheckOutController extends Controller
     public function createAddress(Request $request)
     {
         $request->validate([
-            'name' => ['required', 'max:200'],
-            'phone' => ['required', 'max:200'],
-            'email' => ['required', 'email'],
-            'country' => ['required', 'max: 200'],
-            'state' => ['required', 'max: 200'],
-            'city' => ['required', 'max: 200'],
-            'zip' => ['required', 'max: 200'],
-            'address' => ['required', 'max: 200']
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'phone' => 'required|string|max:20',
+            'address' => 'required|string',
+            'pincode' => 'required|string|max:20',
+            'sector' => 'nullable|string|max:255',
+            'landmark' => 'nullable|string|max:255',
+            'city' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+            'type' => 'required|in:home,office,other',
+            'alt_phone' => 'nullable|string|max:20',
         ]);
 
         $address = new UserAddress();
         $address->user_id = Auth::user()->id;
         $address->name = $request->name;
-        $address->phone = $request->phone;
         $address->email = $request->email;
-        $address->country = $request->country;
-        $address->state = $request->state;
-        $address->city = $request->city;
-        $address->zip = $request->zip;
+        $address->phone = $request->phone;
         $address->address = $request->address;
+        $address->pincode = $request->pincode;
+        $address->sector = $request->sector;
+        $address->landmark = $request->landmark;
+        $address->city = $request->city;
+        $address->country = $request->country;
+        $address->type = $request->type;
+        $address->alt_phone = $request->alt_phone;
         $address->save();
 
         // get updated addresses for current user
