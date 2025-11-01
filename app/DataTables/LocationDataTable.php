@@ -28,8 +28,8 @@ class LocationDataTable extends DataTable
 
         return (new EloquentDataTable($query))
             ->addIndexColumn() // Adds auto-increment ID
-            ->editColumn('sectors', function($row) {
-                $sectors = explode(',', $row->sectors);
+            ->editColumn('sector', function($row) {
+                $sectors = explode(',', $row->sector);
                 if (!empty($sectors)) {
                     return collect($sectors)
                         ->map(fn($sector) => "<span class='badge badge-secondary mr-1 px-2 py-1 mt-2'>{$sector}</span>")
@@ -42,7 +42,6 @@ class LocationDataTable extends DataTable
                     ->map(fn($batch) => "<span class='badge badge-primary mr-1 px-2 py-1 mt-2'>{$batch}</span>")
                     ->implode(' ');
             })
-
             ->editColumn('t_times', function($row) {
                 $allSlots = [];
                 foreach (explode(',', $row->t_times) as $slotJson) {
@@ -70,7 +69,7 @@ class LocationDataTable extends DataTable
                 return $editBtn . $deleteBtn;
             })
             ->addColumn('pin_color', fn($row) => $this->pinColors[$row->pin] ?? '#ffffff')
-            ->rawColumns(['sectors','b_times','t_times','action']);
+            ->rawColumns(['sector','b_times','t_times','action']);
     }
 
     /**
@@ -99,7 +98,7 @@ class LocationDataTable extends DataTable
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->orderBy(0)
-            ->addTableClass('table table-bordered table-striped table-hover') // borders + striped + hover
+            ->addTableClass('table table-bordered table-striped table-hover')
             ->parameters([
                 'dom' => '<"top"fB>rt<"bottom"lip>',
                 'pageLength' => 10,
@@ -118,7 +117,6 @@ class LocationDataTable extends DataTable
             ]);
     }
 
-
     /**
      * Get the columns definition.
      */
@@ -127,7 +125,7 @@ class LocationDataTable extends DataTable
         return [
             Column::computed('DT_RowIndex')->title('ID')->addClass('text-center'),
             Column::make('pin')->title('Pincode'),
-            Column::make('sectors')->title('Sectors'),
+            Column::make('sector')->title('Sectors'), // ✅ fixed from sectors → sector
             Column::make('b_times')->title('Delivery Taken Time'),
             Column::make('t_times')->title('Time Slots'),
             Column::computed('action')
@@ -146,4 +144,3 @@ class LocationDataTable extends DataTable
         return 'Location_' . date('YmdHis');
     }
 }
-

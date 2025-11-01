@@ -164,10 +164,10 @@
                                         data-id="{{ getMainCartTotal() }}">{{ $settings->currency_icon }}{{ getMainCartTotal() }}</b></span>
                             </p>
                             <form id="coupon_form" class="d-flex align-items-center gap-2 p-2 bg-white rounded-3 shadow-sm">
-                                <input type="text" 
-                                    class="form-control flex-grow-1 rounded-3 border-secondary" 
-                                    placeholder="Enter coupon code" 
-                                    name="coupon_code" 
+                                <input type="text"
+                                    class="form-control flex-grow-1 rounded-3 border-secondary"
+                                    placeholder="Enter coupon code"
+                                    name="coupon_code"
                                     value="{{ session()->has('coupon') ? session()->get('coupon')['coupon_code'] : '' }}">
                                 <button type="submit" class="btn btn-primary rounded-3 px-4">
                                     Apply
@@ -206,73 +206,75 @@
                         <div class="wsus__check_form p-3">
                             <form id="addressForm">
                                 @csrf
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="wsus__check_single_form">
-                                            <input type="text" placeholder="Name *" required name="name"
-                                                value="{{ old('name') }}">
-                                        </div>
+                                <div class="row g-3">
+
+                                    {{-- Receiver’s Contact --}}
+                                    <div class="col-12">
+                                        <h6 class="fw-bold mb-2 text-secondary">Receiver's Contact</h6>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="wsus__check_single_form">
-                                            <input type="text" placeholder="Phone *" required name="phone"
-                                                value="{{ old('phone') }}">
-                                        </div>
+
+                                    <div class="col-12">
+                                        <input type="text" class="form-control" name="name" placeholder="Full Name *" required value="{{ old('name') }}">
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="wsus__check_single_form">
-                                            <input type="email" placeholder="Email *" required name="email"
-                                                value="{{ old('email') }}">
-                                        </div>
+
+                                    <div class="col-12">
+                                        <input type="email" class="form-control" name="email" placeholder="Email" value="{{ old('email') }}" required>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <input type="text" class="form-control" name="phone" placeholder="Mobile Number *" required value="{{ old('phone') }}">
+                                    </div>
+
+                                    {{-- Receiver’s Address --}}
+                                    <div class="col-12 mt-3">
+                                        <h6 class="fw-bold mb-2 text-secondary">Receiver's Address</h6>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <input type="text" class="form-control" name="address" placeholder="Flat / House / Tower / Village *" required value="{{ old('address') }}">
                                     </div>
 
                                     <div class="col-md-6">
-                                        <div class="wsus__check_single_form">
-                                            <select class="select_2" name="country" required>
-                                                <option value="">Country / Region *</option>
-                                                @foreach (config('settings.country_list') as $key => $county)
-                                                    <option {{ $county === old('country') ? 'selected' : '' }}
-                                                        value="{{ $county }}">{{ $county }}</option>
-                                                @endforeach
+                                        <input type="number" class="form-control" id="pincode" name="pincode" placeholder="Pincode *" required value="{{ old('pincode') }}">
+                                    </div>
 
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="wsus__check_single_form">
-                                            <input type="text" placeholder="State *" required name="state"
-                                                value="{{ old('state') }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="wsus__check_single_form">
-                                            <input type="text" placeholder="Town / City *" required name="city"
-                                                value="{{ old('city') }}">
-                                        </div>
+                                    <div class="col-12">
+                                        <input type="text" class="form-control" name="landmark" placeholder="Landmark (optional)" value="{{ old('landmark') }}">
                                     </div>
 
                                     <div class="col-md-6">
-                                        <div class="wsus__check_single_form">
-                                            <input id="zipInput" type="number" placeholder="Zip *" readonly
-                                                name="zip" value="{{ old('zip') }}">
+                                        <input type="text" class="form-control" name="city" placeholder="City" readonly value="Gurugram">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" name="country" placeholder="Country" readonly value="India">
+                                    </div>
+
+                                    {{-- Type of Address --}}
+                                    <div class="col-12 mt-3">
+                                        <h6 class="fw-bold mb-2 text-secondary">Type of Address</h6>
+                                        <div class="d-flex gap-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="type" id="home" value="home" checked>
+                                                <label class="form-check-label" for="home">Home</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="type" id="office" value="office">
+                                                <label class="form-check-label" for="office">Office</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="type" id="other" value="other">
+                                                <label class="form-check-label" for="other">Other</label>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-12">
-                                        <div class="wsus__check_single_form">
-                                            <input type="text" placeholder="Address *" required name="address"
-                                                value="{{ old('address') }}">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-xl-12">
-                                        <div class="wsus__check_single_form">
-                                            <button type="submit" class="btn btn-primary">Save changes</button>
-                                        </div>
+                                    {{-- Button --}}
+                                    <div class="col-12 mt-4">
+                                        <button type="submit" class="btn w-100 text-white common_btn" >Save & Continue</button>
                                     </div>
                                 </div>
                             </form>
-
                         </div>
                     </div>
                 </div>
@@ -397,253 +399,66 @@
                             toastr.success(data.message);
                         }
                     },
-                    error: function(data) {
-                        console.log(data);
+                    error: function(xhr) {
+                         if (xhr.status === 422) {
+                            // Laravel validation error
+                            let errors = xhr.responseJSON.errors;
+                            $.each(errors, function(key, value) {
+                                toastr.error(value[0]); // show each error message using toastr
+                            });
+                        } else {
+                            console.log(xhr);
+                            toastr.error('Something went wrong. Please try again.');
+                        }
                     }
                 })
             });
 
             // applay coupon on cart
 
-        $('#coupon_form').on('submit', function(e){
-            e.preventDefault();
-            let formData = $(this).serialize();
-            $.ajax({
-                method: 'GET',
-                url: "{{ route('apply-coupon') }}",
-                data: formData,
-                success: function(data) {
-                   if(data.status === 'error'){
-                    toastr.error(data.message)
-                   }else if (data.status === 'success'){
-                    calculateCouponDescount()
-                    toastr.success(data.message)
-
-                    // Update UI to show coupon applied
-                    $('#coupon_form button').text('Applied').prop('disabled', true).addClass('btn-success');
-                    $('#coupon_form input[name="coupon_code"]').prop('disabled', true);
-                   }
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            })
-
-        })
-
-        // calculate discount amount
-        function calculateCouponDescount(){
-            $.ajax({
-                method: 'GET',
-                url: "{{ route('coupon-calculation') }}",
-                success: function(data) {
-                    if(data.status === 'success'){
-                        $('#discount').text('{{$settings->currency_icon}}'+data.discount);
-                        $('#total_amount').text('{{$settings->currency_icon}}'+data.cart_total);
-                    }
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            })
-        }
-
-        })
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            var sectors = [];
-            // Parse slot time helper
-            function parseSlotTime(slotStart, selectedDate) {
-                // Convert "9pm" → date object
-                let hours = parseInt(slotStart);
-                let isPM = slotStart.toLowerCase().includes("pm");
-                if (isPM && hours < 12) hours += 12;
-                if (!isPM && hours === 12) hours = 0;
-
-                let dateTime = new Date(selectedDate + "T" + String(hours).padStart(2, '0') + ":00:00");
-                return dateTime;
-            }
-
-            // Filter slots function
-            function filterSlotsByDate(selectedSector) {
-                let selectedDate = $("#delivery-date").val();
-                let today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
-
-                $("#slot").html('<option disabled selected>-- Select Slot --</option>');
-
-                if (!selectedSector || !selectedSector.t_time) return;
-
-                let slots = JSON.parse(selectedSector.t_time);
-                let availableSlots = [];
-
-                if (selectedDate === today) {
-                    let now = new Date();
-
-                    slots.forEach(function(slot) {
-                        let slotStart = slot.split("-")[0].trim();
-                        let slotDateTime = parseSlotTime(slotStart, selectedDate);
-
-                        if (slotDateTime > now) {
-                            availableSlots.push(slot);
-                        }
-                    });
-
-                    if (availableSlots.length === 0) {
-                        toastr.error("No slots left for today. Please choose another date.");
-                        $("#slot").html('<option disabled selected>No slots available today</option>');
-                        $("#delivery-time").val('');
-                        $("#delivery-time-span")
-                            .html('No slots available today')
-                            .css("color", "red"); // 🔴 red text
-                        return;
-                    } else {
-                        $("#delivery-time-span")
-                            .html('Available slots for today')
-                            .css("color", "green");
-                    }
-                } else {
-                    availableSlots = slots; // Future date → show all slots
-                    $("#delivery-time-span")
-                        .html('Available slots for ' + selectedDate)
-                        .css("color", "green");
-                }
-
-                availableSlots.forEach(function(slot) {
-                    $("#slot").append('<option value="' + slot + '">' + slot + '</option>');
-                });
-            }
-
-            /** 🔹 Pincode AJAX */
-            $("#pincode").on('input', function() {
-                let pincode = $(this).val().trim();
-                if (pincode.length === 6) {
-                    $.ajax({
-                        url: "{{ route('get-sectors-by-pincode') }}",
-                        type: 'POST',
-                        data: {
-                            pincode: pincode
-                        },
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        success: function(response) {
-                            $("#sector").html(
-                                '<option disabled selected>-- Select Sector --</option>');
-                            $("#slot").html(
-                                '<option disabled selected>-- Select Slot --</option>');
-
-                            if (response.sectors && response.sectors.length > 0) {
-                                toastr.success(
-                                    "Delivery is available in your area. Please select a sector."
-                                );
-                                sectors = response.sectors;
-                                response.sectors.forEach(function(sector) {
-                                    $("#sector").append('<option value="' + sector.id +
-                                        '">' + sector.sector + '</option>');
-                                });
-                            } else {
-                                toastr.error("Delivery is not available in your area.");
-                            }
-                        }
-                    });
-                }
-            });
-
-            // On sector change → filter slots
-            $("#sector").on('change', function() {
-                let sectorId = $(this).val();
-                let selectedSector = sectors.find(s => Number(s.id) === Number(sectorId));
-
-                $("#slot").html('<option disabled selected>-- Select Slot --</option>');
-                $("#delivery-time").val('');
-                $("#delivery-time-span").html('');
-
-                if (selectedSector && selectedSector.t_time) {
-                    filterSlotsByDate(selectedSector);
-                } else {
-                    $("#delivery-time-span").html('Standard delivery: 2-5 business days');
-                }
-            });
-
-
-            // On date change → re-run slot filter
-            $("#delivery-date").on("change", function() {
-                let sectorId = $("#sector").val();
-                let selectedSector = sectors.find(s => s.id == sectorId);
-                if (selectedSector) {
-                    filterSlotsByDate(selectedSector);
-                }
-            });
-
-            $("#slot").on("change", function() {
-                let slot = $(this).val();
-                let date = $("#delivery-date").val();
-                if (slot && date) {
-                    $("#delivery-time-span").html(
-                            "<span style='color: green'>We will deliver your order on</span> <br>" + date +
-                            " <span style='color: green'>at</span> " + slot + ".")
-                        .css("font-weight", "bold")
-                        .css("font-size", "1.1rem");
-                }
-            });
-
-            let deliveryLocation = @json(session('delivery_location') ?: []);
-
-            // If pincode already filled from session → auto load sectors
-            let pincode = $("#pincode").val();
-            if (pincode) {
+            $('#coupon_form').on('submit', function(e){
+                e.preventDefault();
+                let formData = $(this).serialize();
                 $.ajax({
-                    url: "{{ route('get-sectors-by-pincode') }}",
-                    type: 'POST',
-                    data: {
-                        pincode: pincode
-                    },
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    success: function(response) {
-                        $("#sector").html('<option disabled selected>-- Select Sector --</option>');
-                        $("#slot").html('<option disabled selected>-- Select Slot --</option>');
+                    method: 'GET',
+                    url: "{{ route('apply-coupon') }}",
+                    data: formData,
+                    success: function(data) {
+                    if(data.status === 'error'){
+                        toastr.error(data.message)
+                    }else if (data.status === 'success'){
+                        calculateCouponDescount()
+                        toastr.success(data.message)
 
-                        if (response.sectors && response.sectors.length > 0) {
-                            sectors = response.sectors;
-                            response.sectors.forEach(function(sector) {
-                                $("#sector").append('<option value="' + sector.id +
-                                    '" data-time=\'' + sector.t_time + '\'>' + sector
-                                    .sector + '</option>');
-                            });
-
-                            // Restore session sector
-                            if (deliveryLocation.sector) {
-                                $("#sector").val(deliveryLocation.sector).trigger("change");
-                            }
-
-                            // Restore session date
-                            if (deliveryLocation.date) {
-                                $("#delivery-date").val(deliveryLocation.date);
-                            }
-
-                            // Restore session slot (select existing option, don’t append)
-                            if (deliveryLocation.slot) {
-                                $("#slot").val(deliveryLocation.slot);
-                                $("#delivery-time-span").html(
-                                        "<span style='color: green'>We will deliver your order on</span> <br>" +
-                                        deliveryLocation.date +
-                                        " <span style='color: green'>at</span> " + deliveryLocation
-                                        .slot + ".")
-                                    .css("font-weight", "bold")
-                                    .css("font-size", "1.1rem");
-                            }
-
-                        } else {
-                            toastr.error("Delivery is not available in your area.");
-                        }
+                        // Update UI to show coupon applied
+                        $('#coupon_form button').text('Applied').prop('disabled', true).addClass('btn-success');
+                        $('#coupon_form input[name="coupon_code"]').prop('disabled', true);
                     }
-                });
+                    },
+                    error: function(data) {
+                        console.log(data);
+                    }
+                })
+
+            })
+
+            // calculate discount amount
+            function calculateCouponDescount(){
+                $.ajax({
+                    method: 'GET',
+                    url: "{{ route('coupon-calculation') }}",
+                    success: function(data) {
+                        if(data.status === 'success'){
+                            $('#discount').text('{{$settings->currency_icon}}'+data.discount);
+                            $('#total_amount').text('{{$settings->currency_icon}}'+data.cart_total);
+                        }
+                    },
+                    error: function(data) {
+                        console.log(data);
+                    }
+                })
             }
 
-        });
+        })
     </script>
 @endpush
