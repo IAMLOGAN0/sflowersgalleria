@@ -37,14 +37,14 @@ class LocationDataTable extends DataTable
                 }
                 return '-';
             })
-            ->editColumn('b_times', function($row) {
-                return collect(explode(',', $row->b_times))
+            ->editColumn('b_time', function($row) {
+                return collect(explode(',', $row->b_time))
                     ->map(fn($batch) => "<span class='badge badge-primary mr-1 px-2 py-1 mt-2'>{$batch}</span>")
                     ->implode(' ');
             })
-            ->editColumn('t_times', function($row) {
+            ->editColumn('t_time', function($row) {
                 $allSlots = [];
-                foreach (explode(',', $row->t_times) as $slotJson) {
+                foreach (explode(',', $row->t_time) as $slotJson) {
                     $slots = json_decode($slotJson, true);
                     if (is_array($slots)) {
                         $allSlots = array_merge($allSlots, $slots);
@@ -69,7 +69,7 @@ class LocationDataTable extends DataTable
                 return $editBtn . $deleteBtn;
             })
             ->addColumn('pin_color', fn($row) => $this->pinColors[$row->pin] ?? '#ffffff')
-            ->rawColumns(['sector','b_times','t_times','action']);
+            ->rawColumns(['sector','b_time','t_time','action']);
     }
 
     /**
@@ -81,8 +81,8 @@ class LocationDataTable extends DataTable
             ->selectRaw('
                 pin,
                 GROUP_CONCAT(sector SEPARATOR ",") as sector,
-                GROUP_CONCAT(b_time SEPARATOR ",") as b_times,
-                GROUP_CONCAT(t_time SEPARATOR ",") as t_times
+                GROUP_CONCAT(b_time SEPARATOR ",") as b_time,
+                GROUP_CONCAT(t_time SEPARATOR ",") as t_time
             ')
             ->groupBy('pin')
             ->orderBy('pin');
@@ -126,8 +126,8 @@ class LocationDataTable extends DataTable
             Column::computed('DT_RowIndex')->title('ID')->addClass('text-center'),
             Column::make('pin')->title('Pincode'),
             Column::make('sector')->title('Sectors'), // ✅ fixed from sectors → sector
-            Column::make('b_times')->title('Delivery Taken Time'),
-            Column::make('t_times')->title('Time Slots'),
+            Column::make('b_time')->title('Delivery Taken Time'),
+            Column::make('t_time')->title('Time Slots'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)
