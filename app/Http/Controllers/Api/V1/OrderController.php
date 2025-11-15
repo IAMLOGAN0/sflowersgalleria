@@ -162,6 +162,157 @@ class OrderController extends Controller
         ]);
     }
 
+    public function createTempOrder(Request $request)
+    {
+        $request->validate([
+            'shipping_method_id' => ['required', 'integer'],
+            'coupon' => ['nullable', 'string'],
+            'order_data' => ['nullable', 'string'],
+            'payment_method' => 'required|string',
+        ]);
+
+        $user_id = $request->user()->id;
+
+        $shippingMethodModel = ShippingRule::findOrFail($request->shipping_method_id);
+
+        $couponModel = Coupon::where('code', $request->coupon)->first();
+
+        $cart_items = CartItem::with('product')->where('user_id', $user_id)->get();
+
+        if ($cart_items->isEmpty()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Cart is empty'
+            ], 400);
+        }
+
+        $setting = GeneralSetting::first();
+
+        // Create Temporary Order
+        $order = new Order();
+        $order->invocie_id = rand(100000, 999999);
+        $order->user_id = $user_id;
+        $order->sub_total = $this->getCartTotal($user_id);
+        $order->amount = $this->getFinalPayableAmount($user_id, $couponModel, $shippingMethodModel);
+        $order->currency_name = $setting->currency_name;
+        $order->currency_icon = $setting->currency_icon;
+        $order->product_qty = $cart_items->sum('qty');
+        $order->payment_method = $request->payment_method;
+        $order->payment_status = false;
+        $order->order_status = 'pending_payment';
+        $order->save();
+
+        $paymentRef = "TXN-" . time() . "-" . $order->id;
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Temporary order created',
+            'data' => [
+                'order_id' => $order->id,
+                'payment_reference' => $paymentRef,
+                'amount' => $order->amount,
+                'currency' => $order->currency_name,
+            ]
+        ]);
+    }
+
+    public function confirmOrder(Request $request)
+    {
+        $request->validate([
+            'order_id'       => 'required|integer',
+            'transaction_id' => 'required|string',
+            'paid_amount'    => 'required|numeric',
+            'paid_currency'  => 'required|string',
+            'order_data'     => 'nullable|string'
+        ]);
+
+        $order = Order::findOrFail($request->order_id);
+
+        if ($order->payment_status == true) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Order already paid'
+            ], 400);
+        }
+
+        /** --- Decode order_data sent again from app --- */
+        $order_data = $request->order_data
+            ? json_decode($request->order_data, true)
+            : [];
+
+        /** --- Get cart items again to convert them into order products --- */
+        $cart_items = CartItem::with('product')
+            ->where('user_id', $order->user_id)
+            ->get();
+
+        foreach ($cart_items as $key => $item) {
+
+            $data = $order_data[$key] ?? [];
+
+            /** --- Address (optional) --- */
+            $address = isset($data['address_id'])
+                ? UserAddress::find($data['address_id'])?->toArray()
+                : null;
+
+            $product = Product::find($item->product_id);
+            if (! $product) continue;
+
+            /** --- Save product into order_products exactly as before --- */
+            $orderProduct = new OrderProduct();
+            $orderProduct->order_id = $order->id;
+            $orderProduct->product_id = $product->id;
+            $orderProduct->vendor_id = $product->vendor_id;
+            $orderProduct->product_name = $product->name;
+            $orderProduct->variants = json_encode($item->variants);
+            $orderProduct->variant_total = $item->variants_total;
+            $orderProduct->unit_price = $item->price;
+            $orderProduct->qty = $item->qty;
+
+            // FULL DELIVERY DETAILS RESTORED
+            $orderProduct->delivery_address = json_encode($address);
+            $orderProduct->delivery_date = $data['order_date'] ?? null;
+            $orderProduct->delivery_pincode = $data['order_pincode'] ?? null;
+            $orderProduct->delivery_sector = $data['order_sector'] ?? null;
+            $orderProduct->delivery_slot = $data['order_slot'] ?? null;
+            $orderProduct->occation = $data['occation'] ?? '';
+            $orderProduct->message = $data['message'] ?? '';
+
+            $orderProduct->save();
+
+            /** --- Stock update (same as your original code) --- */
+            $product->decrement('qty', $item->qty);
+        }
+
+        /** --- Update order as paid --- */
+        $order->payment_status = true;
+        $order->order_status = 'pending';
+        $order->save();
+
+        /** --- Save transaction --- */
+        $transaction = new Transaction();
+        $transaction->order_id = $order->id;
+        $transaction->transaction_id = $request->transaction_id;
+        $transaction->payment_method = $order->payment_method;
+        $transaction->amount = $order->amount;
+        $transaction->amount_real_currency = $request->paid_amount;
+        $transaction->amount_real_currency_name = $request->paid_currency;
+        $transaction->save();
+
+        /** --- Clear cart (same as before) --- */
+        $cart_items->each->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Order confirmed successfully',
+            'data' => [
+                'order_id' => $order->id,
+                'invoice' => $order->invocie_id,
+                'total_amount' => $order->amount
+            ]
+        ]);
+    }
+
+
     /**
      * Get all orders for logged-in user
      */

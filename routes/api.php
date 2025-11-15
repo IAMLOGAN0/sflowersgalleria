@@ -79,7 +79,10 @@ Route::middleware('auth:api')->group(function () {
 
      // 🛒 Order Routes
     Route::prefix('v1/order')->group(function () {
-        Route::post('/store', [OrderController::class, 'storeOrder']);
+        Route::post('/create-temp', [OrderController::class, 'createTempOrder']);
+        Route::post('/confirm', [OrderController::class, 'confirmOrder']);
+
+        // Route::post('/store', [OrderController::class, 'storeOrder']);
         Route::get('/list', [OrderController::class, 'orderList']);
         Route::get('/detail/{id}', [OrderController::class, 'orderDetail']);
     });
