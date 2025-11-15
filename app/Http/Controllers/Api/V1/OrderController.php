@@ -198,7 +198,7 @@ class OrderController extends Controller
         $order->currency_icon = $setting->currency_icon;
         $order->product_qty = $cart_items->sum('qty');
         $order->payment_method = $request->payment_method;
-        $order->payment_status = false;
+        $order->payment_status = 'pending';
         $order->order_status = 'pending_payment';
         $order->save();
 
@@ -209,6 +209,7 @@ class OrderController extends Controller
             'message' => 'Temporary order created',
             'data' => [
                 'order_id' => $order->id,
+                'invoice_id' => $order->invocie_id,
                 'payment_reference' => $paymentRef,
                 'amount' => $order->amount,
                 'currency' => $order->currency_name,
@@ -220,10 +221,12 @@ class OrderController extends Controller
     {
         $request->validate([
             'order_id'       => 'required|integer',
+            'order_status'    => 'required|string',
             'transaction_id' => 'required|string',
             'paid_amount'    => 'required|numeric',
             'paid_currency'  => 'required|string',
-            'order_data'     => 'nullable|string'
+            'order_data'     => 'nullable|string',
+            'payment_status' => 'string|boolean'
         ]);
 
         $order = Order::findOrFail($request->order_id);
@@ -284,7 +287,7 @@ class OrderController extends Controller
         }
 
         /** --- Update order as paid --- */
-        $order->payment_status = true;
+        $order->payment_status = $request->payment_status;
         $order->order_status = 'pending';
         $order->save();
 
