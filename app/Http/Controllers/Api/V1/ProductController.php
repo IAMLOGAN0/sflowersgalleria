@@ -30,7 +30,7 @@ class ProductController extends Controller
         $product = Product::with([
             'category',
             'brand',
-            'variants',
+            'variants.productVariantItems',
             'productImageGalleries',
             'reviews.user',
         ])
