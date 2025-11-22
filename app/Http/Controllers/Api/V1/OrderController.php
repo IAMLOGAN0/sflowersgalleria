@@ -14,6 +14,7 @@ use App\Models\GeneralSetting;
 use App\Models\UserAddress;
 use App\Models\Coupon;
 use App\Models\CartItem;
+use Exception;
 use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
@@ -217,7 +218,7 @@ class OrderController extends Controller
                     'currency' => $order->currency_name,
                 ]
             ]);
-        } catch (\Throwable $e) {
+        } catch (Exception $e) {
             Log::error('createTempOrder error: ' . $e->getMessage(), ['exception' => $e]);
             return response()->json([
                 'status' => 'error',
@@ -324,7 +325,7 @@ class OrderController extends Controller
                     'total_amount' => $order->amount
                 ]
             ]);
-        } catch (\Throwable $e) {
+        } catch (Exception $e) {
             Log::error('confirmOrder error: ' . $e->getMessage(), ['exception' => $e]);
             return response()->json([
                 'status' => 'error',
