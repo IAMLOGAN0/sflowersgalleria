@@ -255,7 +255,7 @@ class OrderController extends Controller
                 'paid_amount'    => 'required|numeric',
                 'paid_currency'  => 'required|string',
                 'order_data'     => 'nullable|string',
-                'payment_status' => 'string|boolean'
+                'payment_status' => 'nullable|string',
             ]);
 
             $order = Order::findOrFail($request->order_id);
