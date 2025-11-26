@@ -15,6 +15,8 @@ use App\Models\UserAddress;
 use App\Models\Coupon;
 use App\Models\CartItem;
 use App\Models\RazorpaySetting;
+use Exception;
+use Illuminate\Support\Facades\Log;
 use Razorpay\Api\Api;
 class OrderController extends Controller
 {
@@ -175,9 +177,9 @@ class OrderController extends Controller
 
             $user_id = $request->user()->id;
 
-        $shippingMethodModel = ShippingRule::findOrFail($request->shipping_method_id);
-        $couponModel = Coupon::where('code', $request->coupon)->first();
-        $cart_items = CartItem::with('product')->where('user_id', $user_id)->get();
+            $shippingMethodModel = ShippingRule::findOrFail($request->shipping_method_id);
+            $couponModel = Coupon::where('code', $request->coupon)->first();
+            $cart_items = CartItem::with('product')->where('user_id', $user_id)->get();
 
             if ($cart_items->isEmpty()) {
                 return response()->json([
@@ -188,51 +190,53 @@ class OrderController extends Controller
 
             $setting = GeneralSetting::first();
 
-        // Create Temporary Order
-        $order = new Order();
-        $order->invocie_id = rand(100000, 999999);
-        $order->user_id = $user_id;
-        $order->sub_total = $this->getCartTotal($user_id);
-        $order->amount = $this->getFinalPayableAmount($user_id, $couponModel, $shippingMethodModel);
-        $order->currency_name = $setting->currency_name;
-        $order->currency_icon = $setting->currency_icon;
-        $order->product_qty = $cart_items->sum('qty');
-        $order->payment_method = $request->payment_method;
-        $order->payment_status = 'pending';
-        $order->order_status = 'pending_payment';
-        $order->save();
+            // Create Temporary Order
+            $order = new Order();
+            $order->invocie_id = rand(100000, 999999);
+            $order->user_id = $user_id;
+            $order->sub_total = $this->getCartTotal($user_id);
+            $order->amount = $this->getFinalPayableAmount($user_id, $couponModel, $shippingMethodModel);
+            $order->currency_name = $setting->currency_name;
+            $order->currency_icon = $setting->currency_icon;
+            $order->product_qty = $cart_items->sum('qty');
+            $order->payment_method = $request->payment_method;
+            $order->payment_status = 'pending';
+            $order->order_status = 'pending_payment';
+            $order->save();
 
-        // Create Razorpay Order
-        $razorPaySetting = RazorpaySetting::first();
-        $api = new Api($razorPaySetting->razorpay_key, $razorPaySetting->razorpay_secret_key);
+            // Create Razorpay Order
+            $razorPaySetting = RazorpaySetting::first();
+            $api = new Api($razorPaySetting->razorpay_key, $razorPaySetting->razorpay_secret_key);
 
-        $razorOrderData = [
-            'receipt' => "RECPT-" . $order->id,
-            'amount' => $order->amount * 100, // Amount in paise
-            'currency' => $order->currency_name,
-            'notes' => [
-                'order_id' => $order->id,
-                'invoice_id' => $order->invocie_id
-            ]
-        ];
-
-        $razorpayOrder = $api->order->create($razorOrderData);
-
-        // Save razorpay_order_id in database if you want
-        $order->razorpay_order_id = $razorpayOrder['id'];
-        $order->save();
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Temporary order created',
-            'data' => [
-                'order_id' => $order->id,
-                'invoice_id' => $order->invocie_id,
-                'razorpay_order_id' => $razorpayOrder['id'],   // REQUIRED BY APP
-                'amount' => $order->amount,
+            $razorOrderData = [
+                'receipt' => "RECPT-" . $order->id,
+                'amount' => $order->amount * 100, // Amount in paise
                 'currency' => $order->currency_name,
-            ]
-        ]);
+                'notes' => [
+                    'order_id' => $order->id,
+                    'invoice_id' => $order->invocie_id
+                ]
+            ];
+
+            $razorpayOrder = $api->order->create($razorOrderData);
+
+            // Save razorpay_order_id in database if you want
+            $order->razorpay_order_id = $razorpayOrder['id'];
+            $order->save();
+
+        }catch (Exception $e) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Temporary order created',
+                'data' => [
+                    'order_id' => $order->id,
+                    'invoice_id' => $order->invocie_id,
+                    'razorpay_order_id' => $razorpayOrder['id'],   // REQUIRED BY APP
+                    'amount' => $order->amount,
+                    'currency' => $order->currency_name,
+                ]
+            ]);
+        }
     }
 
     public function confirmOrder(Request $request)
