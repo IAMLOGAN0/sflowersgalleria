@@ -14,7 +14,8 @@ use App\Models\GeneralSetting;
 use App\Models\UserAddress;
 use App\Models\Coupon;
 use App\Models\CartItem;
-
+use App\Models\RazorpaySetting;
+use Razorpay\Api\Api;
 class OrderController extends Controller
 {
     /**
@@ -174,9 +175,7 @@ class OrderController extends Controller
         $user_id = $request->user()->id;
 
         $shippingMethodModel = ShippingRule::findOrFail($request->shipping_method_id);
-
         $couponModel = Coupon::where('code', $request->coupon)->first();
-
         $cart_items = CartItem::with('product')->where('user_id', $user_id)->get();
 
         if ($cart_items->isEmpty()) {
@@ -188,7 +187,7 @@ class OrderController extends Controller
 
         $setting = GeneralSetting::first();
 
-        // Create Temporary Order
+        // Create Local Temporary Order
         $order = new Order();
         $order->invocie_id = rand(100000, 999999);
         $order->user_id = $user_id;
@@ -202,7 +201,25 @@ class OrderController extends Controller
         $order->order_status = 'pending_payment';
         $order->save();
 
-        $paymentRef = "TXN-" . time() . "-" . $order->id;
+        // Create Razorpay Order
+        $razorPaySetting = RazorpaySetting::first();
+        $api = new Api($razorPaySetting->razorpay_key, $razorPaySetting->razorpay_secret_key);
+
+        $razorOrderData = [
+            'receipt' => "RECPT-" . $order->id,
+            'amount' => $order->amount * 100, // Amount in paise
+            'currency' => $order->currency_name,
+            'notes' => [
+                'order_id' => $order->id,
+                'invoice_id' => $order->invocie_id
+            ]
+        ];
+
+        $razorpayOrder = $api->order->create($razorOrderData);
+
+        // Save razorpay_order_id in database if you want
+        $order->razorpay_order_id = $razorpayOrder['id'];
+        $order->save();
 
         return response()->json([
             'status' => 'success',
@@ -210,7 +227,7 @@ class OrderController extends Controller
             'data' => [
                 'order_id' => $order->id,
                 'invoice_id' => $order->invocie_id,
-                'payment_reference' => $paymentRef,
+                'razorpay_order_id' => $razorpayOrder['id'],   // REQUIRED BY APP
                 'amount' => $order->amount,
                 'currency' => $order->currency_name,
             ]
