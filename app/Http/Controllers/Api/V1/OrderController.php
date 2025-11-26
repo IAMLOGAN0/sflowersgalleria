@@ -223,7 +223,6 @@ class OrderController extends Controller
             $order->razorpay_order_id = $razorpayOrder['id'];
             $order->save();
 
-        }catch (Exception $e) {
             return response()->json([
                 'status' => 'success',
                 'message' => 'Temporary order created',
@@ -235,6 +234,14 @@ class OrderController extends Controller
                     'currency' => $order->currency_name,
                 ]
             ]);
+
+        }catch (Exception $e) {
+            Log::error('confirmOrder error: ' . $e->getMessage(), ['exception' => $e]);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to confirm order',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 
