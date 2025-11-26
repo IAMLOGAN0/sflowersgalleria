@@ -171,7 +171,6 @@ class OrderController extends Controller
             $request->validate([
                 'shipping_method_id' => ['required', 'integer'],
                 'coupon' => ['nullable', 'string'],
-                'order_data' => ['nullable', 'string'],
                 'payment_method' => 'required|string',
             ]);
 
