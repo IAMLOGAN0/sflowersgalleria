@@ -260,7 +260,7 @@ class OrderController extends Controller
 
             $order = Order::findOrFail($request->order_id);
 
-            if ($order->payment_status == true) {
+            if ($order->payment_status == 'completed') {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Order already paid'
