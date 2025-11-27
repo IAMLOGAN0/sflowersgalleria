@@ -32,6 +32,10 @@ Route::prefix('v1/products')->group(function () {
     Route::get('/{slug}', [ProductController::class, 'getProductDetails']);
     Route::get('/category/{categoryId}', [ProductController::class, 'getProductsByCategory']);
     Route::get('/subcategory/{subcategoryId}', [ProductController::class, 'getProductsBySubcategory']);
+
+    Route::get('/random', [ProductController::class, 'getRandomProducts']);
+    Route::get('/category/{categoryId}/random', [ProductController::class, 'getRandomProductsByCategory']);
+    Route::get('/global-search', [ProductController::class, 'globalSearch']);
 });
 
 Route::prefix('v1/categories')->group(function () {

@@ -94,4 +94,67 @@ class ProductController extends Controller
             'data' => $products
         ]);
     }
+
+    public function getRandomProducts(Request $request)
+    {
+        $perPage = $request->input('per_page', 12);
+
+        $products = Product::with(['variants', 'category', 'productImageGalleries'])
+            ->where(['status' => 1, 'is_approved' => 1])
+            ->inRandomOrder()
+            ->paginate($perPage);
+
+        return response()->json([
+            'success' => true,
+            'data' => $products
+        ]);
+    }
+
+    public function getRandomProductsByCategory($categoryId, Request $request)
+    {
+        $perPage = $request->input('per_page', 12);
+
+        $products = Product::with(['variants', 'category', 'productImageGalleries'])
+            ->where('category_id', $categoryId)
+            ->where(['status' => 1, 'is_approved' => 1])
+            ->inRandomOrder()
+            ->paginate($perPage);
+
+        return response()->json([
+            'success' => true,
+            'data' => $products
+        ]);
+    }
+
+    public function globalSearch(Request $request)
+    {
+        $query = $request->input('q');
+        $perPage = $request->input('per_page', 12);
+
+        if (!$query) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Search query is required.'
+            ], 400);
+        }
+
+        $products = Product::with(['category', 'variants', 'productImageGalleries'])
+            ->where(function ($q) use ($query) {
+                $q->where('name', 'like', '%' . $query . '%')
+                ->orWhereHas('category', function ($cat) use ($query) {
+                    $cat->where('name', 'like', '%' . $query . '%');
+                });
+            })
+            ->where('status', 1)
+            ->where('is_approved', 1)
+            ->paginate($perPage);
+
+        return response()->json([
+            'success' => true,
+            'data' => $products
+        ]);
+    }
+
+
+
 }
