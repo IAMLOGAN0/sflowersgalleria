@@ -254,8 +254,8 @@ class OrderController extends Controller
                 'transaction_id' => 'required|string',
                 'paid_amount'    => 'required|numeric',
                 'paid_currency'  => 'required|string',
-                'order_data'     => 'nullable|string',
                 'payment_status' => 'nullable|string',
+                'order_data'     => 'nullable|array',
             ]);
 
             $order = Order::findOrFail($request->order_id);
@@ -268,51 +268,35 @@ class OrderController extends Controller
             }
 
             /** --- Decode order_data sent again from app --- */
-            $order_data = $request->order_data
-                ? json_decode($request->order_data, true)
-                : [];
+            $order_data = $request->order_data;
 
-            /** --- Get cart items again to convert them into order products --- */
-            $cart_items = CartItem::with('product')
-                ->where('user_id', $order->user_id)
-                ->get();
+            foreach ($order_data as $key => $item) {
 
-            foreach ($cart_items as $key => $item) {
+                $address = UserAddress::find($item['address_id']);
+                $product = Product::find($item['product_id']);
 
-                $data = $order_data[$key] ?? [];
-
-                /** --- Address (optional) --- */
-                $address = isset($data['address_id'])
-                    ? UserAddress::find($data['address_id'])?->toArray()
-                    : null;
-
-                $product = Product::find($item->product_id);
                 if (! $product) continue;
 
-                /** --- Save product into order_products exactly as before --- */
                 $orderProduct = new OrderProduct();
                 $orderProduct->order_id = $order->id;
                 $orderProduct->product_id = $product->id;
                 $orderProduct->vendor_id = $product->vendor_id;
                 $orderProduct->product_name = $product->name;
-                $orderProduct->variants = json_encode($item->variants);
-                $orderProduct->variant_total = $item->variants_total;
-                $orderProduct->unit_price = $item->price;
-                $orderProduct->qty = $item->qty;
-
-                // FULL DELIVERY DETAILS RESTORED
+                $orderProduct->variants = json_encode($item['variants']);
+                $orderProduct->variant_total = $item['variants_total'];
+                $orderProduct->unit_price = $item['price'];
+                $orderProduct->qty = $item['qty'];
                 $orderProduct->delivery_address = json_encode($address);
-                $orderProduct->delivery_date = $data['order_date'] ?? null;
-                $orderProduct->delivery_pincode = $data['order_pincode'] ?? null;
-                $orderProduct->delivery_sector = $data['order_sector'] ?? null;
-                $orderProduct->delivery_slot = $data['order_slot'] ?? null;
-                $orderProduct->occation = $data['occation'] ?? '';
-                $orderProduct->message = $data['message'] ?? '';
+                $orderProduct->delivery_date = $item['order_date'] ?? null;
+                $orderProduct->delivery_pincode = $item['order_pincode'] ?? null;
+                $orderProduct->delivery_sector = $item['order_sector'] ?? null;
+                $orderProduct->delivery_slot = $item['order_slot'] ?? null;
+                $orderProduct->occation = $item['occation'] ?? '';
+                $orderProduct->message = $item['message'] ?? '';
 
                 $orderProduct->save();
 
-                /** --- Stock update (same as your original code) --- */
-                $product->decrement('qty', $item->qty);
+                $product->decrement('qty', $item['qty']);
             }
 
             /** --- Update order as paid --- */
@@ -330,7 +314,9 @@ class OrderController extends Controller
             $transaction->amount_real_currency_name = $request->paid_currency;
             $transaction->save();
 
-            /** --- Clear cart (same as before) --- */
+            $cart_items = CartItem::with('product')
+                ->where('user_id', $order->user_id)
+                ->get();
             $cart_items->each->delete();
 
             return response()->json([
@@ -343,7 +329,6 @@ class OrderController extends Controller
                 ]
             ]);
         } catch (Exception $e) {
-            Log::error('confirmOrder error: ' . $e->getMessage(), ['exception' => $e]);
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed to confirm order',
@@ -358,7 +343,7 @@ class OrderController extends Controller
      */
     public function orderList(Request $request)
     {
-        $orders = Order::with('orderProducts.product')
+        $orders = Order::with('orderProducts.product.productImageGalleries')
             ->where('user_id', $request->user()->id)
             ->latest()
             ->get();
@@ -374,7 +359,7 @@ class OrderController extends Controller
      */
     public function orderDetail(Request $request,$id)
     {
-        $order = Order::with('orderProducts.product')
+        $order = Order::with('orderProducts.product.productImageGalleries')
             ->where('user_id', $request->user()->id)
             ->findOrFail($id);
 
