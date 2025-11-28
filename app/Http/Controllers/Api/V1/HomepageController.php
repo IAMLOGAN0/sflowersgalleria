@@ -106,6 +106,7 @@ class HomepageController extends Controller
             'plants' => fn ($q) => $q->whereHas('category', fn ($cat) => $cat->where('slug', 'plants')),
             'luxury' => fn ($q) => $q->whereHas('category', fn ($cat) => $cat->where('slug', 'luxury')),
             'cakes' => fn ($q) => $q->whereHas('category', fn ($cat) => $cat->where('slug', 'cakes')),
+            'flowers' => fn ($q) => $q->whereHas('category', fn ($cat) => $cat->where('slug', 'flowers')),
         ];
 
         $typeBaseProducts = [];
