@@ -102,16 +102,28 @@
 
         <!-- Edit Button -->
         <button type="button" class="btn btn-outline-secondary editAddressBtn">
-            <i class="bi bi-pencil-square"></i>
+            <!-- Pencil SVG -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0
+                .708l-9.5 9.5-3.5.5a.5.5 0 0 1-.57-.57l.5-3.5 9.5-9.5zM11.207
+                2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586
+                3L10.5 3.207 4 9.707V10h.293L12.793 5.5z"/>
+            </svg>
         </button>
 
-        <!-- Add New -->
+        <!-- Add New Button -->
         <button type="button"
                 class="btn btn-outline-primary addNewAddress"
                 data-pincode="{{ $item->options->order_pincode }}"
                 data-sector="{{ $item->options->order_sector }}">
-            <i class="bi bi-plus-square"></i>
+            <!-- Plus SVG -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0
+                1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0
+                1 8 4z"/>
+            </svg>
         </button>
+
     </div>
 </div>
 
