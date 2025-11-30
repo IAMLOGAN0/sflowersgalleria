@@ -54,7 +54,7 @@ Route::prefix('v1/events')->group(function () {
     Route::get('/{categorySlug}/{eventSlug}', [EventsController::class, 'getEventDetails']);
     Route::get('/{categorySlug}/{eventSlug}/comments', [EventsController::class, 'getCommentsByEventSlug']);
 });
-Route::post('v1/all-coupon', [CartController::class, 'allCoupon'])->name('all-coupon');
+Route::get('v1/all-coupon', [CartController::class, 'allCoupon'])->name('all-coupon');
 Route::post('v1/apply-coupon', [CartController::class, 'couponCalculation'])->name('coupon-calculation');
 
 // ✅ Protected routes (require login)
