@@ -3,9 +3,11 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\CartItem;
+use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\ProductVariantItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class CartController extends Controller
 {
@@ -112,7 +114,6 @@ class CartController extends Controller
         $cupon_code = $request->input('cupon_code');
         $coupon = Coupon::where(['code' => $cupon_code, 'status' => 1])->first();
         if($coupon){
-            $coupon = Session::get('coupon');
             $subTotal = getCartTotal();
             if($coupon->discount_type === 'amount'){
                 $total = $subTotal - $coupon->discount;
@@ -126,5 +127,10 @@ class CartController extends Controller
             $total = getCartTotal();
             return response(['status' => 'success', 'cart_total' => $total, 'discount' => 0]);
         }
+    }
+
+    public function allCoupon(Request $request){
+        $coupons = Coupon::where(['status' => 1])->get();
+        return response(['status' => 'success', 'data' => $coupons]);
     }
 }

@@ -91,27 +91,30 @@
 
                                 <!-- Delivery Address -->
                                 <div class="mb-4">
-                                    <label class="fw-semibold mb-2 d-block">Delivery Address</label>
+    <label class="fw-semibold mb-2 d-block">Delivery Address</label>
 
-                                    <div class="input-group">
-                                        <select class="form-select addressField" name="address[{{$item->rowId}}]">
-                                            @foreach($addresses as $address)
-                                                <option value="{{ $address->id }}">{{ $address->full_address }}</option>
-                                            @endforeach
-                                        </select>
-                                        <button type="button"
-                                                class="btn btn-outline-secondary editAddressBtn">
-                                            Edit
-                                        </button>
-                                        <button type="button" class="btn btn-outline-primary addNewAddress"
-                                                data-pincode="{{ $item->options->order_pincode }}"
-                                                data-sector="{{ $item->options->order_sector }}">
-                                            + Add New
-                                        </button>
+    <div class="input-group">
+        <select class="form-select addressField" name="address[{{$item->rowId}}]">
+            @foreach($addresses as $address)
+                <option value="{{ $address->id }}">{{ $address->full_address }}</option>
+            @endforeach
+        </select>
 
+        <!-- Edit Button -->
+        <button type="button" class="btn btn-outline-secondary editAddressBtn">
+            <i class="bi bi-pencil-square"></i>
+        </button>
 
-                                    </div>
-                                </div>
+        <!-- Add New -->
+        <button type="button"
+                class="btn btn-outline-primary addNewAddress"
+                data-pincode="{{ $item->options->order_pincode }}"
+                data-sector="{{ $item->options->order_sector }}">
+            <i class="bi bi-plus-square"></i>
+        </button>
+    </div>
+</div>
+
 
                                 <!-- Occasion -->
                                 <div class="mb-4">
