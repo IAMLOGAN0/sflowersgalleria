@@ -57,7 +57,7 @@
                         html += `
                         <li id="mini_cart_${product.rowId}">
                             <div class="wsus__cart_img">
-                                <a href="{{ url('product-detail') }}/${product.options.slug}"><img src="{{ asset('/') }}${product.options.image}" alt="product" class="img-fluid w-100"></a>
+                                <a href="{{ url('product-detail') }}/${product.options.slug}"><img src="${product.options.image}" alt="product" class="img-fluid w-100"></a>
                                 <a class="wsis__del_icon remove_sidebar_product" data-id="${product.rowId}" href=""><i class="fas fa-minus-circle"></i></a>
                             </div>
                             <div class="wsus__cart_text">
