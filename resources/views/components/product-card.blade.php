@@ -16,7 +16,7 @@
         </a>
         <ul class="wsus__single_pro_icon">
             <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal" class="show_product_modal" data-id="{{ $product->id }}"><i class="far fa-eye"></i></a></li>
-            <li><a href="" class="add_to_wishlist" data-id="{{$product->id}}"><i class="far fa-heart"></i></a></li>
+            {{-- <li><a href="" class="add_to_wishlist" data-id="{{$product->id}}"><i class="far fa-heart"></i></a></li> --}}
             {{-- <li><a href="#"><i class="far fa-random"></i></a> --}}
         </ul>
         <div class="wsus__product_details">
