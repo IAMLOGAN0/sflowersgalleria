@@ -61,109 +61,106 @@
 
 @push('styles')
 <style>
-    /* ------------------------------
-       Modern Dashboard Styling
-    ------------------------------- */
-    #wsus__dashboard {
-        background-color: #f8f9fa;
-        min-height: 100vh;
-    }
+/* ----------------------------------------
+   FNP Inspired Elegant Dashboard
+----------------------------------------- */
+.dashboard-title {
+    margin-bottom: 2rem;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: #2e3d49;
+}
 
-    .dashboard_content {
-        overflow: visible !important;
-    }
+/* FNP Color Palette */
+:root {
+    --fnp-green: #2baf63;
+    --fnp-dark: #1c2b21;
+    --fnp-soft-bg: #f3f7f4;
+    --fnp-card-bg: #ffffff;
+    --fnp-text: #2d3a32;
+}
 
-    /* Make sure title is always visible */
-    .dashboard-title {
-        margin-bottom: 1.5rem;
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #333;
-        word-wrap: break-word;
-        white-space: normal;
-    }
+/* Container background */
+#wsus__banner {
+    background: var(--fnp-soft-bg);
+}
 
-    .dashboard-title i {
-        color: var(--bs-primary, #0d6efd);
-    }
+/* Dashboard Cards */
+.wsus__dashboard_item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 
-    /* Fix possible overflow/hidden issues */
-    #wsus__dashboard .dashboard_content {
-        overflow: visible !important;
-    }
+    background: var(--fnp-card-bg);
+    border-radius: 18px;
+    padding: 30px 10px;
 
-    /* Adjust for mobile screens */
-    @media (max-width: 575.98px) {
-        .dashboard-title {
-            font-size: 1.25rem;
-            text-align: center;
-            padding: 10px 0;
-            margin-top: 70px;
-        }
-    }s
+    transition: all 0.25s ease-in-out;
 
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    height: 140px;
 
-    /* Dashboard Cards */
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Icon */
+.wsus__dashboard_item i {
+    font-size: 2rem;
+    margin-bottom: 12px;
+    color: var(--fnp-green);
+}
+
+/* Label */
+.wsus__dashboard_item p {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--fnp-dark);
+    font-weight: 600;
+}
+
+/* Numbers */
+.wsus__dashboard_item h4 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-top: 6px;
+    color: var(--fnp-green);
+}
+
+/* Hover — soft floating */
+.wsus__dashboard_item:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.10);
+}
+
+/* Card Color Accents */
+.red i, .red h4     { color: #e63946; }
+.green i, .green h4 { color: #2baf63; }
+.sky i, .sky h4     { color: #0072ff; }
+.orange i, .orange h4 { color: #ff6600; }
+
+/* Remove old gradient backgrounds – FNP uses clean white cards */
+.red, .green, .sky, .orange {
+    background: #ffffff !important;
+}
+
+/* Responsive */
+@media (max-width: 767.98px) {
     .wsus__dashboard_item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        background-color: #fff;
-        border-radius: 16px;
-        padding: 25px 10px;
-        transition: all 0.3s ease-in-out;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-        text-decoration: none;
-        height: 120px;
+        padding: 20px 8px;
+        height: auto;
     }
 
     .wsus__dashboard_item i {
-        font-size: 1.8rem;
-        margin-bottom: 10px;
-        color: #fff;
-    }
-
-    .wsus__dashboard_item p {
-        margin: 0;
-        font-size: 0.95rem;
-        color: #fff;
-        font-weight: 600;
+        font-size: 1.6rem;
     }
 
     .wsus__dashboard_item h4 {
-        font-size: 1.3rem;
-        font-weight: 700;
-        margin-top: 8px;
-        color: #fff;
+        font-size: 1.2rem;
     }
+}
 
-    /* Hover animation */
-    .wsus__dashboard_item:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Custom Colors */
-    .red    { background: linear-gradient(135deg, #ff4e50, #f9d423); }
-    .green  { background: linear-gradient(135deg, #11998e, #38ef7d); }
-    .sky    { background: linear-gradient(135deg, #00c6ff, #0072ff); }
-    .orange { background: linear-gradient(135deg, #ff6a00, #ee0979); }
-
-    /* Responsive Fixes */
-    @media (max-width: 767.98px) {
-        .wsus__dashboard_item {
-            padding: 18px 8px;
-            height: auto;
-        }
-        .wsus__dashboard_item p {
-            font-size: 0.9rem;
-        }
-        .wsus__dashboard_item h4 {
-            font-size: 1.1rem;
-        }
-    }
 
 </style>
 @endpush

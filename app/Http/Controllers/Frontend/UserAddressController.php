@@ -65,7 +65,13 @@ class UserAddressController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $address = UserAddress::findOrFail($id);
+        $data = [
+            'data' => $address,
+            'status' => 'success'
+        ];
+
+        return response()->json($data);
     }
 
     /**

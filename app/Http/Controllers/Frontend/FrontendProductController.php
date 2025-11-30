@@ -137,4 +137,10 @@ class FrontendProductController extends Controller
         $sectors = Location::where('pin', $pincode)->get();
         return response()->json(['sectors' => $sectors]);
     }
+
+    public function subCategories(Request $request)
+    {
+        $sub_categories = SubCategory::where('category_id', $request->id)->where('status', 1)->paginate(10);
+        return view('frontend.pages.sub-category', compact('sub_categories'));
+    }
 }

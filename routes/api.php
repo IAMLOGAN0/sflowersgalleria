@@ -33,7 +33,7 @@ Route::prefix('v1/products')->group(function () {
     Route::get('/category/{categoryId}', [ProductController::class, 'getProductsByCategory']);
     Route::get('/subcategory/{subcategoryId}', [ProductController::class, 'getProductsBySubcategory']);
 
-    Route::get('/random', [ProductController::class, 'getRandomProducts']);
+    Route::get('/random/all', [ProductController::class, 'getRandomProducts']);
     Route::get('/category/{categoryId}/random', [ProductController::class, 'getRandomProductsByCategory']);
     Route::get('/global-search', [ProductController::class, 'globalSearch']);
 });
@@ -101,6 +101,7 @@ Route::middleware('auth:api')->group(function () {
 
     // ✅ Authenticated user APIs
     Route::prefix('v1/auth')->group(function () {
+        Route::post('/refresh', [AuthOtpApiController::class, 'refresh']);
         Route::get('/me', [AuthOtpApiController::class, 'me']);
         Route::post('/logout', [AuthOtpApiController::class, 'logout']);
     });

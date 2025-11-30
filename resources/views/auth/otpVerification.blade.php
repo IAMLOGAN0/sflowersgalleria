@@ -29,14 +29,20 @@
                 <div class="col-md-6 col-lg-5">
                     <div class="card shadow-sm border-0 rounded-4">
                         <div class="card-body p-4">
-                            <ul class="nav nav-tabs mb-4 justify-content-center" id="authTabs" role="tablist">
+                            {{-- <ul class="nav nav-tabs mb-4 justify-content-center" id="authTabs" role="tablist">
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link active fw-semibold" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab">Login</button>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link fw-semibold" id="signup-tab" data-bs-toggle="tab" data-bs-target="#signup" type="button" role="tab">Sign Up</button>
                                 </li>
-                            </ul>
+                            </ul> --}}
+                            <div class="d-flex justify-content-center mb-3 align-items-center">
+                                <div class="me-2">
+                                    <h4 class="mb-0">Validate OTP</h4>
+                                </div>
+                            </div>
+
 
                             <div class="tab-content" id="authTabsContent">
                                 <!-- Login -->

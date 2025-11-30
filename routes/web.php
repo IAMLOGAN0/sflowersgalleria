@@ -99,6 +99,9 @@ Route::get('events', [BlogController::class, 'blog'])->name('blog');
 Route::get('event-categories', [BlogController::class, 'blogCategories'])->name('blog-category');
 
 
+/** contact route */
+Route::get('sub-categories/{id}', [FrontendProductController::class, 'subCategories'])->name('sub-categories');
+
 /** Product routes */
 Route::get('show-product-modal/{id}', [HomeController::class, 'ShowProductModal'])->name('show-product-modal');
 /** add product in wishlist */
@@ -147,8 +150,9 @@ Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'user', 'as' => 
     Route::post('blog-comment', [BlogController::class, 'comment'])->name('blog-comment');
 
     /** Checkout routes */
-    Route::get('checkout', [CheckOutController::class, 'index'])->name('checkout');
+    Route::get('checkout', [CheckOutController::class, 'indaex'])->name('checkout');
     Route::post('checkout/address-create', [CheckOutController::class, 'createAddress'])->name('checkout.address.create');
+    Route::post('checkout/address-update', [CheckOutController::class, 'updateAddress'])->name('checkout.address.update');
     Route::post('checkout/form-submit', [CheckOutController::class, 'checkOutFormSubmit'])->name('checkout.form-submit');
 
     /** Check pincode route */

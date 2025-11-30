@@ -161,4 +161,23 @@ class AuthOtpApiController extends Controller
         auth()->logout();
         return response()->json(['message' => 'Successfully logged out']);
     }
+
+    public function refresh()
+    {
+        try {
+            $newToken = JWTAuth::refresh(JWTAuth::getToken());
+
+            return response()->json([
+                'success' => true,
+                'token' => $newToken
+            ]);
+        }
+        catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Token invalid or expired'
+            ], 401);
+        }
+    }
+
 }

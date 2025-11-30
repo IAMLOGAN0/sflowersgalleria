@@ -40,12 +40,29 @@ class HomeController extends Controller
         $categoryProductSliderSectionThree = HomePageSetting::where('key', 'product_slider_section_three')->first();
 
         // banners
+        $homepage_secion_banner_one = Adverisement::where('key', 'homepage_secion_banner_one')->first();
+        $homepage_secion_banner_one = json_decode($homepage_secion_banner_one->value);
 
+        $homepage_secion_banner_two = Adverisement::where('key', 'homepage_secion_banner_two')->first();
+        $homepage_secion_banner_two = json_decode($homepage_secion_banner_two?->value);
+
+        $homepage_secion_banner_three = Adverisement::where('key', 'homepage_secion_banner_three')->first();
+        $homepage_secion_banner_three = json_decode($homepage_secion_banner_three?->value);
+
+        $homepage_secion_banner_four = Adverisement::where('key', 'homepage_secion_banner_four')->first();
+        $homepage_secion_banner_four = json_decode($homepage_secion_banner_four?->value);
+
+        $productpage_banner_section = Adverisement::where('key', 'productpage_banner_section')->first();
+        $productpage_banner_section = json_decode($productpage_banner_section?->value);
+
+        $cartpage_banner_section = Adverisement::where('key', 'cartpage_banner_section')->first();
+        $cartpage_banner_section = json_decode($cartpage_banner_section?->value);
 
         $recentBlogs = Blog::with(['category', 'user'])->where('status', 1)->orderBy('id', 'DESC')->take(8)->get();
 
         $categories = Category::where('status', 1)->get();
         $sub_categories = SubCategory::where('status', 1)->get();
+
         return view(
             'frontend.home.home',
             compact(
@@ -60,7 +77,13 @@ class HomeController extends Controller
                 'categoryProductSliderSectionThree',
                 'recentBlogs',
                 'categories',
-                'sub_categories'
+                'sub_categories',
+                'homepage_secion_banner_one',
+                'homepage_secion_banner_two',
+                'homepage_secion_banner_three',
+                'homepage_secion_banner_four',
+                'productpage_banner_section',
+                'cartpage_banner_section'
             )
         );
     }

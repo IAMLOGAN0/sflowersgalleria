@@ -17,6 +17,8 @@ class CheckOutController extends Controller
         $addresses = UserAddress::where('user_id', Auth::user()->id)->get();
         $shippingMethods = ShippingRule::where('status', 1)->get();
         $cartItems = Cart::content();
+
+
         return view('frontend.pages.checkout', compact('addresses', 'shippingMethods', 'cartItems'));
     }
 
@@ -60,6 +62,51 @@ class CheckOutController extends Controller
         return response()->json([
             'status'  => 'success',
             'message' => 'Address added successfully!',
+            'data'    => $html
+        ]);
+    }
+
+    public function updateAddress(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'phone' => 'required|string|max:20',
+            'address' => 'required|string',
+            'pincode' => 'required|string|max:20',
+            'sector' => 'nullable|string|max:255',
+            'landmark' => 'nullable|string|max:255',
+            'city' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+            'type' => 'required|in:home,office,other',
+            'alt_phone' => 'nullable|string|max:20',
+        ]);
+
+        $address = UserAddress::findOrFail($request->id);
+        $address->name = $request->name;
+        $address->email = $request->email;
+        $address->phone = $request->phone;
+        $address->address = $request->address;
+        $address->pincode = $request->pincode;
+        $address->sector = $request->sector;
+        $address->landmark = $request->landmark;
+        $address->city = $request->city;
+        $address->country = $request->country;
+        $address->type = $request->type;
+        $address->alt_phone = $request->alt_phone;
+        $address->save();
+
+        // get updated addresses for current user
+        $addresses = UserAddress::where('user_id', Auth::id())
+            ->orderBy('updated_at', 'DESC')
+            ->get();
+
+        // prepare updated HTML for select dropdown
+        $html = view('frontend.partials.address_dropdown', compact('addresses'))->render();
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Address updated successfully!',
             'data'    => $html
         ]);
     }

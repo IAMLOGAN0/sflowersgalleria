@@ -34,6 +34,9 @@ class CategoryDataTable extends DataTable
             ->addColumn('image', function($query){
                 return "<img width='40px' src='$query->image' ></img>";
             })
+            ->addColumn('banner_image', function($query){
+                return "<img width='40px' src='$query->banner_image' ></img>";
+            })
             ->addColumn('status', function($query){
                 if($query->status == 1){
                     $button = '<label class="custom-switch mt-2">
@@ -48,7 +51,7 @@ class CategoryDataTable extends DataTable
                 }
                 return $button;
             })
-            ->rawColumns(['icon', 'action', 'status', 'image'])
+            ->rawColumns(['icon', 'action', 'status', 'image', 'banner_image'])
             ->setRowId('id');
     }
 
@@ -92,6 +95,7 @@ class CategoryDataTable extends DataTable
             Column::make('id')->width(100),
             Column::make('icon')->width(300),
             Column::make('image')->width(300),
+            Column::make('banner_image')->width(300),
             Column::make('name'),
             Column::make('status')->width(200),
             Column::computed('action')

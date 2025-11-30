@@ -29,10 +29,14 @@
                                 </button>
                                 <input type="hidden" name="icon" id="selected-icon" value="">
                             </div>
-                        </div>  
+                        </div>
                         <div class="form-group">
                             <label>Image</label>
                             <input type="file" class="form-control" name="image" value="">
+                        </div>
+                        <div class="form-group">
+                            <label>Banner</label>
+                            <input type="file" class="form-control" name="banner_image" value="">
                         </div>
                         <div class="form-group">
                             <label>Name</label>

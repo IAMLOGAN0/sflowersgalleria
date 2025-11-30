@@ -92,14 +92,24 @@
                                 <!-- Delivery Address -->
                                 <div class="mb-4">
                                     <label class="fw-semibold mb-2 d-block">Delivery Address</label>
+
                                     <div class="input-group">
                                         <select class="form-select addressField" name="address[{{$item->rowId}}]">
                                             @foreach($addresses as $address)
                                                 <option value="{{ $address->id }}">{{ $address->full_address }}</option>
                                             @endforeach
                                         </select>
+                                        <button type="button"
+                                                class="btn btn-outline-secondary editAddressBtn">
+                                            Edit
+                                        </button>
+                                        <button type="button" class="btn btn-outline-primary addNewAddress"
+                                                data-pincode="{{ $item->options->order_pincode }}"
+                                                data-sector="{{ $item->options->order_sector }}">
+                                            + Add New
+                                        </button>
 
-                                        <button type="button" class="btn btn-outline-primary addNewAddress" data-pincode="{{ $item->options->order_pincode }}" data-sector="{{ $item->options->order_sector }}">+ Add New</button>
+
                                     </div>
                                 </div>
 
@@ -335,7 +345,7 @@
                         }
                     },
                     error: function(data) {
-                        console.log(data);
+                        // console.log(data);
                     }
                 });
             });
@@ -374,7 +384,7 @@
                                 }
                             },
                             error: function(data) {
-                                console.log(data);
+                                // console.log(data);
                             }
                         })
                     }
@@ -384,6 +394,17 @@
             });
 
             $(".addNewAddress").on('click', function() {
+
+                $("#addressForm").attr("data-mode", "add");
+                $("#addressForm").attr("data-id", "");
+                $("#addressForm input[name='name']").val("");
+                $("#addressForm input[name='email']").val("");
+                $("#addressForm input[name='phone']").val("");
+                $("#addressForm input[name='address']").val("");
+                $("#addressForm input[name='landmark']").val("");
+
+                $("#addressForm input[name='type']").prop("checked", false);
+
                 $pincode = $(this).attr('data-pincode');
                 $sector = $(this).attr('data-sector');
                 if($sector){
@@ -394,7 +415,7 @@
                         data: {sector_id: $sector},
                         success: function(data) {
                             if (data.status === 'success') {
-                                console.log(data.sector);
+                                // console.log(data.sector);
                                 $("#sector").val(data.sector.sector);
                                 // you can use data.sector to prefill any other fields if needed
                             }
@@ -410,32 +431,29 @@
 
             $("#addressForm").on('submit', function(e) {
                 e.preventDefault();
-                let data = $(this).serialize();
+
+                let mode = $(this).data('mode');
+                let id   = $(".addressField").val();
+                let formData = $(this).serialize();
+
+                let url = (mode == "update")
+                    ? "{{ route('user.checkout.address.update') }}"
+                    : "{{ route('user.checkout.address.create') }}";
+
                 $.ajax({
-                    url: "{{ route('user.checkout.address.create') }}",
-                    method: 'POST',
-                    data: data,
+                    url: url,
+                    method: "POST",
+                    data: formData + "&id=" + id,
                     success: function(data) {
                         if (data.status === 'success') {
                             $('#exampleModal').modal('hide');
-                            $('.addressField').html(data.data);
+                            $('.addressField').html(data.data); // Refresh address list everywhere
                             toastr.success(data.message);
                         }
-                    },
-                    error: function(xhr) {
-                         if (xhr.status === 422) {
-                            // Laravel validation error
-                            let errors = xhr.responseJSON.errors;
-                            $.each(errors, function(key, value) {
-                                toastr.error(value[0]); // show each error message using toastr
-                            });
-                        } else {
-                            console.log(xhr);
-                            toastr.error('Something went wrong. Please try again.');
-                        }
                     }
-                })
+                });
             });
+
 
             // applay coupon on cart
 
@@ -459,7 +477,7 @@
                     }
                     },
                     error: function(data) {
-                        console.log(data);
+                        // console.log(data);
                     }
                 })
 
@@ -477,11 +495,53 @@
                         }
                     },
                     error: function(data) {
-                        console.log(data);
+                        // console.log(data);
                     }
                 })
             }
 
         })
+
+        $('.addressField').on('change', function() {
+    let selectedAddress = $(this).val();
+    $(this).closest('.input-group').find('.editAddressBtn').attr('data-address-id', selectedAddress);
+});
+
+$(".editAddressBtn").on('click', function () {
+    let addressId = $(".addressField").val();
+
+    if (!addressId) {
+        toastr.error("Please select an address to edit");
+        return;
+    }
+    let url = "/user/address/" + addressId;
+    $.ajax({
+        url: url,
+        method: "GET",
+        success: function (res) {
+            if (res.status == 'success') {
+                // Fill modal fields
+                $("#addressForm input[name='name']").val(res.data.name);
+                $("#addressForm input[name='email']").val(res.data.email);
+                $("#addressForm input[name='phone']").val(res.data.phone);
+                $("#addressForm input[name='address']").val(res.data.address);
+                $("#addressForm input[name='pincode']").val(res.data.pincode);
+                $("#addressForm input[name='sector']").val(res.data.sector);
+                $("#addressForm input[name='landmark']").val(res.data.landmark);
+                $("#addressForm input[name='city']").val(res.data.city);
+                $("#addressForm input[name='country']").val(res.data.country);
+
+                $("#addressForm input[name='type'][value='" + res.data.type + "']").prop("checked", true);
+
+                // Change form mode to "update"
+                $("#addressForm").attr("data-mode", "update");
+                $("#addressForm").attr("data-id", addressId);
+
+                $('#exampleModal').modal('show');
+            }
+        }
+    });
+});
+
     </script>
 @endpush

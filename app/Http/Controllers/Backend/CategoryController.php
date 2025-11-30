@@ -41,10 +41,12 @@ class CategoryController extends Controller
         ]);
 
         $imagePath = $this->uploadImage($request, 'image', 'uploads/category');
+        $bannerImagePath = $this->uploadImage($request, 'banner_image', 'uploads/category/banner_image');
         $category = new Category();
         $category->icon = $request->icon;
         $category->name = $request->name;
         $category->image = $imagePath;
+        $category->banner_image = $bannerImagePath;
         $category->slug = Str::slug($request->name);
         $category->status = $request->status;
         $category->save();
@@ -77,17 +79,23 @@ class CategoryController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'icon' => ['required', 'not_in:empty'],
+            'icon' => ['nullable', 'not_in:empty'],
             'name' => ['required', 'max:200', 'unique:categories,name,'.$id],
             'status' => ['required']
         ]);
 
         $category = Category::findOrFail($id);
-        $category->icon = $request->icon;
+        if(!empty($request->icon)){
+            $category->icon = $request->icon;
+        }
         $category->name = $request->name;
         if ($request->hasFile('image')) {
             $imagePath = $this->updateImage($request, 'image', 'uploads/category', $category->image);
             $category->image = $imagePath;
+        }
+        if ($request->hasFile('banner_image')) {
+            $bannerImagePath = $this->updateImage($request, 'banner_image', 'uploads/category/banner_image', $category->banner_image);
+            $category->banner_image = $bannerImagePath;
         }
         $category->slug = Str::slug($request->name);
         $category->status = $request->status;
