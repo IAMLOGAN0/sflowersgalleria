@@ -190,7 +190,7 @@
                 </ul>
             </li>
 
-            <li><a class="nav-link {{ setActive(['admin.advertisement.*']) }}"
+            <li class="{{ setActive(['admin.advertisement.*']) }}"><a class="nav-link"
                     href="{{ route('admin.advertisement.index') }}"><i class="fas fa-ad"></i>
                     <span>Advertisement</span></a></li>
 

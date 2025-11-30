@@ -150,7 +150,7 @@ Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'user', 'as' => 
     Route::post('blog-comment', [BlogController::class, 'comment'])->name('blog-comment');
 
     /** Checkout routes */
-    Route::get('checkout', [CheckOutController::class, 'indaex'])->name('checkout');
+    Route::get('checkout', [CheckOutController::class, 'index'])->name('checkout');
     Route::post('checkout/address-create', [CheckOutController::class, 'createAddress'])->name('checkout.address.create');
     Route::post('checkout/address-update', [CheckOutController::class, 'updateAddress'])->name('checkout.address.update');
     Route::post('checkout/form-submit', [CheckOutController::class, 'checkOutFormSubmit'])->name('checkout.form-submit');
