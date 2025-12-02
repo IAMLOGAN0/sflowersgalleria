@@ -53,7 +53,10 @@ class ProductVariantItemDataTable extends DataTable
             ->addColumn('variant_name', function($query){
                 return $query->productVariant->name;
             })
-            ->rawColumns(['status', 'action', 'is_default'])
+            ->addColumn('image', function($query){
+                return "<img width='70px' src='".asset($query->image)."' ></img>";
+            })
+            ->rawColumns(['status', 'action', 'is_default', 'image'])
             ->setRowId('id');
     }
 
@@ -94,6 +97,7 @@ class ProductVariantItemDataTable extends DataTable
     {
         return [
             Column::make('id'),
+            Column::make('image'),
             Column::make('name'),
             Column::make('variant_name'),
             Column::make('price'),
