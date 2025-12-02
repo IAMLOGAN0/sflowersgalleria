@@ -8,9 +8,12 @@ use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\ProductVariantItem;
 use Illuminate\Http\Request;
+use App\Traits\ImageUploadTrait;
 
 class ProductVariantItemController extends Controller
 {
+    use ImageUploadTrait;
+
     public function index(ProductVariantItemDataTable $dataTable, $productId, $variantId)
     {
         $product = Product::findOrFail($productId);
@@ -33,8 +36,12 @@ class ProductVariantItemController extends Controller
             'name' => ['required', 'max:200'],
             'price' => ['integer', 'required'],
             'is_default' => ['required'],
-            'status' => ['required']
+            'status' => ['required'],
+            'image' => ['required', 'image', 'max:3000'],
         ]);
+
+        /** Handle the image upload */
+        $imagePath = $this->uploadImage($request, 'image', 'uploads/product/variant_item');
 
         $variantItem = new ProductVariantItem();
         $variantItem->product_variant_id = $request->variant_id;
@@ -42,6 +49,7 @@ class ProductVariantItemController extends Controller
         $variantItem->price = $request->price;
         $variantItem->is_default = $request->is_default;
         $variantItem->status = $request->status;
+        $variantItem->image = $imagePath;
         $variantItem->save();
 
         toastr('Created Successfully!', 'success', 'success');
@@ -60,15 +68,22 @@ class ProductVariantItemController extends Controller
     public function update(Request $request, string $variantItemId)
     {
         $request->validate([
+            'image' => ['nullable', 'image', 'max:3000'],
             'name' => ['required', 'max:200'],
             'price' => ['integer', 'required'],
             'is_default' => ['required'],
             'status' => ['required']
         ]);
 
+
+
         $variantItem = ProductVariantItem::findOrFail($variantItemId);
+
+        $imagePath = $this->updateImage($request, 'image', 'uploads/product/variant_item', $variantItem->image);
+
         $variantItem->name = $request->name;
         $variantItem->price = $request->price;
+        $variantItem->image = empty(!$imagePath) ? $imagePath : $variantItem->image;
         $variantItem->is_default = $request->is_default;
         $variantItem->status = $request->status;
         $variantItem->save();

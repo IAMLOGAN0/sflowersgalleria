@@ -17,7 +17,7 @@
 
                   </div>
                   <div class="card-body">
-                    <form action="{{route('admin.products-variant-item.update', $variantItem->id)}}" method="POST">
+                    <form action="{{route('admin.products-variant-item.update', $variantItem->id)}}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div class="form-group">
@@ -33,6 +33,11 @@
                         <div class="form-group">
                             <label>Price <code>(Set 0 for make it free)</code></label>
                             <input type="text" class="form-control" name="price" value="{{$variantItem->price}}">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Image</label>
+                            <input type="file" class="form-control" name="image" value="">
                         </div>
 
                         <div class="form-group">

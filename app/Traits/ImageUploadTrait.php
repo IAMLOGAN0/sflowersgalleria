@@ -49,8 +49,11 @@ trait ImageUploadTrait {
     public function updateImage(Request $request, $inputName, $path, $oldPath=null)
     {
         if($request->hasFile($inputName)){
-            if(File::exists(public_path($oldPath))){
-                File::delete(public_path($oldPath));
+
+            $oldPath = str_replace(url('/').'/', '', $oldPath);
+
+            if(File::exists($oldPath)){
+                File::delete($oldPath);
             }
 
             $image = $request->{$inputName};
@@ -66,8 +69,9 @@ trait ImageUploadTrait {
     /** Handle Delte File */
     public function deleteImage(string $path)
     {
-        if(File::exists(public_path($path))){
-            File::delete(public_path($path));
+        $path = str_replace(url('/').'/', '', $path);
+        if(File::exists($path)){
+            File::delete($path);
         }
     }
 }
