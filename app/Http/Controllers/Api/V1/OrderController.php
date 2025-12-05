@@ -314,10 +314,10 @@ class OrderController extends Controller
             $transaction->amount_real_currency_name = $request->paid_currency;
             $transaction->save();
 
-            $cart_items = CartItem::with('product')
+            CartItem::with('product')
                 ->where('user_id', $order->user_id)
-                ->get();
-            $cart_items->each->delete();
+                ->delete();
+
 
             return response()->json([
                 'status' => 'success',
