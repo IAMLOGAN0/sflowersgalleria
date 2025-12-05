@@ -33,6 +33,7 @@ class CartController extends Controller
                 if ($variantItem) {
                     $variants[$variantItem->productVariant->name]['name'] = $variantItem->name;
                     $variants[$variantItem->productVariant->name]['price'] = $variantItem->price;
+                    $variants[$variantItem->productVariant->name]['image'] = $variantItem->image;
                     $variantTotalAmount += $variantItem->price;
                 }
             }
@@ -73,7 +74,7 @@ class CartController extends Controller
     /** Get all cart items */
     public function getCart(Request $request)
     {
-        $items = CartItem::with('product', 'product.category', 'product.variants.productVariantItems', 'product.productImageGalleries')
+        $items = CartItem::with('product', 'product.category', 'product.productImageGalleries')
         ->where('user_id', $request->user()->id)
         ->get();
         return response()->json(['status' => 'success', 'data' => $items]);
