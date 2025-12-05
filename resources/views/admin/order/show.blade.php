@@ -34,7 +34,7 @@
                             <b>Email: </b> {{$address->email}}<br>
                             <b>Phone:</b> {{$address->phone}}<br>
                             <b>Address:</b> {{$address->address}},<br>
-                            {{$address->city}}, {{$address->state}}, {{$address->zip}}<br>
+                            {{$address->city}}, {{$address->zip}}<br>
                             {{$address->country}}
                         </address>
                       </div>
