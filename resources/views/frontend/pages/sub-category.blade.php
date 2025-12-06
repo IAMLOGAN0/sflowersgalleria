@@ -34,7 +34,7 @@
     ==============================-->
     <section id="wsus__blogs">
         <div class="container">
-            <section id="wsus__sub_categories" class="py-2 bg-white">
+            <section id="wsus__sub_categories" class="py-2">
                 <div class="container">
                     <!-- Sub Categories -->
                     <div class="row g-4 justify-content-center text-center">
