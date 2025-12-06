@@ -75,9 +75,9 @@
                     <!-- Sub Categories -->
                     <div class="row g-4 justify-content-center text-center">
                         @foreach ($sub_categories as $category)
-                        <div class="col-6 col-md-4 col-lg-3 col-xl-2 fnp-card">
+                        <div class="col-6 col-md-4 col-lg-3 col-xl-2">
                             <a href="{{ route('products.index', ['subcategory' => $category->slug]) }}" class="text-decoration-none">
-                                <div class="subcategory-card">
+                                <div class="fnp-card">
                                     <div class="subcategory-img">
                                         <img src="{{ $category->image }}" alt="{{ $category->name }}" class="img-fluid">
                                     </div>
