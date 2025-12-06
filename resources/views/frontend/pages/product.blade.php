@@ -157,14 +157,14 @@
                                 aria-labelledby="v-pills-home-tab">
                                 <div class="row">
                                     @foreach ($products as $product)
-                                    <div class="col-xl-4 col-sm-6">
+                                    <div class="col-sm-6 col-6 col-md-4 col-lg-3 col-xl-4">
                                         <div class="wsus__product_item">
                                             <span class="wsus__new">{{productType($product->product_type)}}</span>
                                             @if(checkDiscount($product))
                                                 <span class="wsus__minus">-{{calculateDiscountPercent($product->price, $product->offer_price)}}%</span>
                                             @endif
                                             <a class="wsus__pro_link" href="{{route('product-detail', $product->slug)}}">
-                                                <img src="{{asset($product->thumb_image)}}" alt="product" class="img-fluid w-100 img_1" />
+                                                <img src="{{asset($product->thumb_image)}}" alt="product" class="img-fluid" />
                                                 <img src="
                                                 @if(isset($product->productImageGalleries[0]->image))
                                                     {{asset($product->productImageGalleries[0]->image)}}
@@ -179,7 +179,8 @@
                                                 {{-- <li><a href="#"><i class="far fa-random"></i></a> --}}
                                             </ul>
                                             <div class="wsus__product_details">
-                                                <a class="wsus__category" href="#">{{$product->category->name}} </a>
+                                                {{-- <a class="wsus__category" href="#">{{$product->category->name}} </a> --}}
+                                                <a class="wsus__pro_name" href="{{route('product-detail', $product->slug)}}">{{limitText($product->name, 53)}}</a>
                                                 <p class="wsus__pro_rating">
 
                                                     @for ($i = 1; $i <= 5; $i++)
@@ -190,9 +191,8 @@
                                                         @endif
                                                     @endfor
 
-                                                    <span>({{$product->reviews_count}} review)</span>
+                                                    {{-- <span>({{$product->reviews_count}} review)</span> --}}
                                                 </p>
-                                                <a class="wsus__pro_name" href="{{route('product-detail', $product->slug)}}">{{limitText($product->name, 53)}}</a>
                                                 @if(checkDiscount($product))
                                                     <p class="wsus__price">{{$settings->currency_icon}}{{$product->offer_price}} <del>{{$settings->currency_icon}}{{$product->price}}</del></p>
                                                 @else
