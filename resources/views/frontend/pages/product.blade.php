@@ -164,7 +164,7 @@
                                                 <span class="wsus__minus">-{{calculateDiscountPercent($product->price, $product->offer_price)}}%</span>
                                             @endif
                                             <a class="wsus__pro_link" href="{{route('product-detail', $product->slug)}}">
-                                                <img src="{{asset($product->thumb_image)}}" alt="product" class="img-fluid" />
+                                                <img src="{{asset($product->thumb_image)}}" alt="product" class="img-fluid w-100 img_1" />
                                                 <img src="
                                                 @if(isset($product->productImageGalleries[0]->image))
                                                     {{asset($product->productImageGalleries[0]->image)}}
@@ -212,7 +212,7 @@
                                                     @endif
                                                     @endforeach
                                                     <input class="" name="qty" type="hidden" min="1" max="100" value="1" />
-                                                    <button class="add_cart" type="submit">add to cart</button>
+                                                    <button class="add_cart" type="submit" style="border-radius: 5px;">add to cart</button>
                                                 </form>
                                             </div>
                                         </div>
