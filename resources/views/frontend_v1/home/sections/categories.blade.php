@@ -22,9 +22,9 @@
                                class="collection-image img-style">
 
                                 <img class="lazyload"
-                                     data-src="{{ $category->image ? asset($category->image) : asset('frontend_v1/images/no-image.png') }}"
-                                     src="{{ $category->image ? asset($category->image) : asset('frontend_v1/images/no-image.png') }}"
-                                     alt="{{ $category->name }}">
+                                     data-src="{{$category->image}}"
+                                     src="{{$category->image}}"
+                                     alt="{{$category->name}}">
                             </a>
 
                             <div class="collection-content text-center">
@@ -36,6 +36,7 @@
 
                         </div>
                     </div>
+
                 @endforeach
 
 
