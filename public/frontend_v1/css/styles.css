@@ -2,7 +2,7 @@
     * Name: Ecomus Multipurpose eCommerce HTML Template
     * Version: 1.1.0
     * Author: Themesflat
-    * Author URI: http://themesflat.com 
+    * Author URI: http://themesflat.com
 
 	* Abstracts variable
 
@@ -2240,7 +2240,7 @@ label {
 }
 
 .logo-header img {
-  width: 110px;
+  width: 60px !important;
 }
 
 .box-nav-ul .menu-item {
@@ -15680,7 +15680,7 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
   outline: none;
 }
 
-/* Preload 
+/* Preload
 ------------------------------------------- */
 .preload-wrapper .preload-container {
   display: flex;
@@ -16838,7 +16838,7 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
     line-height: 24px;
   }
   .logo-header img {
-    width: 136px;
+    width: 110px;
   }
   .canvas-mb {
     width: 100% !important;
