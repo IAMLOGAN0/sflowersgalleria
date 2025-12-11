@@ -18,6 +18,7 @@
             $tabProducts[] = \App\Models\Product::withAvg('reviews', 'rating')
                 ->with(['variants', 'category', 'productImageGalleries'])
                 ->where('category_id', $cat->id)
+                ->where('status', 1)
                 ->orderBy('id', 'DESC')->take(12)->get();
 
         } elseif (array_key_first($lastKey) === 'sub_category') {
@@ -27,6 +28,7 @@
             $tabProducts[] = \App\Models\Product::withAvg('reviews', 'rating')
                 ->with(['variants', 'category', 'productImageGalleries'])
                 ->where('sub_category_id', $cat->id)
+                 ->where('status', 1)
                 ->orderBy('id', 'DESC')->take(12)->get();
 
         } else {
@@ -36,6 +38,7 @@
             $tabProducts[] = \App\Models\Product::withAvg('reviews', 'rating')
                 ->with(['variants', 'category', 'productImageGalleries'])
                 ->where('child_category_id', $cat->id)
+                 ->where('status', 1)
                 ->orderBy('id', 'DESC')->take(12)->get();
         }
     }
