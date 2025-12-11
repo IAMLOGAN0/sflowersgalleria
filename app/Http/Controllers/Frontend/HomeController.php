@@ -64,7 +64,7 @@ class HomeController extends Controller
         $sub_categories = SubCategory::where('status', 1)->get();
 
         return view(
-            'frontend.home.home',
+            'frontend_v1.home.home',
             compact(
                 'sliders',
                 'flashSaleDate',

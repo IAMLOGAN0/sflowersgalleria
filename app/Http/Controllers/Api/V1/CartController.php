@@ -8,6 +8,8 @@ use App\Models\Product;
 use App\Models\ProductVariantItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
+
 
 class CartController extends Controller
 {
@@ -110,28 +112,129 @@ class CartController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Cart cleared']);
     }
 
-    public function couponCalculation(Request $request)
-    {
-        $cupon_code = $request->input('cupon_code');
-        $coupon = Coupon::where(['code' => $cupon_code, 'status' => 1])->first();
-        if($coupon){
-            $subTotal = getCartTotal();
-            if($coupon->discount_type === 'amount'){
-                $total = $subTotal - $coupon->discount;
-                return response(['status' => 'success', 'cart_total' => $total, 'discount' => $coupon->discount]);
-            }elseif($coupon['discount_type'] === 'percent'){
-                $discount = $subTotal - ($subTotal * $coupon->discount / 100);
-                $total = $subTotal - $discount;
-                return response(['status' => 'success', 'cart_total' => $total, 'discount' => $discount]);
-            }
-        }else {
-            $total = getCartTotal();
-            return response(['status' => 'success', 'cart_total' => $total, 'discount' => 0]);
-        }
-    }
+public function couponCalculation(Request $request)
+{
+    try {
+        $request->validate([
+            'cupon_code' => 'required|string',
+            'total' => 'required|numeric'
+        ]);
 
-    public function allCoupon(Request $request){
-        $coupons = Coupon::where(['status' => 1])->get();
-        return response(['status' => 'success', 'data' => $coupons]);
+        $user = auth()->user();
+        $code = strtoupper($request->cupon_code);
+        $total = floatval($request->total);
+
+        $coupon = Coupon::where('code', $code)->where('status', 1)->first();
+
+        if (!$coupon) {
+            return response([
+                'status' => 'error',
+                'message' => 'Invalid coupon code'
+            ]);
+        }
+
+        $today = date('Y-m-d');
+
+        // 1️⃣ Check date validity
+        if ($today < $coupon->start_date || $today > $coupon->end_date) {
+            return response([
+                'status' => 'error',
+                'message' => 'Coupon expired or not active'
+            ]);
+        }
+
+        // 2️⃣ Global usage limit
+        if ($coupon->total_used >= $coupon->quantity) {
+            return response([
+                'status' => 'error',
+                'message' => 'Coupon usage limit reached'
+            ]);
+        }
+
+        // 3️⃣ Check user usage limit
+        $usage = DB::table('coupon_users')
+            ->where('coupon_id', $coupon->id)
+            ->where('user_id', $user->id)
+            ->first();
+
+        if ($usage && $usage->times_used >= $coupon->max_use) {
+            return response([
+                'status' => 'error',
+                'message' => 'You already used this coupon maximum allowed times'
+            ]);
+        }
+
+        // 4️⃣ Dynamic Minimum Order Amount
+        if ($coupon->min_order_amount > 0 && $total < $coupon->min_order_amount) {
+            return response([
+                'status' => 'error',
+                'message' => "Minimum order amount ₹{$coupon->min_order_amount} required"
+            ]);
+        }
+
+        // 5️⃣ Apply discount
+        if ($coupon->discount_type === 'amount') {
+            $discountAmount = $coupon->discount;
+        } else {
+            $discountAmount = ($total * $coupon->discount) / 100;
+        }
+
+        $finalTotal = max($total - $discountAmount, 0);
+
+        return response([
+            'status' => 'success',
+            'message' => 'Coupon Applied Successfully',
+            'discount_amount' => round($discountAmount),
+            'final_total' => round($finalTotal)
+        ]);
+
+    } catch (\Exception $e) {
+        return response([
+            'status' => 'error',
+            'message' => 'Something went wrong',
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
+
+
+    // public function allCoupon(Request $request){
+    //     $coupons = Coupon::where(['status' => 1])->get();
+    //     return response(['status' => 'success', 'data' => $coupons]);
+    // }
+    
+    
+    public function allCoupon(Request $request)
+{
+    $user = auth()->user();
+
+    $today = date('Y-m-d');
+
+    // Get all active coupons where:
+    // - status = 1
+    // - start_date <= today
+    // - end_date >= today
+    // - total_used < quantity (still available)
+    $coupons = Coupon::where('status', 1)
+        ->where('start_date', '<=', $today)
+        ->where('end_date', '>=', $today)
+        ->whereColumn('total_used', '<', 'quantity')
+        ->get();
+
+    // Filter out coupons user already used max times
+    $filtered = $coupons->filter(function ($coupon) use ($user) {
+        $userUsed = DB::table('coupon_users')
+            ->where('coupon_id', $coupon->id)
+            ->where('user_id', $user->id)
+            ->count();
+
+        return $userUsed < $coupon->max_use;
+    });
+
+    return response([
+        'status' => 'success',
+        'data' => array_values($filtered->toArray()),
+    ]);
+}
+
 }
